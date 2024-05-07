@@ -1,19 +1,16 @@
 import Image from "next/image";
+import Carousel from "@/components/Utilities/Carousel";
 
 export default function RegisterPage() {
+  const images = [
+    '/static/images/carousel-img/login-hero.png',
+    '/static/images/carousel-img/login-hero2.jpg',
+  ];
   return (
     <main className="flex min-h-screen">
       {/* Left Column for the Image */}
       <div className="w-1/2 flex items-center justify-center bg-gray-100">
-        <div className="w-3/4 p-4 h-5/6 bg-white shadow-lg rounded-3xl relative">
-          <Image
-            src="/static/images/login-hero.png"
-            alt="Decorative"
-            layout="fill"
-            className="rounded-2xl object-cover"
-            priority
-          />
-        </div>
+        <Carousel images={images}/>
       </div>
 
       {/* Right Column for the Registration Form */}
