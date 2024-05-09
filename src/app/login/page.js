@@ -1,38 +1,47 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Carousel from "@/components/Utilities/Carousel";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Page() {
+  const [showPassword, setShowPassword] = useState(false);
 
   const images = [
-    '/static/images/carousel-img/login-hero.png',
-    '/static/images/carousel-img/login-hero2.jpg',
+    "/static/images/carousel-img/login-hero.png",
+    "/static/images/carousel-img/login-hero2.jpg",
   ];
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <main className="flex min-h-screen">
       {/* Left Column for the Image */}
-      
-      <div className="w-1/2 flex items-center justify-center bg-gray-100">
-        <Carousel images={images}/>
+      <div className="w-1/2 flex flex-col items-center justify-center bg-gray-100">
+        <Image
+          src="/static/images/godentist_logo.jpeg"
+          alt="Logo"
+          width={1488}
+          height={423}
+          className="max-w-xs md:max-w-sm lg:max-w-base mb-8"
+        />
+        <Carousel images={images} />
       </div>
 
       <div className="w-1/2 flex flex-col items-center justify-center bg-white p-12">
         {/* Logo and Greeting */}
         <div className="mb-8 flex flex-col items-center">
           {" "}
-          <div className="relative">
-            <Image
-              src="/static/images/godentist_logo.jpeg"
-              alt="Logo"
-              width={100}
-              height={100}
-              className="h-32 w-32"
-            />
-          </div>
-          <h1 className="text-2xl font-bold text-blue-dentist mt-4">
+          <h1 className="text-5xl font-bold text-blue-dentist mt-4">
             Hello there 👋
           </h1>
-          <p className="text-gray-700">Welcome back, and let's get started!</p>
+          <p className="text-gray-700 text-lg py-3">
+            Welcome back, and let's get started!
+          </p>
         </div>
 
         {/* Form */}
@@ -41,18 +50,37 @@ export default function Page() {
             <span className="text-gray-700">Username / Mail</span>
             <input
               type="text"
-              className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist"
+              className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your username or email"
             />
           </label>
-          <label className="flex flex-col">
+          <label className="flex flex-col relative">
             <span className="text-gray-700">Password</span>
             <input
-              type="password"
-              className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist"
+              type={showPassword ? "text" : "password"}
+              className="mt-1 p-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-9 focus:outline-none"
+            >
+              <FontAwesomeIcon
+                icon={showPassword ? faEye : faEyeSlash}
+                className="text-gray-400" // Tailwind classes for color and size
+              />
+            </button>
           </label>
+
+          {/* Forgot Password Link */}
+          <a
+            href="/forgot-password"
+            className="text-right text-sm text-blue-dentist hover:text-blue-dentist-dark"
+          >
+            Forgot your password?
+          </a>
+
           <button
             type="submit"
             className="w-full p-3 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark"
