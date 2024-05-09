@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Carousel from "@/components/Utilities/Carousel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +11,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const images = [
     "/static/images/carousel-img/login-hero2.jpg",
-    "/static/images/carousel-img/login-hero.png",
+    "/static/images/carousel-img/login-hero.png"
   ];
 
   const togglePasswordVisibility = () => {
@@ -24,38 +23,37 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); 
 
   async function handleRegister(event) {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      console.error('Passwords do not match.');
+      setErrorMessage('Passwords do not match.');
       return;
     }
 
-    const body = JSON.stringify({ name, email, password});
-    console.log(body);
+    const body = JSON.stringify({ name, email, password });
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: body
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
-        router.push('/login');
+        setErrorMessage('');
+        router.push("/login");
       } else {
-        console.error(data.message);
+        setErrorMessage(data.message || "Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error('An unexpected error occurred:', error);
+      setErrorMessage("An unexpected error occurred: " + error.message); 
     }
   }
 
- 
   return (
     <main className="flex min-h-screen">
       {/* Left Column for the Image */}
@@ -74,14 +72,19 @@ export default function RegisterPage() {
       <div className="w-1/2 flex flex-col items-center justify-center bg-white p-12">
         {/* Logo and Greeting */}
         <div className="mb-8 flex flex-col items-center">
-          <h1 className="text-5xl font-bold text-blue-dentist mt-4">
-            Join us today 🚀
-          </h1>
+          <h1 className="text-5xl font-bold text-blue-dentist mt-4">Join us today 🚀</h1>
           <p className="text-gray-700 text-lg py-3">Create your account and get started!</p>
         </div>
 
+        {/* Error Alert */}
+        {errorMessage && (
+          <div className="w-full max-w-sm mb-6 p-3 bg-red-100 text-red-700 border border-red-200 rounded-lg">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Form */}
-        <form className="w-full max-w-sm flex flex-col space-y-6" onSubmit={handleRegister} >
+        <form className="w-full max-w-sm flex flex-col space-y-6" onSubmit={handleRegister}>
           <label className="flex flex-col">
             <span className="text-gray-700">Full Name</span>
             <input
@@ -90,7 +93,6 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your full name"
             />
@@ -103,7 +105,6 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your email address"
             />
@@ -112,12 +113,10 @@ export default function RegisterPage() {
             <span className="text-gray-700">Password</span>
             <input
               type={showPassword ? "text" : "password"}
-
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Create a password"
             />
@@ -128,7 +127,7 @@ export default function RegisterPage() {
             >
               <FontAwesomeIcon
                 icon={showPassword ? faEye : faEyeSlash}
-                className="text-gray-400" // Tailwind classes for color and size
+                className="text-gray-400"
               />
             </button>
           </label>
@@ -136,12 +135,10 @@ export default function RegisterPage() {
             <span className="text-gray-700">Confirm Password</span>
             <input
               type={showPassword ? "text" : "password"}
-
               name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Re-enter your password"
             />
@@ -152,13 +149,13 @@ export default function RegisterPage() {
             >
               <FontAwesomeIcon
                 icon={showPassword ? faEye : faEyeSlash}
-                className="text-gray-400" 
+                className="text-gray-400"
               />
             </button>
           </label>
           <button
             type="submit"
-            className="w-full p-3 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark "
+            className="w-full p-3 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark"
           >
             Register
           </button>
@@ -166,10 +163,7 @@ export default function RegisterPage() {
           {/* Additional Links */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a
-              href="/login"
-              className="text-blue-dentist hover:text-blue-dentist-dark"
-            >
+            <a href="/login" className="text-blue-dentist hover:text-blue-dentist-dark">
               Login here
             </a>
           </p>
