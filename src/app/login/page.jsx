@@ -1,13 +1,44 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import Image from "next/image";
 import Carousel from "@/components/Utilities/Carousel";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {setCookies} from '@/api/auth/cookiesHandler';
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleLogin(event) {
+    event.preventDefault();
+    const body = JSON.stringify({ email, password });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setCookies(data);
+        console.log(data);
+
+        router.push('/');
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+    }
+  }
 
   const images = [
     "/static/images/carousel-img/login-hero.png",
@@ -45,11 +76,15 @@ export default function Page() {
         </div>
 
         {/* Form */}
-        <form className="w-full max-w-sm flex flex-col space-y-6">
+        <form className="w-full max-w-sm flex flex-col space-y-6" onSubmit={handleLogin}>
           <label className="flex flex-col">
             <span className="text-gray-700">Username / Mail</span>
             <input
               type="text"
+              name='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your username or email"
             />
@@ -58,11 +93,16 @@ export default function Page() {
             <span className="text-gray-700">Password</span>
             <input
               type={showPassword ? "text" : "password"}
+              name='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+
               className="mt-1 p-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your password"
             />
             <button
-              type="button"
+              type="submit"
               onClick={togglePasswordVisibility}
               className="absolute right-3 top-9 focus:outline-none"
             >

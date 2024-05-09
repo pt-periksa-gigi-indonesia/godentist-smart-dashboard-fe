@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 import Image from "next/image";
 import Carousel from "@/components/Utilities/Carousel";
@@ -18,11 +19,48 @@ export default function RegisterPage() {
     setShowPassword(!showPassword);
   };
 
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  async function handleRegister(event) {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      console.error('Passwords do not match.');
+      return;
+    }
+
+    const body = JSON.stringify({ name, email, password});
+    console.log(body);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        router.push('/login');
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+    }
+  }
+
+ 
   return (
     <main className="flex min-h-screen">
       {/* Left Column for the Image */}
       <div className="w-1/2 flex flex-col items-center justify-center bg-gray-100">
-      <Image
+        <Image
           src="/static/images/godentist_logo.jpeg"
           alt="Logo"
           width={1488}
@@ -43,11 +81,16 @@ export default function RegisterPage() {
         </div>
 
         {/* Form */}
-        <form className="w-full max-w-sm flex flex-col space-y-6">
+        <form className="w-full max-w-sm flex flex-col space-y-6" onSubmit={handleRegister} >
           <label className="flex flex-col">
             <span className="text-gray-700">Full Name</span>
             <input
               type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your full name"
             />
@@ -56,6 +99,11 @@ export default function RegisterPage() {
             <span className="text-gray-700">Email</span>
             <input
               type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Enter your email address"
             />
@@ -64,6 +112,12 @@ export default function RegisterPage() {
             <span className="text-gray-700">Password</span>
             <input
               type={showPassword ? "text" : "password"}
+
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Create a password"
             />
@@ -82,6 +136,12 @@ export default function RegisterPage() {
             <span className="text-gray-700">Confirm Password</span>
             <input
               type={showPassword ? "text" : "password"}
+
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Re-enter your password"
             />
@@ -92,7 +152,7 @@ export default function RegisterPage() {
             >
               <FontAwesomeIcon
                 icon={showPassword ? faEye : faEyeSlash}
-                className="text-gray-400" // Tailwind classes for color and size
+                className="text-gray-400" 
               />
             </button>
           </label>
