@@ -2,6 +2,7 @@
 import { cookies } from 'next/headers'
 
 export async function setCookies(data) { 
+    cookies().set('user_id', data.user.id, { path: '/' });
     cookies().set('access_token', data.tokens.access.token, { path: '/' });
     cookies().set('refresh_token', data.tokens.refresh.token, { path: '/' });
 }
@@ -17,3 +18,7 @@ export async function getCookies() {
     return { access_token, refresh_token };
 }
 
+export async function getUserId() {
+    const usersId = cookies().get('user_id'); 
+    return usersId.value;
+}
