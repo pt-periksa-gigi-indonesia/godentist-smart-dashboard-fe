@@ -10,12 +10,12 @@ import Sidebar from "@/components/Navigation/Sidebar";
 export default function Page() {
     const [userInfo, setUserInfo] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1); 
-    const [totalPages, setTotalPages] = useState(1); 
-    const [isModalOpen, setIsModalOpen] = useState(false); 
-    const [selectedUserId, setSelectedUserId] = useState(null); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const router = useRouter();
-    const itemsPerPage = 8; 
+    const itemsPerPage = 8;
 
     async function fetchUserInfo() {
         try {
@@ -29,9 +29,9 @@ export default function Page() {
 
     async function fetchAllUsers(page) {
         try {
-            const users = await getAllUsers({ limit: itemsPerPage, page });
-            setAllUsers(users.results);
-            setTotalPages(Math.ceil(users.total / itemsPerPage)); 
+            const { results, totalPages } = await getAllUsers({ limit: itemsPerPage, page });
+            setAllUsers(results);
+            setTotalPages(Math.ceil(totalPages));
         } catch (error) {
             console.error('Error fetching all users:', error);
         }
@@ -50,7 +50,7 @@ export default function Page() {
         if (userInfo && userInfo.role !== 'admin') {
             router.push('/');
         }
-        fetchAllUsers(currentPage); 
+        fetchAllUsers(currentPage);
     }, [currentPage]);
 
     async function handleDelete(userId) {
@@ -100,37 +100,50 @@ export default function Page() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    {/* Add a header cell for the index */}
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
+                                        #
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
                                         Name
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold  uppercase tracking-wider">
                                         Email
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
                                         Role
                                     </th>
-                                    <th className="relative px-6 py-3">
-                                        <span className="sr-only">Delete</span>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase text-right">
+                                        Action
                                     </th>
                                 </tr>
                             </thead>
+
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {allUsers.map(user => (
-                                    <tr key={user.id} className='text-black'>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button
-                                                className="text-red-600 hover:text-red-900"
-                                                onClick={() => openDeleteModal(user.id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {allUsers.map((user, index) => {
+                                    // Calculate the global index based on the current page and items per page
+                                    const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
+
+                                    return (
+                                        <tr key={user.id} className='text-black'>
+                                            {/* Add an extra column for the index */}
+                                            <td className="px-6 py-4 whitespace-nowrap">{globalIndex}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button
+                                                    className="text-red-600 hover:text-red-900"
+                                                    onClick={() => openDeleteModal(user.id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
+
                         </table>
 
                         {/* Pagination Controls */}
