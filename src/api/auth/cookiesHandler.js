@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 
 export async function setCookies(data) { 
     cookies().set('user_id', data.user.id, { path: '/' });
+    cookies().set('role', data.user.role, { path: '/' });
     cookies().set('access_token', data.tokens.access.token, { path: '/' });
     cookies().set('refresh_token', data.tokens.refresh.token, { path: '/' });
 }
@@ -21,4 +22,9 @@ export async function getCookies() {
 export async function getUserId() {
     const usersId = cookies().get('user_id'); 
     return usersId.value;
+}
+
+export async function getUserRole() {
+    const role = cookies().get('role');
+    return role.value;
 }

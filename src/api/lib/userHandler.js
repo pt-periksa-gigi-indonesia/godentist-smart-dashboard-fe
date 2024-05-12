@@ -1,13 +1,10 @@
 "use server"
-import {getCookies} from '@/api/auth/cookiesHandler';
+import { getCookies } from '@/api/auth/cookiesHandler';
 
-export async function getUserInfo(user_id) {
+// Get user data
+export async function getUserData(user_id) {
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
-
-    if (!access_token) {
-        throw new Error('Access token is missing. Please log in again.');
-    }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${user_id}`, {
         method: 'GET',
@@ -16,19 +13,14 @@ export async function getUserInfo(user_id) {
             'Authorization': `Bearer ${access_token}`
         },
     });
-    
-    const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error(`Failed to fetch user information: ${response.statusText}`);
-    }
+    const data = await response.json();
 
     return data;
 }
 
-
-// get all users
-export async function getAllUsers({ name,  role="user" ,limit = 10, page = 1 } = {}) {
+// Get all users
+export async function getAllUsers({ name, role = "user", limit = 10, page = 1 } = {}) {
     const cookies = await getCookies();
     const access_token = cookies.access_token?.value;
 
@@ -54,16 +46,7 @@ export async function getAllUsers({ name,  role="user" ,limit = 10, page = 1 } =
         });
 
         if (!response.ok) {
-            switch (response.status) {
-                case 401:
-                    throw new Error('Unauthorized: Invalid access token.');
-                case 403:
-                    throw new Error('Forbidden: You do not have access to this resource.');
-                case 404:
-                    throw new Error('Not Found: The requested resource was not found.');
-                default:
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
         const data = await response.json();
@@ -74,15 +57,10 @@ export async function getAllUsers({ name,  role="user" ,limit = 10, page = 1 } =
     }
 }
 
-
 // Delete a user
 export async function deleteUser(user_id) {
     const cookies = await getCookies();
     const access_token = cookies.access_token?.value;
-
-    if (!access_token) {
-        throw new Error('Access token is missing. Please log in again.');
-    }
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${user_id}`, {
@@ -92,23 +70,36 @@ export async function deleteUser(user_id) {
                 'Authorization': `Bearer ${access_token}`,
             },
         });
+        return true;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        throw error;
+    }
+}
+
+// Update a user
+export async function updateUser(user_id, updatedFields) {
+    const cookies = await getCookies();
+    const access_token = cookies.access_token?.value;
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${user_id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+            body: JSON.stringify(updatedFields),
+        });
 
         if (!response.ok) {
-            switch (response.status) {
-                case 401:
-                    throw new Error('Unauthorized: Invalid access token.');
-                case 403:
-                    throw new Error('Forbidden: You do not have access to this resource.');
-                case 404:
-                    throw new Error('Not Found: The requested resource was not found.');
-                default:
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
         }
 
         return true;
     } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('Error updating user:', error);
         throw error;
     }
 }

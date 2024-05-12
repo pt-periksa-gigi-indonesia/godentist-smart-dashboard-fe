@@ -3,12 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { checkToken } from '@/api/auth/validateAccessToken';
-import { getUserId } from '@/api/auth/cookiesHandler';
-import { getUserInfo, getAllUsers, deleteUser } from '@/api/lib/userHandler';
+import { getUserId, getUserRole } from '@/api/auth/cookiesHandler';
+import { getUserData, getAllUsers, deleteUser } from '@/api/lib/userHandler';
 import Sidebar from "@/components/Navigation/Sidebar";
 
 export default function Page() {
-    const [userInfo, setUserInfo] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -16,16 +15,6 @@ export default function Page() {
     const [selectedUserId, setSelectedUserId] = useState(null);
     const router = useRouter();
     const itemsPerPage = 8;
-
-    async function fetchUserInfo() {
-        try {
-            const user_id = await getUserId();
-            const data = await getUserInfo(user_id);
-            setUserInfo(data);
-        } catch (error) {
-            console.error('Error fetching user information:', error);
-        }
-    }
 
     async function fetchAllUsers(page) {
         try {
@@ -37,21 +26,34 @@ export default function Page() {
         }
     }
 
-    async function foo() {
-        const validate = await checkToken();
-        if (!validate) {
+    async function authCheck() {
+        const isValid = await checkToken();
+        const user_role = await getUserRole();
+        if (isValid && user_role === 'admin') {
+            return true;
+        }
+        else if (isValid && user_role !== 'admin') {
+            router.push('/');
+        }
+        else {
             router.push('/login');
         }
     }
 
+
     useEffect(() => {
-        foo();
-        fetchUserInfo();
-        if (userInfo && userInfo.role !== 'admin') {
-            router.push('/');
+        async function fetchData() {
+            const isValid = await authCheck();
+            if (isValid) {
+                fetchAllUsers(currentPage);
+            }
+            else {
+                router.push('/');
+            }
         }
-        fetchAllUsers(currentPage);
+        fetchData();
     }, [currentPage]);
+
 
     async function handleDelete(userId) {
         try {
@@ -63,6 +65,12 @@ export default function Page() {
             console.error('Error deleting user:', error);
         }
     }
+
+    function handleEdit(userId) {
+        // console.log('Edit user:', userId);
+        router.push(`admin/edit/${userId}`);
+    }
+
 
     function openDeleteModal(userId) {
         setSelectedUserId(userId);
@@ -101,19 +109,19 @@ export default function Page() {
                             <thead className="bg-gray-50">
                                 <tr>
                                     {/* Add a header cell for the index */}
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs  text-gray-500 font-extrabold uppercase tracking-wider">
                                         #
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs  text-gray-500 font-extrabold uppercase tracking-wider">
                                         Name
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold  uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs text-gray-500 font-extrabold  uppercase tracking-wider">
                                         Email
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs  text-gray-500 font-extrabold uppercase tracking-wider">
                                         Role
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 font-extrabold uppercase text-right">
+                                    <th className="px-6 py-3 text-xs  text-gray-500 font-extrabold uppercase text-right">
                                         Action
                                     </th>
                                 </tr>
@@ -133,11 +141,21 @@ export default function Page() {
                                             <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <button
+                                                    className="text-blue-600 hover:text-blue-900"
+                                                    onClick={() => handleEdit(user.id)}
+                                                >
+                                                    Edit
+                                                </button>
+
+
+                                                <button
                                                     className="text-red-600 hover:text-red-900"
                                                     onClick={() => openDeleteModal(user.id)}
                                                 >
                                                     Delete
                                                 </button>
+
+
                                             </td>
                                         </tr>
                                     );
