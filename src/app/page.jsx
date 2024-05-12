@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { checkToken } from '@/api/auth/validateAccessToken';
 import { getUserId } from '@/api/auth/cookiesHandler';
-import { getUserInfo } from '@/api/lib/userHandler';
+import { getUserData } from '@/api/lib/userHandler';
 
 import Sidebar from "@/components/Navigation/Sidebar";
 
@@ -16,23 +16,25 @@ export default function DoctorDashboard() {
   async function fetchUserInfo() {
     try {
       const user_id = await getUserId(); 
-      const data = await getUserInfo(user_id); 
+      const data = await getUserData(user_id); 
       setUserInfo(data);
     } catch (error) {
-      console.error('Error fetching user information:', error);
+      console.error('Error fetching user information:');
     }
   }
 
-  async function foo() {
-    const validate = await checkToken();
-    if (!validate) {
+  async function authCheck() {
+    const isValid = await checkToken();;
+    if (isValid) {
+      fetchUserInfo();
+    }
+    else {
       router.push('/login');
     }
   }
 
   useEffect(() => {
-    foo();
-    fetchUserInfo();
+    authCheck();
   }, []);
 
   return (

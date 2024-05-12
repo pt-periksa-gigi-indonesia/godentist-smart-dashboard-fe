@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import Carousel from "@/components/Utilities/Carousel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -163,9 +164,9 @@ export default function RegisterPage() {
           {/* Additional Links */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-dentist hover:text-blue-dentist-dark">
+            <Link href="/login" className="text-blue-dentist hover:text-blue-dentist-dark">
               Login here
-            </a>
+            </Link>
           </p>
         </form>
       </div>
