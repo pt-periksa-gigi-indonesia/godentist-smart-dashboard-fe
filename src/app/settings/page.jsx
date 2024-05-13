@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkToken } from "@/api/auth/validateAccessToken";
+import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData, updateUser } from "@/api/lib/userHandler";
 import Sidebar from "@/components/Navigation/Sidebar";
+import SuccessModal from "@/components/Utilities/SuccesModal"; 
 
 export default function ProfileEditPage() {
     const [user, setUser] = useState({
@@ -16,6 +18,7 @@ export default function ProfileEditPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -33,14 +36,14 @@ export default function ProfileEditPage() {
 
     const fetchUserData = async () => {
         try {
-            // Assume getUserData uses the currently logged-in user's token
-            const userData = await getUserData("currentUserId"); // Replace "currentUserId" with a valid method to retrieve the user's ID
+            const user_id = await getUserId(); 
+            const userData = await getUserData(user_id); 
             setUser(userData);
-            setIsLoading(false);
+            // setIsLoading(false);
         } catch (error) {
             console.error("Error fetching user data:", error);
             setError("Failed to load user data.");
-            setIsLoading(false);
+            // setIsLoading(false);
         }
     };
 
@@ -58,7 +61,7 @@ export default function ProfileEditPage() {
                 email: user.email,
                 role: user.role
             });
-            alert("Profile updated successfully!");
+            setSuccessMessage("Profile updated successfully!");
         } catch (error) {
             console.error("Error updating user:", error);
             setError("Failed to update profile.");
@@ -67,14 +70,21 @@ export default function ProfileEditPage() {
         }
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    const closeModal = () => {
+        setSuccessMessage(null);
+    };
+
+    // if (isLoading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="flex min-h-screen bg-gray-50">
             <Sidebar />
             <div className="flex flex-col w-full p-6">
                 <h1 className="text-2xl text-gray-700 font-bold">Edit Profile</h1>
+                {successMessage && (
+                    <SuccessModal message={successMessage} onClose={closeModal} />
+                )}
                 <form onSubmit={handleSubmit} className="mt-4">
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
