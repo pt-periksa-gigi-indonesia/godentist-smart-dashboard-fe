@@ -25,12 +25,16 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleRegister(event) {
     event.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
 
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match.');
+      setIsLoading(false);
       return;
     }
 
@@ -47,13 +51,15 @@ export default function RegisterPage() {
       if (response.ok) {
         setErrorMessage('');
         setTimeout(() => {
-          router.push("/login");
+          router.push("/waiting");
         }, 500);
       } else {
         setErrorMessage(data.message || "Registration failed. Please try again.");
       }
     } catch (error) {
       setErrorMessage("An unexpected error occurred: " + error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -159,8 +165,9 @@ export default function RegisterPage() {
           <button
             type="submit"
             className="w-full p-3 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark"
+            disabled={isLoading}
           >
-            Register
+            {isLoading ? "Registering..." : "Register"}
           </button>
 
           {/* Additional Links */}
