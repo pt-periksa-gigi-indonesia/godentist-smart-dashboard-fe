@@ -74,6 +74,8 @@ export default function ProfileEditPage() {
         setSuccessMessage(null);
     };
 
+    console.log(user.role);
+
     // if (isLoading) return <div>Loading...</div>;
     // if (error) return <div>Error: {error}</div>;
 
@@ -124,6 +126,7 @@ export default function ProfileEditPage() {
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
+                            <option value="master">Master Admin</option>
                         </select>
                     </div>
                     <div className="flex items-center justify-between">
