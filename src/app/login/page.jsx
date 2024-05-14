@@ -14,11 +14,14 @@ export default function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
   async function handleLogin(event) {
     event.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
     const body = JSON.stringify({ email, password });
 
     try {
@@ -32,12 +35,16 @@ export default function Page() {
       if (response.ok) {
         setCookies(data);
         setErrorMessage("");
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
       } else {
         setErrorMessage(data.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred: " + error.message); 
+      setErrorMessage("An unexpected error occurred: " + error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -126,14 +133,15 @@ export default function Page() {
           <button
             type="submit"
             className="w-full p-3 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </button>
 
           {/* Additional Links */}
           <p className="text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <Link href="/register"  className="text-blue-dentist hover:text-blue-dentist-dark">Register Now</Link>
+            <Link href="/register" className="text-blue-dentist hover:text-blue-dentist-dark">Register Now</Link>
           </p>
         </form>
       </div>

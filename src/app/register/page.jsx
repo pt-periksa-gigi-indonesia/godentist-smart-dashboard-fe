@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); 
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleRegister(event) {
     event.preventDefault();
@@ -46,12 +46,14 @@ export default function RegisterPage() {
       const data = await response.json();
       if (response.ok) {
         setErrorMessage('');
-        router.push("/login");
+        setTimeout(() => {
+          router.push("/login");
+        }, 500);
       } else {
         setErrorMessage(data.message || "Registration failed. Please try again.");
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred: " + error.message); 
+      setErrorMessage("An unexpected error occurred: " + error.message);
     }
   }
 
