@@ -37,7 +37,6 @@ const Sidebar = ({ isCollapsed }) => {
                     <Link href="/schedule" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Partner's Account</Link>
                     <Link href="/doctors" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Notifications</Link>
                     <Link href="/recipes" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Quick Links</Link>
-                    <Link href="/settings" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Settings</Link>
                 </nav>
             </aside>
         </div>
