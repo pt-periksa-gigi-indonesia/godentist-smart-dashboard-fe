@@ -39,9 +39,9 @@ export default function Page() {
   async function authCheck() {
     const isValid = await checkToken();
     const user_role = await getUserRole();
-    if (isValid && user_role === "admin") {
+    if (isValid && user_role === "master") {
       return true;
-    } else if (isValid && user_role !== "admin") {
+    } else if (isValid && user_role === "admin") {
       router.push("/");
     } else {
       router.push("/login");
@@ -137,7 +137,7 @@ export default function Page() {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex flex-col w-full p-6">
-        <h1 className="text-2xl text-gray-700 font-bold">Admin Page</h1>
+        <h1 className="text-2xl text-gray-700 font-bold">Master Admin Page</h1>
         <div className="my-2">
           <h2 className="text-lg font-medium text-gray-700">
             Manage User Accounts

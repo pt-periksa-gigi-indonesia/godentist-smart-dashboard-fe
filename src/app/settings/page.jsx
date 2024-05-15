@@ -72,6 +72,8 @@ export default function ProfileEditPage() {
         setSuccessMessage(null);
     };
 
+    console.log(user.role);
+
     const toggleSidebar = () => {
         setIsCollapsed(prev => !prev);
     };
@@ -125,6 +127,7 @@ export default function ProfileEditPage() {
                             >
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
+                                <option value="master">Master Admin</option>
                             </select>
                         </div>
                         <div className="flex items-center justify-between">

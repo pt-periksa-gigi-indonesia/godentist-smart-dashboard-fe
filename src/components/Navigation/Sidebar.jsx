@@ -29,7 +29,7 @@ const Sidebar = ({ isCollapsed }) => {
                 <nav className="flex-grow p-6 space-y-4">
                     <Link href="/" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Dashboard</Link>
                     {/* if user role admin show admin page */}
-                    {user_role === 'admin' && (
+                    {user_role === 'master' && (
                         <Link href="/admin" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Admin</Link>
                     )}
                     <Link href="/appointments" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Activity</Link>
