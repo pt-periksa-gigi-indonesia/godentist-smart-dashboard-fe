@@ -2,28 +2,23 @@
 
 import { deleteCookies } from '@/api/auth/cookiesHandler';
 import { useRouter } from 'next/navigation';
-import {getUserRole} from '@/api/auth/cookiesHandler';
+import { getUserRole } from '@/api/auth/cookiesHandler';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed }) => {
     const router = useRouter();
     const [user_role, setRole] = useState('');
+    
     useEffect(() => {
         getUserRole().then(user_role => {
-          setRole(user_role);
+            setRole(user_role);
         });
-      }, []);
-
-
-    async function handleLogout() {
-        deleteCookies();
-        router.push('/login');
-    }
+    }, []);
 
     return (
-        <div className='position: fixed;'>
-            <aside className="w-64 bg-white shadow-lg flex flex-col">
+        <div className={`fixed top-0 left-0 h-full ${isCollapsed ? 'w-0' : 'w-64'} transition-width duration-300`}> {/* Added transition for collapsing */}
+            <aside className={`bg-white shadow-lg flex flex-col h-full ${isCollapsed ? 'w-0 overflow-hidden' : 'w-64'}`}>
                 <div className="pt-7 px-7 flex justify-center">
                     <img
                         src="/static/images/godentist_logo.jpeg"
@@ -44,14 +39,9 @@ const Sidebar = () => {
                     <Link href="/recipes" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Quick Links</Link>
                     <Link href="/settings" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Settings</Link>
                 </nav>
-                <button
-                    onClick={handleLogout}
-                    className="m-6 mt-0 p-4 bg-blue-dentist text-white rounded-lg font-medium hover:bg-blue-dentist-dark"
-                >
-                    Log out
-                </button>
             </aside>
         </div>
     );
 };
+
 export default Sidebar;
