@@ -36,11 +36,14 @@ export default function DoctorDashboard() {
 
   useEffect(() => {
     authCheck();
+    
   }, []);
 
   const toggleSidebar = () => {
     setIsCollapsed(prev => !prev);
   };
+
+  
 
   return (
     <div className="flex min-h-screen bg-gray-50">

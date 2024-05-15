@@ -20,7 +20,7 @@ export async function getUserData(user_id) {
 }
 
 // Get all users
-export async function getAllUsers({ name, role = "user", limit = 10, page = 1 } = {}) {
+export async function getAllUsers({ name, role, limit = 10, page = 1 } = {}) {
     const cookies = await getCookies();
     const access_token = cookies.access_token?.value;
 
@@ -50,7 +50,10 @@ export async function getAllUsers({ name, role = "user", limit = 10, page = 1 } 
         }
 
         const data = await response.json();
-        return data;
+        return {
+            ...data,
+            results: data.results.filter(user => user.role !== "master") 
+        };
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
@@ -77,7 +80,7 @@ export async function deleteUser(user_id) {
     }
 }
 
-// Update a user
+// Update a user information
 export async function updateUser(user_id, updatedFields) {
     const cookies = await getCookies();
     const access_token = cookies.access_token?.value;
@@ -100,6 +103,33 @@ export async function updateUser(user_id, updatedFields) {
         return true;
     } catch (error) {
         console.error('Error updating user:', error);
+        throw error;
+    }
+}
+
+// Update a user role
+export async function updateUserRole(user_id, updatedFieldsRole) {
+    const cookies = await getCookies();
+    const access_token = cookies.access_token?.value;
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/verify/${user_id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+            body: JSON.stringify(updatedFieldsRole),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error updating user role:', error);
         throw error;
     }
 }

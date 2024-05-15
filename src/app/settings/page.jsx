@@ -1,12 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getUserRole } from "@/api/auth/cookiesHandler";
 import { checkToken } from "@/api/auth/validateAccessToken";
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData, updateUser } from "@/api/lib/userHandler";
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
-import SuccessModal from "@/components/Utilities/SuccesModal"; 
+import SuccessModal from "@/components/Utilities/SuccesModal";
 
 export default function ProfileEditPage() {
     const [user, setUser] = useState({
@@ -20,6 +21,8 @@ export default function ProfileEditPage() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const router = useRouter();
+
+    // check if person as user role then redirect to login page
 
     useEffect(() => {
         const authCheckAndFetch = async () => {
@@ -36,9 +39,11 @@ export default function ProfileEditPage() {
 
     const fetchUserData = async () => {
         try {
-            const user_id = await getUserId(); 
-            const userData = await getUserData(user_id); 
+            const user_id = await getUserId();
+            const userData = await getUserData(user_id);
+            setTimeout(() => {
             setUser(userData);
+            }, 500);
         } catch (error) {
             console.error("Error fetching user data:", error);
             setError("Failed to load user data.");
@@ -57,7 +62,6 @@ export default function ProfileEditPage() {
             await updateUser(user.id, {
                 name: user.name,
                 email: user.email,
-                role: user.role
             });
             setSuccessMessage("Profile updated successfully!");
         } catch (error) {
@@ -80,14 +84,16 @@ export default function ProfileEditPage() {
 
     return (
         <div className="flex min-h-screen bg-gray-50">
+
+            {successMessage && (
+                <SuccessModal message={successMessage} onClose={closeModal} />
+            )}
+
             <Sidebar isCollapsed={isCollapsed} />
             <div className={`flex-grow flex flex-col transition-all duration-300 ${isCollapsed ? 'ml-0' : 'ml-64'}`}>
                 <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
                 <div className="p-6">
                     <h1 className="text-2xl text-gray-700 font-bold">Edit Profile</h1>
-                    {successMessage && (
-                        <SuccessModal message={successMessage} onClose={closeModal} />
-                    )}
                     <form onSubmit={handleSubmit} className="mt-4">
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -119,16 +125,14 @@ export default function ProfileEditPage() {
                             <label className="block text-gray-700 text-sm font-bold mb-2">
                                 Role
                             </label>
-                            <select
-                                name="role"
+                            <input
+                                className="shadow appearance-none border rounded-xl w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                 value={user.role}
-                                onChange={handleInputChange}
-                                className="shadow border rounded-xl w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Role"
+                                disabled
                             >
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                                <option value="master">Master Admin</option>
-                            </select>
+
+                            </input>
                         </div>
                         <div className="flex items-center justify-between">
                             <button

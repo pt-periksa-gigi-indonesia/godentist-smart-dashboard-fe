@@ -11,13 +11,22 @@ export async function middleware(req) {
     const homeUrl = req.nextUrl.clone();
     homeUrl.pathname = '/';
 
+    const waitingUrl = req.nextUrl.clone();
+    waitingUrl.pathname = '/waiting';
+
     if (!isTokenValid && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/admin')) {
         return NextResponse.redirect(url.toString());
     } 
     else if (isTokenValid && req.nextUrl.pathname === '/admin') {
         const role = await getUserRole(req);
-        if (role !== 'admin') {
+        if (role !== 'master') {
             return NextResponse.redirect(homeUrl.toString());
+        }
+    }
+    else if (isTokenValid && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/settings')) {
+        const role = await getUserRole(req);
+        if (role === 'user') {
+            return NextResponse.redirect(waitingUrl.toString());
         }
     }
 
@@ -25,5 +34,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/', '/admin', '/login', '/register'], 
+    matcher: ['/', '/admin', '/login', '/register', '/settings', '/waiting'], 
 };
