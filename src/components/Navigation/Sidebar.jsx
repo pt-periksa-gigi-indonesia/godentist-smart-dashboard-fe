@@ -18,7 +18,7 @@ const Sidebar = ({ isCollapsed }) => {
 
     return (
         <div className={`fixed top-0 left-0 h-full ${isCollapsed ? 'w-0' : 'w-64'} transition-width duration-300`}> {/* Added transition for collapsing */}
-            <aside className={`bg-white shadow-lg flex flex-col h-full ${isCollapsed ? 'w-0 overflow-hidden' : 'w-64'}`}>
+            <aside className={`bg-white shadow-inner border flex flex-col h-full ${isCollapsed ? 'w-0 overflow-hidden' : 'w-64'}`}>
                 <div className="pt-7 px-7 flex justify-center">
                     <img
                         src="/static/images/godentist_logo.jpeg"
@@ -27,16 +27,16 @@ const Sidebar = ({ isCollapsed }) => {
                     />
                 </div>
                 <nav className="flex-grow p-6 space-y-4">
-                    <Link href="/" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Dashboard</Link>
+                    <Link href="/" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Dashboard</Link>
                     {/* if user role admin show admin page */}
                     {user_role === 'master' && (
-                        <Link href="/admin" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Admin</Link>
+                        <Link href="/admin" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Admin</Link>
                     )}
-                    <Link href="/appointments" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Activity</Link>
-                    <Link href="/patients" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Patients</Link>
-                    <Link href="/schedule" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Partner's Account</Link>
-                    <Link href="/doctors" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Notifications</Link>
-                    <Link href="/recipes" className="block p-4 text-gray-800 hover:bg-blue-dentist hover:text-white rounded-lg">Quick Links</Link>
+                    <Link href="/schedule" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Partner's Account</Link>
+                    <Link href="/patients" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Patients</Link>
+                    <Link href="/transactions" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Transactions</Link>
+                    <Link href="/feedbacks" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Feedbacks</Link>
+                    <Link href="/recipes" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Service</Link>
                 </nav>
             </aside>
         </div>

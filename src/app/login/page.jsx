@@ -75,7 +75,7 @@ export default function Page() {
         {/* Logo and Greeting */}
         <div className="mb-8 flex flex-col items-center">
           <h1 className="text-5xl font-bold text-blue-dentist mt-4">Hello there 👋</h1>
-          <p className="text-gray-700 text-lg py-3">Welcome back, and let's get started!</p>
+          <p className="text-gray-700 font-normal text-lg py-3">Welcome back, and let's get started!</p>
         </div>
 
         {/* Error Alert */}
