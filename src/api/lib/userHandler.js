@@ -133,3 +133,57 @@ export async function updateUserRole(user_id, updatedFieldsRole) {
         throw error;
     }
 }
+
+// Send verification email
+export async function sendVerificationEmail() {
+    const cookies = await getCookies();
+    const access_token = cookies.access_token?.value;
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/send-verification-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+        throw error;
+    }
+
+}
+
+// Verify user email
+export async function verifyEmail(){
+    const cookies = await getCookies();
+    const access_token = cookies.access_token?.value;
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/verify-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error verifying email:', error);
+        throw error;
+    }
+}
+
