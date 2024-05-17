@@ -8,6 +8,8 @@ import { getAllUsers, deleteUser, updateUser, updateUserRole } from "@/api/lib/u
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
 import SuccessModal from "@/components/Utilities/SuccesModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesLeft, faAngleRight, faAnglesRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function Page() {
   const [allUsers, setAllUsers] = useState([]);
@@ -26,6 +28,20 @@ export default function Page() {
   const itemsPerPage = 8;
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+
+
+  const columns = [
+    { key: 'name', header: 'Name' },
+    { key: 'email', header: 'Email' },
+    { key: 'role', header: 'Role' }
+  ];
+
+
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+
+  const toggleDropdown = (userId) => {
+    setDropdownOpen(dropdownOpen === userId ? null : userId);
+  };
 
   async function fetchAllUsers(page) {
     try {
@@ -165,15 +181,12 @@ export default function Page() {
 
 
         <div className="flex flex-col w-full p-6 mt-16">
-          <h1 className="text-2xl text-gray-700 font-bold">Master Admin Page</h1>
-          <div className="my-2">
-            <h2 className="text-lg font-medium text-gray-700">
-              Manage User Accounts
-            </h2>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
           </div>
           {allUsers.length > 0 && (
             <div>
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200  border border-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs text-gray-500 font-extrabold uppercase tracking-wider">
@@ -199,16 +212,16 @@ export default function Page() {
                       (currentPage - 1) * itemsPerPage + index + 1;
                     return (
                       <tr key={user.id} className="text-black">
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {globalIndex}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {user.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {user.email}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {user.role}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -233,28 +246,47 @@ export default function Page() {
 
               {/* Pagination Controls */}
               <div className="flex justify-center mt-4 space-x-4">
+                {/* Display current page number and total pages */}
+                <span className="px-4 py-2 text-gray-800">{`Page ${currentPage} of ${totalPages}`}</span>
+
+
+                {/* Jump to first page */}
                 <button
-                  className={`px-4 py-2 bg-red-500 rounded-md ${currentPage === 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-red-600"
-                    }`}
+                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(1)}
+                >
+                  <FontAwesomeIcon icon={faAnglesLeft} />
+                </button>
+
+                {/* Previous page */}
+                <button
+                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
                   disabled={currentPage === 1}
                   onClick={() => handlePageChange(currentPage - 1)}
                 >
-                  Previous
+                  <FontAwesomeIcon icon={faAngleLeft} />
                 </button>
-                <span className="px-4 py-2 text-gray-800">{`Page ${currentPage} of ${totalPages}`}</span>
+
+                {/* Next page */}
                 <button
-                  className={`px-4 py-2 bg-blue-500 rounded-md ${currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-blue-600"
-                    }`}
+                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
                   disabled={currentPage === totalPages}
                   onClick={() => handlePageChange(currentPage + 1)}
                 >
-                  Next
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </button>
+
+                {/* Jump to last page */}
+                <button
+                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(totalPages)}
+                >
+                  <FontAwesomeIcon icon={faAnglesRight} />
                 </button>
               </div>
+
             </div>
           )}
 

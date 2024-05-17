@@ -5,7 +5,11 @@ import { useEffect, useState } from 'react';
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
 
-import { getDoctors, getDoctorById } from '@/api/lib/doctorHandler';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAnglesLeft, faAngleRight, faAnglesRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { FaUserClock, FaUserCheck, FaUser } from 'react-icons/fa';
+
+import { getDoctors, getTotalVerifiedDoctors, getTotalUnverifiedDoctors, getTotalDoctors} from '@/api/lib/doctorHandler';
 
 
 export default function DoctorsPage() {
@@ -13,21 +17,25 @@ export default function DoctorsPage() {
     const [doctors, setDoctors] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');  // State to store the search term
 
     const router = useRouter();
 
-    // Fetch the doctor data
-    const fetchDoctors = () => {
-        getDoctors().then(data => {
+    // Fetch the doctor data with pagination and search
+    const fetchDoctors = async () => {
+        try {
+            const data = await getDoctors({ page: currentPage, name: searchTerm }); // Adjust getDoctors to accept an object with page and name
             setDoctors(data.results);
             setTotalPages(data.totalPages);
-        });
+            setCurrentPage(1);
+        } catch (error) {
+            console.error('Failed to fetch doctors:', error);
+        }
     };
 
-    // Fetch the doctor data
     useEffect(() => {
-        fetchDoctors(currentPage);
-    }, [currentPage]);
+        fetchDoctors();
+    }, [currentPage, searchTerm]);
 
     const toggleSidebar = () => {
         setIsCollapsed(prev => !prev);
@@ -39,6 +47,15 @@ export default function DoctorsPage() {
         }
     };
 
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const dummyData = {
+        unverifiedDoctors: 5,
+        verifiedDoctors: 20,
+        totalClinics: 10,
+    };
 
     return (
         <div className="flex min-h-screen bg-white">
@@ -49,6 +66,43 @@ export default function DoctorsPage() {
                 <main className="flex-grow p-6 mt-16">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold text-gray-800">Manage Doctors</h1>
+                    </div>
+
+                        <div className="col-span-2 p-4 mb-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
+                                    <FaUserClock className="text-xl mr-4" />
+                                    <div>
+                                        <h3 className="text-md font-normal">Unverified</h3>
+                                        <p className="text-xl font-bold">{dummyData.unverifiedDoctors} doctors</p>
+                                    </div>
+                                </div>
+                                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
+                                    <FaUserCheck className="text-xl mr-4" />
+                                    <div>
+                                        <h3 className="text-md font-normal">Verified</h3>
+                                        <p className="text-xl font-bold">{dummyData.verifiedDoctors} doctors</p>
+                                    </div>
+                                </div>
+                                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
+                                    <FaUser className="text-xl mr-4" />
+                                    <div>
+                                        <h3 className="text-md font-normal">Total Doctor</h3>
+                                        <p className="text-xl font-bold">{dummyData.totalClinics} clinics</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <div className="flex  items-center mb-6 text-black">
+                        <input
+                            type="text"
+                            placeholder="Search by name..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            className="border-2 border-gray-200 rounded-lg p-2 w-2/4"
+                        />
                     </div>
 
                     <table className="min-w-full divide-y divide-gray-200 border border-gray-200">
@@ -83,26 +137,42 @@ export default function DoctorsPage() {
                     </table>
 
                     <div className="flex justify-center mt-4 space-x-4">
+                        <span className="px-4 py-2 text-gray-800">Page {currentPage} of {totalPages}</span>
+
+                        {/* Jump to first page */}
                         <button
-                            className={`px-4 py-2 bg-red-500 rounded-md ${currentPage === 1
-                                ? "opacity-50 cursor-not-allowed"
-                                : "hover:bg-red-600"
-                                }`}
+                            className={`text-gray-800 cursor-pointer flex items-center border border-gray-300 rounded-md py-1 px-2 pl-4 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            onClick={() => handlePageChange(1)}
+                            disabled={currentPage === 1}
+                        >
+                            <FontAwesomeIcon icon={faAnglesLeft} />
+                        </button>
+
+                        {/* Previous page */}
+                        <button
+                            className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
-                            Previous
+                            <FontAwesomeIcon icon={faAngleLeft} />
                         </button>
-                        <span className="px-4 py-2 text-gray-800">Page {currentPage} of {totalPages}</span>
+
+                        {/* Next page */}
                         <button
-                            className={`px-4 py-2 bg-blue-500 rounded-md ${currentPage === totalPages
-                                ? "opacity-50 cursor-not-allowed"
-                                : "hover:bg-blue-600"
-                                }`}
+                            className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         >
-                            Next
+                            <FontAwesomeIcon icon={faAngleRight} />
+                        </button>
+
+                        {/* Jump to last page */}
+                        <button
+                            className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                            onClick={() => handlePageChange(totalPages)}
+                            disabled={currentPage === totalPages}
+                        >
+                            <FontAwesomeIcon icon={faAnglesRight} />
                         </button>
                     </div>
 

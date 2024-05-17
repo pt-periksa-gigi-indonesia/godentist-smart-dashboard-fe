@@ -2,11 +2,17 @@
 import { getCookies } from '@/api/auth/cookiesHandler';
 
 // Get doctor data
-export async function getDoctors({ limit = 10, page = 1 } = {}){
+export async function getDoctors({ limit = 10, page = 1, name = '' } = {}){
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors`, {
+    const queryParams = new URLSearchParams({
+        limit,
+        page,
+        ...(name && { name }),
+    }).toString();
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors?${queryParams}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -14,13 +20,14 @@ export async function getDoctors({ limit = 10, page = 1 } = {}){
         },
     });
 
+
+
     const data = await response.json();
 
     return data;
 }
 
 // Get doctor data by id
-
 export async function getDoctorById(doctor_id){
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
@@ -37,3 +44,4 @@ export async function getDoctorById(doctor_id){
 
     return data;
 }
+
