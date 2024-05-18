@@ -9,8 +9,8 @@ import { FaUserClock, FaUserCheck, FaUser } from 'react-icons/fa';
 
 import { getDoctors} from '@/api/lib/doctorHandler';
 
-import SearchBar from '@/components/Utilities/SearchBar';
 import DoctorTable from '@/components/Tables/DoctorTable';
+import { SkeletonDoctorTable } from '@/components/Tables/SkeletonDoctorTable';
 import Pagination from '@/components/Utilities/Pagination';
 
 export default function DoctorsPage() {
@@ -18,15 +18,15 @@ export default function DoctorsPage() {
     const [doctors, setDoctors] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [searchTerm, setSearchTerm] = useState('');  // State to store the search term
+    const [searchTerm, setSearchTerm] = useState('');  
     const [totalDoctor, setTotalDoctor] = useState(0);
     const [totalVerDoctor, setTotalVerifiedDoctor] = useState(0);
     const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
-
-    // const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch the doctor data with pagination and search
     const fetchDoctors = async () => {
+        setIsLoading(true);
         try {
             const data = await getDoctors({ page: currentPage, name: searchTerm });
             setDoctors(data.results);
@@ -38,6 +38,9 @@ export default function DoctorsPage() {
             setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Failed to fetch doctors:', error);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
@@ -100,12 +103,16 @@ export default function DoctorsPage() {
                         </div>
                     </div>
 
-                    <SearchBar 
-                        searchTerm={searchTerm} 
-                        onSearchChange={handleSearchChange} 
-                    />
 
-                    <DoctorTable doctors={doctors} />
+                    {isLoading ? (
+                        <SkeletonDoctorTable />
+                    ) : (
+                        <DoctorTable 
+                            doctors={doctors} 
+                            searchTerm={searchTerm} 
+                            handleSearchChange={handleSearchChange}
+                        />
+                    )}
 
                     <Pagination 
                         currentPage={currentPage} 

@@ -32,7 +32,7 @@ const Sidebar = ({ isCollapsed }) => {
                     {user_role === 'master' && (
                         <Link href="/admin" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Users</Link>
                     )}
-                    <Link href="/doctors" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Doctors</Link>
+                    <Link href="/doctors" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist  hover:text-white rounded-lg">Doctors</Link>
                     {/* <Link href="/patients" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Patients</Link> */}
                     <Link href="/transactions" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Transactions</Link>
                     <Link href="/feedbacks" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Feedbacks</Link>
