@@ -71,6 +71,13 @@ export default function DoctorDashboard() {
     setIsCollapsed(prev => !prev);
   };
 
+  const fetchedData = {
+    doctorsStatus: [  
+      { status: 'Unverified Doctors', total: totalUnverDoctor },
+      { status: 'Verified Doctors', total: totalVerDoctor }
+    ]
+  }; 
+
   const dummyData = {
     unverifiedDoctors: 5,
     verifiedDoctors: 20,
@@ -110,7 +117,7 @@ export default function DoctorDashboard() {
   };
 
   const renderChart = () => {
-    const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : dummyData.doctorsStatus;
+    const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : fetchedData.doctorsStatus;
     if (chartType === 'bar') {
       return (
         <ResponsiveContainer width="100%" height={300}>
