@@ -11,6 +11,9 @@ import SuccessModal from "@/components/Utilities/SuccesModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faAngleRight, faAnglesRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
+import SearchBar from '@/components/Utilities/SearchBar';
+import Pagination from "@/components/Utilities/Pagination";
+
 export default function Page() {
   const [allUsers, setAllUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +31,7 @@ export default function Page() {
   const itemsPerPage = 8;
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   const columns = [
@@ -43,11 +47,12 @@ export default function Page() {
     setDropdownOpen(dropdownOpen === userId ? null : userId);
   };
 
-  async function fetchAllUsers(page) {
+  async function fetchAllUsers(page, searchTerm = '') {
     try {
       const { results, totalPages } = await getAllUsers({
         limit: itemsPerPage,
         page,
+        name: searchTerm,
       });
       setAllUsers(results);
       setTotalPages(Math.ceil(totalPages));
@@ -72,15 +77,16 @@ export default function Page() {
     async function fetchData() {
       const isValid = await authCheck();
       if (isValid) {
-        fetchAllUsers(currentPage);
+        fetchAllUsers(currentPage, searchTerm);
       } else {
         router.push("/");
       }
     }
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   async function handleDelete(userId) {
+    console.log("Deleting user with id:", userId);
     try {
       const result = await deleteUser(userId);
       if (result) {
@@ -167,6 +173,12 @@ export default function Page() {
     setIsCollapsed(prev => !prev);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+
+  console.log('allUsers:', allUsers);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -184,6 +196,9 @@ export default function Page() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
           </div>
+
+          <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+          
           {allUsers.length > 0 && (
             <div>
               <table className="min-w-full divide-y divide-gray-200  border border-gray-200">
@@ -244,48 +259,11 @@ export default function Page() {
                 </tbody>
               </table>
 
-              {/* Pagination Controls */}
-              <div className="flex justify-center mt-4 space-x-4">
-                {/* Display current page number and total pages */}
-                <span className="px-4 py-2 text-gray-800">{`Page ${currentPage} of ${totalPages}`}</span>
-
-
-                {/* Jump to first page */}
-                <button
-                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={currentPage === 1}
-                  onClick={() => handlePageChange(1)}
-                >
-                  <FontAwesomeIcon icon={faAnglesLeft} />
-                </button>
-
-                {/* Previous page */}
-                <button
-                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={currentPage === 1}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  <FontAwesomeIcon icon={faAngleLeft} />
-                </button>
-
-                {/* Next page */}
-                <button
-                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={currentPage === totalPages}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </button>
-
-                {/* Jump to last page */}
-                <button
-                  className={`px-4 py-2 rounded-md text-gray-800 border border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={currentPage === totalPages}
-                  onClick={() => handlePageChange(totalPages)}
-                >
-                  <FontAwesomeIcon icon={faAnglesRight} />
-                </button>
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
 
             </div>
           )}

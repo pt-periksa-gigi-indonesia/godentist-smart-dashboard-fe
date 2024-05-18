@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pi
 import { checkToken } from '@/api/auth/validateAccessToken';
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData } from '@/api/lib/userHandler';
+import { getDoctors } from '@/api/lib/doctorHandler';
 
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
@@ -19,6 +20,29 @@ export default function DoctorDashboard() {
   const [chartType, setChartType] = useState('bar');
   const [dataType, setDataType] = useState('transactions');
   const router = useRouter();
+
+  const [totalDoctor, setTotalDoctor] = useState(0);
+  const [totalVerDoctor, setTotalVerifiedDoctor] = useState(0);
+  const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
+
+  const fetchDoctors = async () => {
+    try {
+      const data = await getDoctors({});
+      console.log('data:', data);
+      const verifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "verified");
+      setTotalVerifiedDoctor(verifiedDoctors.length);
+      const unverifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "unverified");
+      setTotalUnverifiedDoctor(unverifiedDoctors.length);
+      setTotalDoctor(data.results.length);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.error('Failed to fetch doctors:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
 
   async function fetchUserInfo() {
     try {
@@ -125,6 +149,8 @@ export default function DoctorDashboard() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Good Morning, Team!</h1>
           </div>
+
+
           <div className="grid grid-cols-4 gap-4">
             {/* Partner's Account */}
             <div className="col-span-2 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -134,14 +160,14 @@ export default function DoctorDashboard() {
                   <FaUserClock className="text-xl mr-4" />
                   <div>
                     <h3 className="text-md font-normal">Unverified</h3>
-                    <p className="text-xl font-bold">{dummyData.unverifiedDoctors} doctors</p>
+                    <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
                   </div>
                 </div>
                 <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
                   <FaUserCheck className="text-xl mr-4" />
                   <div>
                     <h3 className="text-md font-normal">Verified</h3>
-                    <p className="text-xl font-bold">{dummyData.verifiedDoctors} doctors</p>
+                    <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
                   </div>
                 </div>
                 <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
@@ -153,6 +179,8 @@ export default function DoctorDashboard() {
                 </div>
               </div>
             </div>
+
+
             {/* Patients */}
             <div className="col-span-1 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
               <div className="flex justify-between items-center mb-2">
