@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import Sidebar from "@/components/Navigation/Sidebar";
@@ -23,7 +22,6 @@ export default function DoctorsPage() {
     const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Fetch the doctor data with pagination and search
     const fetchDoctors = async () => {
         setIsLoading(true);
         try {
