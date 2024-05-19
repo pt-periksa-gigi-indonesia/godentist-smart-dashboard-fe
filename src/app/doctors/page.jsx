@@ -11,7 +11,6 @@ import { getDoctors} from '@/api/lib/doctorHandler';
 
 import DoctorTable from '@/components/Tables/DoctorTable';
 import { SkeletonDoctorTable } from '@/components/Tables/SkeletonDoctorTable';
-import Pagination from '@/components/Utilities/Pagination';
 
 export default function DoctorsPage() {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -30,6 +29,7 @@ export default function DoctorsPage() {
         try {
             const data = await getDoctors({ page: currentPage, name: searchTerm });
             setDoctors(data.results);
+            console.log(data.results);
             const verifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "verified");
             setTotalVerifiedDoctor(verifiedDoctors.length);
             const unverifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "unverified");
@@ -111,14 +111,12 @@ export default function DoctorsPage() {
                             doctors={doctors} 
                             searchTerm={searchTerm} 
                             handleSearchChange={handleSearchChange}
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            
                         />
                     )}
-
-                    <Pagination 
-                        currentPage={currentPage} 
-                        totalPages={totalPages} 
-                        onPageChange={handlePageChange} 
-                    />
 
                 </main>
             </div>

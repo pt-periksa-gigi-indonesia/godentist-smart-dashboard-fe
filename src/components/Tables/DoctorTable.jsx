@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { MoreHorizontal, ChevronDown } from 'lucide-react';
 
 import SearchBar from '@/components/Utilities/SearchBar';
+import Pagination from '../Utilities/Pagination';
 
 import {
     Table,
@@ -24,7 +25,7 @@ import {
     DropdownMenuCheckboxItem, // Import the DropdownMenuCheckboxItem component
 } from "@/components/ui/dropdown-menu"
 
-const DoctorTable = ({ doctors, searchTerm, handleSearchChange }) => {
+const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange }) => {
     const router = useRouter();
 
     const [filter, setFilter] = useState(null);
@@ -109,6 +110,8 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange }) => {
                     ))}
                 </TableBody>
             </Table>
+
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
         </div>
     );
 };
