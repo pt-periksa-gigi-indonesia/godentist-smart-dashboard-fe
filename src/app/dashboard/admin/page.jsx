@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { checkToken } from "@/api/auth/validateAccessToken";
 import { getUserRole } from "@/api/auth/cookiesHandler";
 import { getAllUsers, deleteUser, updateUser, updateUserRole } from "@/api/lib/userHandler";
-import Sidebar from "@/components/Navigation/Sidebar";
-import Navbar from "@/components/Navigation/Navbar";
+
 import SuccessModal from "@/components/Utilities/SuccesModal";
 
 import UserTable from "@/components/Tables/UserTable";
@@ -17,11 +16,9 @@ export default function Page() {
   const [totalPages, setTotalPages] = useState(1);
   const router = useRouter();
   const itemsPerPage = 8;
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
 
   async function fetchAllUsers(page, searchTerm = '') {
     setIsLoading(true);
@@ -77,7 +74,6 @@ export default function Page() {
     }
   }
 
-
   function closeModalOnSuccess() {
     setSuccessMessage(null);
   }
@@ -104,31 +100,19 @@ export default function Page() {
     }
   }
 
-
-  const toggleSidebar = () => {
-    setIsCollapsed(prev => !prev);
-  };
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-
   console.log('allUsers:', allUsers);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-
+    <>
       {successMessage && (
         <SuccessModal message={successMessage} onClose={closeModalOnSuccess} />
       )}
 
-      <Sidebar isCollapsed={isCollapsed} />
-      <div className={`flex-grow flex flex-col transition-all duration-300 ${isCollapsed ? 'ml-0' : 'ml-64'}`}>
-        <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
-
-
-        <div className="flex flex-col w-full p-6 mt-16">
+        <div className="flex flex-col w-full px-6 mt-16">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
           </div>
@@ -147,9 +131,7 @@ export default function Page() {
               handleDelete={handleDelete}
             />
           )}
-
-        </div>
       </div>
-    </div>
+    </>
   );
 }

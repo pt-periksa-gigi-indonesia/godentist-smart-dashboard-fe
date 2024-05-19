@@ -36,7 +36,7 @@ export default function Page() {
         setCookies(data);
         setErrorMessage("");
         setTimeout(() => {
-          router.push("/");
+          router.push("/dashboard");
         }, 500);
       } else {
         setErrorMessage(data.message || "Login failed. Please try again.");

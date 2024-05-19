@@ -1,103 +1,75 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData } from '@/api/lib/userHandler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faBell, faGear } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { deleteCookies } from '@/api/auth/cookiesHandler';
 
-const Navbar = ({ toggleSidebar, isCollapsed }) => {
+const Navbar = () => {
     const router = useRouter();
     const [userName, setUserName] = useState('');
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
-    const triggerRef = useRef(null);
+    const [userImage, setUserImage] = useState('');
 
     useEffect(() => {
-        async function fetchUserName() {
+        async function fetchUserData() {
             try {
                 const userId = await getUserId();
                 const userData = await getUserData(userId);
                 setUserName(userData.name);
+                setUserImage(userData.image);
             } catch (error) {
-                console.error('Error fetching user name:', error);
+                console.error('Error fetching user data:', error);
             }
         }
-        fetchUserName();
+        fetchUserData();
     }, []);
 
     const handleLogout = () => {
+        deleteCookies();
         router.push('/login');
     };
 
-    const toggleDropdown = () => {
-        setDropdownOpen(prev => !prev);
-    };
-
-    const handleClickOutside = (event) => {
-        if (
-            dropdownRef.current &&
-            !dropdownRef.current.contains(event.target) &&
-            !triggerRef.current.contains(event.target)
-        ) {
-            setDropdownOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        if (dropdownOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [dropdownOpen]);
-
     return (
-        <nav className={`bg-white fixed top-0 ${isCollapsed ? 'left-0' : 'left-64'} right-0 z-40 flex items-center justify-between p-4 h-16 transition-all duration-300`}>
+        <nav className="bg-white fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 h-16">
             <div className="flex items-center space-x-4">
-                <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-700">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
+                {/* Toggle button */}
             </div>
-            <div className="relative flex items-center space-x-4">
+            <div className="relative flex items-center space-x-4 mr-4">
                 <FontAwesomeIcon icon={faBell} className="text-gray-800 cursor-pointer text-xl pr-3" />
-                <span
-                    ref={triggerRef}
-                    onClick={toggleDropdown}
-                    className="text-gray-800 cursor-pointer flex items-center pr-3 border border-gray-300 rounded-md py-1 px-2 pl-4 hover:bg-gray-100"
-                >
-                    {userName}
-                    <FontAwesomeIcon icon={faChevronDown} className="pl-10 ml-2" />
-                </span>
-                <div
-                    ref={dropdownRef}
-                    className={`absolute right-0 mt-40 w-48 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-300 ${
-                        dropdownOpen ? 'opacity-100 max-h-60' : 'opacity-0 max-h-0'
-                    }`}
-                >
-                    {/* add the settings */}
-                    <Link href="/settings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 w-full">
-                        <FontAwesomeIcon icon={faGear} className="mr-2" />
-                        Settings
-                    </Link>
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 w-full"
-                    >
-                        <FontAwesomeIcon icon={faArrowRightFromBracket} className="mr-2" />
-                        Logout
-                    </button>
-                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={userImage} alt={userName} />
+                                <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-48" align="end" forceMount>
+                        <DropdownMenuItem asChild>
+                            <Link href="/dashboard/settings" className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <FontAwesomeIcon icon={faGear} className="mr-2" />
+                                Settings
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <FontAwesomeIcon icon={faArrowRightFromBracket} className="mr-2" />
+                            Logout
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </nav>
     );

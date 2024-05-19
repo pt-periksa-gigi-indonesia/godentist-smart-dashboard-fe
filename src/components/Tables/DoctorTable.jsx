@@ -31,7 +31,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
     const [filter, setFilter] = useState(null);
 
     const handleViewDetails = (doctorId) => {
-        router.push(`/doctors/details/${doctorId}`);
+        router.push(`/dashboard/doctors/details/${doctorId}`);
     };
 
     const handleChangeStatus = (doctorId) => {

@@ -9,30 +9,35 @@ export async function middleware(req) {
     url.pathname = '/login';
 
     const homeUrl = req.nextUrl.clone();
-    homeUrl.pathname = '/';
+    homeUrl.pathname = '/dashboard';
 
     const waitingUrl = req.nextUrl.clone();
     waitingUrl.pathname = '/waiting';
-
-    if (!isTokenValid && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/admin')) {
+    
+    if (!isTokenValid && (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/admin')) {
         return NextResponse.redirect(url.toString());
     } 
+    
     else if (isTokenValid && req.nextUrl.pathname === '/admin') {
         const role = await getUserRole(req);
         if (role !== 'master') {
             return NextResponse.redirect(homeUrl.toString());
         }
     }
-    else if (isTokenValid && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/settings')) {
+    else if (isTokenValid && (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/settings')) {
         const role = await getUserRole(req);
         if (role === 'user') {
             return NextResponse.redirect(waitingUrl.toString());
         }
+        else if (role === 'admin') {
+            return NextResponse.redirect(homeUrl.toString());
+        }
     }
+    
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/', '/admin', '/login', '/register', '/settings', '/waiting'], 
+    matcher: [ '/dashboard/:path*','/admin', '/login', '/register', '/settings', '/waiting'], 
 };

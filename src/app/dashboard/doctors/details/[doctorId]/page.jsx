@@ -13,8 +13,8 @@ export default function DoctorDetailPage() {
     const { doctorId } = params;
     const [doctor, setDoctor] = useState(null);
 
-     // Async function to fetch doctor data by ID
-     async function fetchDoctorById(doctorId) {
+    // Async function to fetch doctor data by ID
+    async function fetchDoctorById(doctorId) {
         try {
             const data = await getDoctorById(doctorId);
             setDoctor(data[0]);
@@ -26,7 +26,7 @@ export default function DoctorDetailPage() {
     // Fetch the doctor data when the component mounts or the doctorId changes
     useEffect(() => {
         fetchDoctorById(doctorId);
-        
+
     }, [doctorId]);
 
     console.log(doctor);
@@ -41,26 +41,23 @@ export default function DoctorDetailPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-white">
-            <Sidebar isCollapsed={isCollapsed} />
-            <div className={`flex-grow flex flex-col transition-all duration-300 ${isCollapsed ? 'ml-0' : 'ml-64'}`}>
-                <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
-                <main className="flex-grow p-6 mt-16">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Doctor Details</h1>
-                    {doctor ? (
+        <>
+            <main className="flex-grow p-6 mt-16">
+                <h1 className="text-2xl font-bold text-gray-800 mb-4">Doctor Details</h1>
+                {doctor ? (
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <div className="flex items-center mb-4">
                             {/* <img src={doctor.cardUrl || "/path/to/default-image.jpg"} alt={`${doctor.name || '-'}`} className="w-24 h-24 rounded-full mr-4" /> */}
                             <div>
-                                 <h2 className="text-gray-600 text-xl font-semibold">{doctor.name || '-'}</h2>  
-                                 <p className="text-gray-600">{doctor.specialization || '-'}</p> 
-                                 <p className="text-gray-600">{doctor.workPlace || '-'}</p> 
+                                <h2 className="text-gray-600 text-xl font-semibold">{doctor.name || '-'}</h2>
+                                <p className="text-gray-600">{doctor.specialization || '-'}</p>
+                                <p className="text-gray-600">{doctor.workPlace || '-'}</p>
                             </div>
                         </div>
 
                         <div className="mb-4">
-                             <h3 className="text-gray-600 text-lg font-semibold mb-2">Consultation Price</h3> 
-                             <p className="text-gray-600">{doctor.consultationPrice ? `Rp ${doctor.consultationPrice.toLocaleString()}` : '-'}</p> 
+                            <h3 className="text-gray-600 text-lg font-semibold mb-2">Consultation Price</h3>
+                            <p className="text-gray-600">{doctor.consultationPrice ? `Rp ${doctor.consultationPrice.toLocaleString()}` : '-'}</p>
                         </div>
 
                         <div className="mb-4 text-gray-600">
@@ -103,11 +100,10 @@ export default function DoctorDetailPage() {
                             <p><strong>Total Amount From Consultation:</strong> {doctor.totalAmountFromConsultation !== null ? `Rp ${doctor.totalAmountFromConsultation.toLocaleString()}` : '-'}</p>
                         </div>
                     </div>
-                    ) : (
-                        <p>Loading doctor information...</p>
-                    )}
-                </main>
-            </div>
-        </div>
+                ) : (
+                    <p>Loading doctor information...</p>
+                )}
+            </main>
+        </>
     )
 }
