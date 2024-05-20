@@ -1,8 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-
+import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
 import { getDoctorById } from "@/api/lib/doctorHandler";
@@ -12,8 +12,9 @@ export default function DoctorDetailPage() {
     const params = useParams();
     const { doctorId } = params;
     const [doctor, setDoctor] = useState(null);
+    const [viewType, setViewType] = useState('Chart');
+    const [chartType, setChartType] = useState('Bar');
 
-    // Async function to fetch doctor data by ID
     async function fetchDoctorById(doctorId) {
         try {
             const data = await getDoctorById(doctorId);
@@ -23,81 +24,181 @@ export default function DoctorDetailPage() {
         }
     }
 
-    // Fetch the doctor data when the component mounts or the doctorId changes
     useEffect(() => {
         fetchDoctorById(doctorId);
-
     }, [doctorId]);
-
-    console.log(doctor);
 
     const toggleSidebar = () => {
         setIsCollapsed(prev => !prev);
     };
-    if (doctor) {
-        console.log("Doctor Name:", doctor.name); // This will log the doctor's name once the state is updated
-    } else {
-        console.log("Doctor data is not yet loaded");
-    }
+
+    const statisticsData = [
+        { name: 'Clinic Patients', value: doctor?.clinicPatientsCount || 0 },
+        { name: 'Consultation Patients', value: doctor?.consultationPatientsCount || 0 },
+        { name: 'Clinic Revenue', value: doctor?.totalAmountFromClinic || 0 },
+        { name: 'Consultation Revenue', value: doctor?.totalAmountFromConsultation || 0 },
+    ];
+
+    const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042'];
+
+    const renderChart = () => {
+        switch (chartType) {
+            case 'Line':
+                return (
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={statisticsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                        </LineChart>
+                    </ResponsiveContainer>
+                );
+            case 'Pie':
+                return (
+                    <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                            <Pie
+                                data={statisticsData}
+                                dataKey="value"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={100}
+                                fill="#8884d8"
+                                label
+                            >
+                                {statisticsData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                );
+            case 'Bar':
+            default:
+                return (
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={statisticsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="value" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                );
+        }
+    };
+
+    const renderText = () => (
+        <div className="text-gray-800">
+            <p><strong>Clinic Patients Count:</strong> {doctor?.clinicPatientsCount !== null ? doctor.clinicPatientsCount : '-'}</p>
+            <p><strong>Consultation Patients Count:</strong> {doctor?.consultationPatientsCount !== null ? doctor.consultationPatientsCount : '-'}</p>
+            <p><strong>Total Amount From Clinic:</strong> {doctor?.totalAmountFromClinic !== null ? `Rp ${doctor.totalAmountFromClinic.toLocaleString()}` : '-'}</p>
+            <p><strong>Total Amount From Consultation:</strong> {doctor?.totalAmountFromConsultation !== null ? `Rp ${doctor.totalAmountFromConsultation.toLocaleString()}` : '-'}</p>
+        </div>
+    );
 
     return (
         <>
             <main className="flex-grow p-6 mt-16">
-                <h1 className="text-2xl font-bold text-gray-800 mb-4">Doctor Details</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Details</h1>
                 {doctor ? (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <div className="flex items-center mb-4">
-                            {/* <img src={doctor.cardUrl || "/path/to/default-image.jpg"} alt={`${doctor.name || '-'}`} className="w-24 h-24 rounded-full mr-4" /> */}
+                    <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="flex items-center mb-4 lg:mb-0">
+
+                            <div className="w-32 h-32 rounded-full mr-4 flex items-center justify-center bg-gray-200">
+                                <FaUser className="text-gray-500 text-6xl" />
+                            </div>
+
                             <div>
-                                <h2 className="text-gray-600 text-xl font-semibold">{doctor.name || '-'}</h2>
+                                <h2 className="text-gray-800 text-2xl font-semibold">{doctor.name || '-'}</h2>
                                 <p className="text-gray-600">{doctor.specialization || '-'}</p>
                                 <p className="text-gray-600">{doctor.workPlace || '-'}</p>
+                                <p className="text-gray-800">Consultation Price: {doctor.consultationPrice ? `Rp ${doctor.consultationPrice.toLocaleString()}` : '-'}</p>
                             </div>
                         </div>
 
-                        <div className="mb-4">
-                            <h3 className="text-gray-600 text-lg font-semibold mb-2">Consultation Price</h3>
-                            <p className="text-gray-600">{doctor.consultationPrice ? `Rp ${doctor.consultationPrice.toLocaleString()}` : '-'}</p>
-                        </div>
+                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-white p-6 rounded-lg shadow-md">
+                                <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
+                                    <FaCalendarAlt className="mr-2" />Work Schedule
+                                </h3>
+                                {doctor.DoctorWorkSchedule.length > 0 ? doctor.DoctorWorkSchedule.map((schedule) => (
+                                    <div key={schedule.id} className="border p-4 rounded-lg mb-2">
+                                        <p className="text-gray-800"><strong>Days:</strong> {schedule.fromDay || '-'} to {schedule.untilDay || '-'}</p>
+                                        <p className="text-gray-800"><strong>Hours:</strong> {schedule.fromHour || '-'} to {schedule.untilHour || '-'}</p>
+                                        <p className="text-gray-800"><strong>Description:</strong> {schedule.description || '-'}</p>
+                                        <p className="text-gray-800"><strong>Status:</strong> {schedule.status || '-'}</p>
+                                    </div>
+                                )) : <p className="text-gray-800">-</p>}
+                            </div>
 
-                        <div className="mb-4 text-gray-600">
-                            <h3 className="text-lg font-semibold mb-2">Work Schedule</h3>
-                            {doctor.DoctorWorkSchedule.length > 0 ? doctor.DoctorWorkSchedule.map((schedule) => (
-                                <div key={schedule.id} className="border p-4 rounded-lg mb-2">
-                                    <p className="text-gray-600"><strong>Days:</strong> {schedule.fromDay || '-'} to {schedule.untilDay || '-'}</p>
-                                    <p className="text-gray-600"><strong>Hours:</strong> {schedule.fromHour || '-'} to {schedule.untilHour || '-'}</p>
-                                    <p className="text-gray-600"><strong>Description:</strong> {schedule.description || '-'}</p>
-                                    <p className="text-gray-600"><strong>Status:</strong> {schedule.status || '-'}</p>
+                            <div className="bg-white p-6 rounded-lg shadow-md">
+                                <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
+                                    <FaChartBar className="mr-2" />Statistics
+                                </h3>
+                                <div className="flex items-center mb-4">
+                                    <div className="mr-4">
+                                        <label htmlFor="viewType" className="mr-2 text-gray-600">Select View Type:</label>
+                                        <select
+                                            id="viewType"
+                                            value={viewType}
+                                            onChange={(e) => setViewType(e.target.value)}
+                                            className="border border-gray-300 p-2 rounded"
+                                        >
+                                            <option value="Chart">Chart</option>
+                                            <option value="Text">Text</option>
+                                        </select>
+                                    </div>
+                                    {viewType === 'Chart' && (
+                                        <div>
+                                            <label htmlFor="chartType" className="mr-2 text-gray-600">Select Chart Type:</label>
+                                            <select
+                                                id="chartType"
+                                                value={chartType}
+                                                onChange={(e) => setChartType(e.target.value)}
+                                                className="border border-gray-300 p-2 rounded"
+                                            >
+                                                <option value="Bar">Bar Chart</option>
+                                                <option value="Line">Line Chart</option>
+                                                <option value="Pie">Pie Chart</option>
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
-                            )) : <p>-</p>}
-                        </div>
+                                {viewType === 'Chart' ? renderChart() : renderText()}
+                            </div>
 
-                        <div className="mb-4 text-gray-600">
-                            <h3 className="text-lg font-semibold mb-2">Experience</h3>
-                            {doctor.DoctorExperience.length > 0 ? doctor.DoctorExperience.map((experience) => (
-                                <div key={experience.id} className="border p-4 rounded-lg mb-2">
-                                    <p><strong>From Year:</strong> {experience.fromYear ? new Date(experience.fromYear).getFullYear() : '-'}</p>
-                                    <p><strong>Description:</strong> {experience.description || '-'}</p>
-                                </div>
-                            )) : <p>-</p>}
-                        </div>
+                            <div className="bg-white p-6 rounded-lg shadow-md">
+                                <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
+                                    <FaBriefcase className="mr-2" />Experience
+                                </h3>
+                                {doctor.DoctorExperience.length > 0 ? doctor.DoctorExperience.map((experience) => (
+                                    <div key={experience.id} className="border p-4 rounded-lg mb-2">
+                                        <p className="text-gray-800"><strong>From Year:</strong> {experience.fromYear ? new Date(experience.fromYear).getFullYear() : '-'}</p>
+                                        <p className="text-gray-800"><strong>Description:</strong> {experience.description || '-'}</p>
+                                    </div>
+                                )) : <p className="text-gray-800">-</p>}
+                            </div>
 
-                        <div className="mb-4 text-gray-600">
-                            <h3 className="text-lg font-semibold mb-2">Feedback</h3>
-                            {doctor.feedback.length > 0 ? doctor.feedback.map((feedback) => (
-                                <div key={feedback.id} className="border p-4 rounded-lg mb-2">
-                                    <p><strong>Message:</strong> {feedback.message || '-'}</p>
-                                    <p><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
-                                </div>
-                            )) : <p>-</p>}
-                        </div>
-
-                        <div className="mb-4 text-gray-600">
-                            <h3 className="text-lg font-semibold mb-2">Statistics</h3>
-                            <p><strong>Clinic Patients Count:</strong> {doctor.clinicPatientsCount !== null ? doctor.clinicPatientsCount : '-'}</p>
-                            <p><strong>Consultation Patients Count:</strong> {doctor.consultationPatientsCount !== null ? doctor.consultationPatientsCount : '-'}</p>
-                            <p><strong>Total Amount From Clinic:</strong> {doctor.totalAmountFromClinic !== null ? `Rp ${doctor.totalAmountFromClinic.toLocaleString()}` : '-'}</p>
-                            <p><strong>Total Amount From Consultation:</strong> {doctor.totalAmountFromConsultation !== null ? `Rp ${doctor.totalAmountFromConsultation.toLocaleString()}` : '-'}</p>
+                            <div className="bg-white p-6 rounded-lg shadow-md">
+                                <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
+                                    <FaComments className="mr-2" />Feedback
+                                </h3>
+                                {doctor.feedback.length > 0 ? doctor.feedback.map((feedback) => (
+                                    <div key={feedback.id} className="border p-4 rounded-lg mb-2">
+                                        <p className="text-gray-800"><strong>Message:</strong> {feedback.message || '-'}</p>
+                                        <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
+                                    </div>
+                                )) : <p className="text-gray-800">-</p>}
+                            </div>
                         </div>
                     </div>
                 ) : (
@@ -105,5 +206,5 @@ export default function DoctorDetailPage() {
                 )}
             </main>
         </>
-    )
+    );
 }

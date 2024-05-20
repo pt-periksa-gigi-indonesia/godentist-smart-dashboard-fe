@@ -44,9 +44,8 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
         router.push('/login');
     };
 
-
     return (
-        <nav className={`bg-white fixed ${isCollapsed ? 'left-0 lg:px-10 sm:px-4' : 'lg:left-64 md:left-0 sm:left-0'}  right-0 z-40 flex items-center justify-between p-4 h-16 transition-all duration-300`}>
+        <nav className={`bg-white fixed ${isCollapsed ? 'left-0 lg:px-10 sm:px-4' : 'lg:left-64 md:left-0 sm:left-0'} right-0 z-40 flex items-center justify-between p-4 h-16 transition-all duration-300`}>
             <div className="flex items-center space-x-4">
                 <button className={cn(`relative hidden lg:block`)} onClick={toggleSidebar}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -57,15 +56,16 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
                     <MobileSidebar />
                 </div>
             </div>
-            <div className="relative flex items-center space-x-4 lg:mr-0 sm:mr-4">
-                <FontAwesomeIcon icon={faBell} className="text-gray-800 cursor-pointer text-xl pr-3" />
+            <div className="relative flex items-center space-x-4 lg:mr-6 mt-4 sm:mr-4">
+                <FontAwesomeIcon icon={faBell} className="text-blue-dentist cursor-pointer text-xl pr-3" />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                            <Avatar className="h-8 w-8">
+                        <Button variant="ghost" className="relative flex items-center space-x-2 h-8 rounded-lg border border-gray-300 p-2 py-5 pl-4 pr-12">
+                            <Avatar className="h-7 w-7 ">
                                 <AvatarImage src={userImage} alt={userName} />
                                 <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
                             </Avatar>
+                            <span className="text-gray-800 font-medium text-md">{userName}</span>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-48" align="end" forceMount>

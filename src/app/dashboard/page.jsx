@@ -1,8 +1,7 @@
-
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaUserClock, FaUserCheck, FaClinicMedical, FaUserInjured, FaMoneyCheckAlt } from 'react-icons/fa';
+import { FaUserClock, FaUserCheck, FaClinicMedical, FaUserInjured, FaMoneyCheckAlt, FaCommentDots, FaStar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 import { checkToken } from '@/api/auth/validateAccessToken';
@@ -18,6 +17,7 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444'
 export default function DoctorDashboard() {
   const [chartType, setChartType] = useState('bar');
   const [dataType, setDataType] = useState('transactions');
+  const [greeting, setGreeting] = useState('');
   const router = useRouter();
 
   const [totalVerDoctor, setTotalVerifiedDoctor] = useState(0);
@@ -40,7 +40,15 @@ export default function DoctorDashboard() {
 
   useEffect(() => {
     fetchDoctors();
+    setGreeting(getGreeting());
   }, []);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  };
 
   async function fetchUserInfo() {
     try {
@@ -65,13 +73,12 @@ export default function DoctorDashboard() {
     authCheck();
   }, []);
 
-
   const fetchedData = {
-    doctorsStatus: [  
+    doctorsStatus: [
       { status: 'Unverified Doctors', total: totalUnverDoctor },
       { status: 'Verified Doctors', total: totalVerDoctor }
     ]
-  }; 
+  };
 
   const dummyData = {
     unverifiedDoctors: 5,
@@ -120,7 +127,7 @@ export default function DoctorDashboard() {
             <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="total" fill="#000000" />
+            <Bar dataKey="total" fill="#3a5fd9" />
           </BarChart>
         </ResponsiveContainer>
       );
@@ -141,118 +148,137 @@ export default function DoctorDashboard() {
   };
 
   return (
-        <main className="flex-grow px-6 mt-16">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Good Morning, Team!</h1>
-          </div>
+    <main className="flex-grow px-6 mt-16">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">
+          {greeting}, <span className="text-blue-dentist">Team!</span>
+        </h1>
+      </div>
 
-          <div className="grid grid-cols-4 gap-4">
-            {/* Partner's Account */}
-            <div className="col-span-2 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-md font-medium text-gray-800 mb-2">Partner's Account</h2>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                  <FaUserClock className="text-xl mr-4" />
-                  <div>
-                    <h3 className="text-md font-normal">Unverified</h3>
-                    <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
-                  </div>
-                </div>
-                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                  <FaUserCheck className="text-xl mr-4" />
-                  <div>
-                    <h3 className="text-md font-normal">Verified</h3>
-                    <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
-                  </div>
-                </div>
-                <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                  <FaClinicMedical className="text-xl mr-4" />
-                  <div>
-                    <h3 className="text-md font-normal">Total Clinics</h3>
-                    <p className="text-xl font-bold">{dummyData.totalClinics} clinics</p>
-                  </div>
-                </div>
+      <div className="grid grid-cols-4 gap-4">
+        {/* Partner's Account */}
+        <div className="col-span-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl border border-gray-200 shadow-sm">
+          <h2 className="text-md font-medium text-gray-100 mb-2">Partner's Account</h2>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
+              <FaUserClock className="text-xl ml-1 mr-4" />
+              <div>
+                <h3 className="text-md font-normal">Unverified</h3>
+                <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
               </div>
             </div>
-
-
-            {/* Patients */}
-            <div className="col-span-1 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-md font-medium text-gray-800">Total Patients</h2>
-                <FaUserInjured className="text-lg text-gray-400" />
-              </div>
-              <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
-                <div>
-                  <p className="text-2xl font-bold">{dummyData.totalPatients} people</p>
-                  <h3 className="text-sm text-gray-400 font-normal pt-1">+31 from last month</h3>
-                </div>
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
+              <FaUserCheck className="text-xl ml-1 mr-4" />
+              <div>
+                <h3 className="text-md font-normal">Verified</h3>
+                <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
               </div>
             </div>
-            {/* Transactions */}
-            <div className="col-span-1 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-md font-medium text-gray-800">Total Transactions</h2>
-                <FaMoneyCheckAlt className="text-lg text-gray-400" />
-              </div>
-              <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
-                <div>
-                  <p className="text-2xl font-bold">${dummyData.totalTransactions}</p>
-                  <h3 className="text-sm text-gray-400 font-normal pt-1">+26% from last month</h3>
-                </div>
-              </div>
-            </div>
-            {/* Overview */}
-            <div className="col-span-2 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-medium text-gray-800 pb-4">Overview</h2>
-                <div className="flex space-x-2">
-                  <select
-                    value={dataType}
-                    onChange={(e) => setDataType(e.target.value)}
-                    className="border border-gray-300 rounded p-1 text-gray-800"
-                  >
-                    <option value="transactions">Total Transactions</option>
-                    <option value="doctors">Doctor Status</option>
-                  </select>
-                  <select
-                    value={chartType}
-                    onChange={(e) => setChartType(e.target.value)}
-                    className="border border-gray-300 rounded p-1 text-gray-800"
-                  >
-                    <option value="bar">Bar Chart</option>
-                    <option value="pie">Pie Chart</option>
-                  </select>
-                </div>
-              </div>
-              {renderChart()}
-            </div>
-            {/* Feedback */}
-            <div className="col-span-1 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-lg font-medium text-gray-800 pb-4">Feedback</h2>
-              <div className="space-y-2">
-                {dummyData.feedback.map(feedback => (
-                  <div key={feedback.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-                    <p className="text-md text-gray-800 font-bold">{feedback.user}</p>
-                    <p className="text-sm text-gray-600">{feedback.feedback}</p>
-                    <p className="text-xs text-gray-400">{feedback.date}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Popular Services */}
-            <div className="col-span-1 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-lg font-medium text-gray-800 pb-4">Popular Services</h2>
-              <div className="space-y-2">
-                {dummyData.popularServices.map(service => (
-                  <div key={service.id} className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
-                    <p className="text-md text-gray-800 font-bold">{service.service}</p>
-                    <p className="text-sm text-gray-600">Number of times booked: {service.count}</p>
-                  </div>
-                ))}
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
+              <FaClinicMedical className="text-xl ml-1 mr-4" />
+              <div>
+                <h3 className="text-md font-normal">Total Clinics</h3>
+                <p className="text-xl font-bold">{dummyData.totalClinics} clinics</p>
               </div>
             </div>
           </div>
-        </main>
+        </div>
+
+        {/* Patients */}
+        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-md font-medium text-gray-800">Total Patients</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaUserInjured className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
+            <div>
+              <p className="text-2xl font-bold">{dummyData.totalPatients} people</p>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+31 from last month</h3>
+            </div>
+          </div>
+        </div>
+
+        {/* Transactions */}
+        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-md font-medium text-gray-800">Total Transactions</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaMoneyCheckAlt className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
+            <div>
+              <p className="text-2xl font-bold">${dummyData.totalTransactions}</p>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+26% from last month</h3>
+            </div>
+          </div>
+        </div>
+
+        {/* Overview */}
+        <div className="col-span-2 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-medium text-gray-800 pb-4">Overview</h2>
+            <div className="flex space-x-2">
+              <select
+                value={dataType}
+                onChange={(e) => setDataType(e.target.value)}
+                className="border border-gray-300 rounded p-1 text-gray-800"
+              >
+                <option value="transactions">Total Transactions</option>
+                <option value="doctors">Doctor Status</option>
+              </select>
+              <select
+                value={chartType}
+                onChange={(e) => setChartType(e.target.value)}
+                className="border border-gray-300 rounded p-1 text-gray-800"
+              >
+                <option value="bar">Bar Chart</option>
+                <option value="pie">Pie Chart</option>
+              </select>
+            </div>
+          </div>
+          {renderChart()}
+        </div>
+        
+        {/* Feedback */}
+        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-medium text-gray-800">Feedback</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaCommentDots className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            {dummyData.feedback.map(feedback => (
+              <div key={feedback.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <p className="text-md text-gray-800 font-bold">{feedback.user}</p>
+                <p className="text-sm text-gray-600">{feedback.feedback}</p>
+                <p className="text-xs text-blue-dentist">{feedback.date}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Popular Services */}
+        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-medium text-gray-800">Popular Services</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaStar className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            {dummyData.popularServices.map(service => (
+              <div key={service.id} className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <p className="text-md text-gray-800 font-bold">{service.service}</p>
+                <p className="text-sm text-blue-dentist">Number of times booked: {service.count}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
