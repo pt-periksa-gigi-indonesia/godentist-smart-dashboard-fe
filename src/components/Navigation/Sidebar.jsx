@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 
-const Sidebar = ({}) => {
+const Sidebar = ({isCollapsed}) => {
     const [user_role, setRole] = useState('');
     
     useEffect(() => {
@@ -15,8 +15,8 @@ const Sidebar = ({}) => {
     }, []);
 
     return (
-        <nav className={cn(`relative hidden border-r pt-16 lg:block w-72 h-full top-0`)}> 
-            <aside className={`fixed shadow-inner border flex flex-col h-full w-64 z-50 top-0 left-0`}>
+        <nav className={cn(`relative hidden border-r pt-16 lg:block ${isCollapsed ? 'w-0' : 'w-64'} h-full top-0 `)}> 
+            <aside className={`fixed shadow-inner border flex flex-col h-full ${isCollapsed ? 'w-0 overflow-hidden' : 'w-64'} z-50 top-0 left-0`}>
                 <div className="pt-7 px-7 flex justify-center">
                     <img
                         src="/static/images/godentist_logo.jpeg"

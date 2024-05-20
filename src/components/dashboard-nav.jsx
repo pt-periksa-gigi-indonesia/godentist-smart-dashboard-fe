@@ -12,7 +12,7 @@ export function DashboardNav({ items, setOpen }) {
   }
 
   return (
-    <nav className="grid items-start gap-2">
+    <nav className="grid items-start gap-4">
       {items.map((item, index) => (
         item.href && (
           <Link
@@ -24,7 +24,7 @@ export function DashboardNav({ items, setOpen }) {
           >
             <span
               className={cn(
-                "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                "group flex items-center rounded-md p-4 text-sm font-medium hover:bg-blue-dentist hover:text-white",
                 path === item.href ? "bg-accent" : "transparent",
                 item.disabled && "cursor-not-allowed opacity-80"
               )}
