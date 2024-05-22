@@ -31,10 +31,8 @@ const Sidebar = ({isCollapsed}) => {
                         <Link href="/dashboard/admin" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Users</Link>
                     )}
                     <Link href="/dashboard/doctors" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist  hover:text-white rounded-lg">Doctors</Link>
-                    {/* <Link href="/patients" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Patients</Link> */}
-                    <Link href="/dashboard/transactions" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Transactions</Link>
-                    <Link href="/dashboard//feedbacks" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Feedbacks</Link>
-                    <Link href="/dashboard//recipes" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Service</Link>
+                    <Link href="/dashboard/clinics" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Clinics</Link>
+                    <Link href="/dashboard/feedbacks" className="block p-4 text-gray-800 font-medium hover:bg-blue-dentist hover:text-white rounded-lg">Feedbacks</Link>
                 </nav>
             </aside>
         </nav>
