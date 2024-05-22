@@ -46,18 +46,18 @@ export default function ClinicsPage() {
                     <h1 className="text-2xl font-bold text-gray-800">Manage Clinics</h1>
                 </div>
 
-                <div className="col-span-2 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="col-span-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
                     <div className="grid grid-cols-2 gap-2">
-                        <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                            <FaHospital className="text-xl mr-4" />
+                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
+                            <FaHospital className="text-xl ml-4 mr-4" />
                             <div>
                                 <h3 className="text-md font-normal">Total Clinics</h3>
                                 <p className="text-xl font-bold">{totalClinics} clinics</p>
                             </div>
                         </div>
 
-                        <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                            <FaMoneyCheckAlt className="text-xl mr-4" />
+                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
+                            <FaMoneyCheckAlt className="text-xl ml-4 mr-4" />
                             <div>
                                 <h3 className="text-md font-normal">Total Transactions</h3>
                                 <p className="text-xl font-bold">{totalTransactions} transactions</p>

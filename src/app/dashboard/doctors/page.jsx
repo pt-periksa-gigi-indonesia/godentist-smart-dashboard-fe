@@ -63,25 +63,25 @@ export default function DoctorsPage() {
                     <h1 className="text-2xl font-bold text-gray-800">Manage Doctors</h1>
                 </div>
 
-                <div className="col-span-2 p-4  bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="col-span-2 p-4  bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
                     <div className="grid grid-cols-3 gap-2">
-                        <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                            <FaUser className="text-xl mr-4" />
+                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
+                            <FaUser className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Total Doctor</h3>
                                 <p className="text-xl font-bold">{totalDoctor} doctors</p>
                             </div>
                         </div>
 
-                        <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                            <FaUserClock className="text-xl mr-4" />
+                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
+                            <FaUserClock className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Unverified</h3>
                                 <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
                             </div>
                         </div>
-                        <div className="p-2 bg-white text-gray-800 rounded-md flex items-center">
-                            <FaUserCheck className="text-xl mr-4" />
+                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
+                            <FaUserCheck className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Verified</h3>
                                 <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
