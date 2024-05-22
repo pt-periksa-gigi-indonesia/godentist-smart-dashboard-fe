@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, ChevronDown } from 'lucide-react';
+import { ChevronDown, Edit } from 'lucide-react';
 
 import SearchBar from '@/components/Utilities/SearchBar';
 import Pagination from '../Utilities/Pagination';
@@ -22,7 +22,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    DropdownMenuCheckboxItem, // Import the DropdownMenuCheckboxItem component
+    DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu"
 
 const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange }) => {
@@ -93,7 +93,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="ghost" className="h-8 w-8 p-0">
-                                            <MoreHorizontal className="h-4 w-4" />
+                                            <Edit className="h-4 w-4" />
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
