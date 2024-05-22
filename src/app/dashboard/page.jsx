@@ -120,6 +120,8 @@ export default function DoctorDashboard() {
 
   const renderChart = () => {
     const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : fetchedData.doctorsStatus;
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; // Define your colors for the pie chart
+
     if (chartType === 'bar') {
       return (
         <ResponsiveContainer width="100%" height={300}>
@@ -127,7 +129,7 @@ export default function DoctorDashboard() {
             <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="total" fill="#3a5fd9" />
+            <Bar dataKey="total" fill="#3a5fd9" radius={[10, 10, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       );
@@ -146,6 +148,7 @@ export default function DoctorDashboard() {
       );
     }
   };
+
 
   return (
     <main className="flex-grow px-6 mt-16">
@@ -241,7 +244,7 @@ export default function DoctorDashboard() {
           </div>
           {renderChart()}
         </div>
-        
+
         {/* Feedback */}
         <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
@@ -260,7 +263,7 @@ export default function DoctorDashboard() {
             ))}
           </div>
         </div>
-        
+
         {/* Popular Services */}
         <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
