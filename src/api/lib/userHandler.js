@@ -187,3 +187,75 @@ export async function verifyEmail(){
     }
 }
 
+// Sending forgot password email to user
+export async function forgotPassword(email){
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/forgot-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error sending forgot password email:', error);
+        throw error;
+    }
+}
+
+// Reset user password with token
+export async function resetPassword(token, password){
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/reset-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ password }),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        throw error;
+    }
+}
+
+export async function createUser(user) {
+    const cookies = await getCookies();
+    const access_token = cookies.access_token?.value;
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw error;
+    }
+}

@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Carousel from "@/components/Utilities/Carousel";
 
+import { forgotPassword } from "@/api/lib/userHandler";
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,22 +23,12 @@ export default function ForgotPassword() {
     const body = JSON.stringify({ email });
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: body
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setSuccessMessage("Password reset instructions have been sent to your email.");
-        setErrorMessage("");
-        setEmail('');
-      } else {
-        setErrorMessage(data.message || "Failed to send reset instructions. Please try again.");
-      }
+      await forgotPassword(email);
+      setSuccessMessage("Reset instructions sent to your email. Please check your inbox.");
+      setErrorMessage('');
     } catch (error) {
-      setErrorMessage("An unexpected error occurred: " + error.message);
+      setErrorMessage(error.message);
+      setSuccessMessage('');
     } finally {
       setIsLoading(false);
     }
