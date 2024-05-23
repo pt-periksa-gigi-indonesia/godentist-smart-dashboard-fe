@@ -19,30 +19,50 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
-    DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu"
+
+import Modal from '@/components/Utilities/Modal';
 
 const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange }) => {
     const router = useRouter();
 
     const [filter, setFilter] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
 
     const handleViewDetails = (doctorId) => {
         router.push(`/dashboard/doctors/details/${doctorId}`);
     };
 
-    const handleChangeStatus = (doctorId) => {
-        console.log(`Change status for doctor ${doctorId}`);
+    const handleChangeStatus = (doctor) => {
+        setSelectedDoctor(doctor);
+        setIsModalOpen(true);
     };
 
     const handleFilterChange = (filterValue) => {
         setFilter(filterValue);
     };
 
-    // Filter doctors based on search term and filter
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedDoctor(null);
+    };
+
+    const handleStatusUpdate = (status) => {
+        // Logic to update the doctor's status
+        console.log(`Updating status to ${status}...`);
+        // After updating the status, close the modal
+        closeModal();
+    };
+
+    const dummyOCRData = {
+        name: 'John Doe',
+        registrationNumber: '123456789',
+        documentType: 'Medical License',
+        documentPhoto: 'https://i.pinimg.com/736x/e1/91/d2/e191d205da482b7433b9edb62c921a4d.jpg'
+    };
+
     const filteredDoctors = doctors.filter(doctor => {
         const includesSearchTerm = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
         const passesFilter = !filter || doctor.verificationStatus === filter;
@@ -100,7 +120,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                         <DropdownMenuItem onClick={() => handleViewDetails(doctor.id)}>
                                             View Doctor Details
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleChangeStatus(doctor.id)}>
+                                        <DropdownMenuItem onClick={() => handleChangeStatus(doctor)}>
                                             Change Doctor Status
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
@@ -112,6 +132,39 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
             </Table>
 
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+
+            {isModalOpen && (
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <h2 className="text-xl font-semibold mb-4">Doctor Details</h2>
+                    <div className="mb-4">
+                        <img src={dummyOCRData.documentPhoto} alt="Document" className="w-40 h-auto mx-auto rounded-md" />
+                    </div>
+                    <p><strong>Documents:</strong></p>
+                    <ul className="mb-4">
+                        <li>Document Type: {dummyOCRData.documentType}</li>
+                        <li>Name: {dummyOCRData.name}</li>
+                        <li>Registration Number: {dummyOCRData.registrationNumber}</li>
+                    </ul>
+                    <p><strong>Status:</strong> {selectedDoctor.verificationStatus}</p>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            >
+                                Change Status
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleStatusUpdate('verified')}>
+                                Verify
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleStatusUpdate('unverified')}>
+                                Unverify
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </Modal>
+            )}
         </div>
     );
 };
