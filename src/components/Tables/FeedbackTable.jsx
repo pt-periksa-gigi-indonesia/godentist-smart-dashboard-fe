@@ -1,32 +1,124 @@
-// components/Tables/FeedbackTable.js
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { ChevronDown, Edit } from 'lucide-react';
 
-export default function FeedbackTable({ feedbacks }) {
+import SearchBar from '@/components/Utilities/SearchBar';
+import Pagination from '../Utilities/Pagination';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+
+
+export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange,currentPage, totalPages, onPageChange }) {
+    const router = useRouter();
+    const [sortOrder, setSortOrder] = useState("ascending");
+
+     // Function to handle sorting change
+     const handleSortChange = (order) => {
+        setSortOrder(order);
+    };
+
+    // Filter and search feedbacks
+    const filteredFeedbacks = feedbacks.filter(feedback => {
+        const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = filter === 'all' || feedback.type === filter;
+        return matchesSearch && matchesFilter;
+    });
+
     return (
-        <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                    <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <div>
+            <div className="flex py-4">
+            <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />
+                
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="ml-auto">
+                            Filter <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => onFilterChange("all")}>
+                            Show All
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onFilterChange("doctor")}>
+                            Filter by Doctor
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onFilterChange("clinic")}>
+                            Filter by Clinic
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="ml-4">
+                            Sort <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleSortChange("ascending")}>
+                            Newest
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleSortChange("descending")}>
+                            Oldest
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            
+            
+            <Table>
+                <TableHeader className="bg-gray-50 border border-gray-200">
+                    <TableRow>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            No.
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Recipient
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Feedback
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {feedbacks.map((feedback) => (
-                        <tr key={feedback.id}>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{feedback.recipient}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{feedback.message}</div>
-                            </td>
-                        </tr>
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {filteredFeedbacks.map((feedback, index) => (
+                        <TableRow key={feedback.id}>
+                            <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{index + 1}</div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{feedback.name}</div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{feedback.feedback}</div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{new Date(feedback.createdAt).toLocaleString()}</div>
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
+
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
         </div>
     );
 }

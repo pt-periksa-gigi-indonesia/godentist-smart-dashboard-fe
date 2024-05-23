@@ -27,6 +27,7 @@ const UserTable = ({
     currentPage,
     totalPages,
     onPageChange,
+    itemsPerPage,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -125,7 +126,9 @@ const UserTable = ({
                 <TableBody>
                     {filteredUsers.map((user, index) => (
                         <TableRow key={user.id}>
-                            <TableCell className="font-medium">{index + 1}</TableCell>
+                            <TableCell className="font-medium">
+                                {index + 1 + itemsPerPage * (currentPage - 1)}
+                            </TableCell>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>

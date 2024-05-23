@@ -124,6 +124,7 @@ export default function Page() {
               users={allUsers}
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
+              itemsPerPage={itemsPerPage}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}

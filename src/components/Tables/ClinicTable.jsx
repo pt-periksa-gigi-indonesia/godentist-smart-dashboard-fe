@@ -11,7 +11,7 @@ export default function ClinicTable({ clinics }) {
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Clinic Name
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Total Transactions
                         </th>
                         <th scope="col" className="relative px-6 py-3">
@@ -25,11 +25,11 @@ export default function ClinicTable({ clinics }) {
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">{clinic.name}</div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{clinic.transactions}</div>
+                            <td className="px-6 py-4 whitespace-nowrap text-center">
+                                <div className="text-sm text-gray-900 text-center">{clinic.transactions}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <Link href={`/clinics/${clinic.id}`} className="text-blue-600 hover:text-blue-900">
+                                <Link href={`/dashboard/clinics/details/${clinic.id}`} className="text-blue-600 hover:text-blue-900">
                                     View Details
                                 </Link>
                             </td>

@@ -8,6 +8,7 @@ import { checkToken } from '@/api/auth/validateAccessToken';
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData } from '@/api/lib/userHandler';
 import { getDoctors } from '@/api/lib/doctorHandler';
+import { getClinics } from '@/api/lib/clinicHandler';
 
 import Sidebar from "@/components/Navigation/Sidebar";
 import Navbar from "@/components/Navigation/Navbar";
@@ -150,6 +151,36 @@ export default function DoctorDashboard() {
   };
 
 
+  const [clinics, setClinics] = useState([]);
+  const [totalClinics, setTotalClinics] = useState(0);
+  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchClinics = async () => {
+      setIsLoading(true);
+      try {
+          const data = await getClinics();
+          setClinics(data.results);
+          const test = data.results[0].id;
+          console.log(test);
+          const clinicsData = data.results;
+          console.log(data);
+          setTotalClinics(data.totalResults);
+      } catch (error) {
+          console.error('Failed to fetch clinics:', error);
+      }
+      finally {
+          setIsLoading(false);
+      }
+
+  }
+
+  useEffect(() => {
+      fetchClinics();
+  }, []);
+
+
+
   return (
     <main className="flex-grow px-6 mt-16">
       <div className="flex justify-between items-center mb-6">
@@ -181,7 +212,7 @@ export default function DoctorDashboard() {
               <FaClinicMedical className="text-xl ml-1 mr-4" />
               <div>
                 <h3 className="text-md font-normal">Total Clinics</h3>
-                <p className="text-xl font-bold">{dummyData.totalClinics} clinics</p>
+                <p className="text-xl font-bold">{totalClinics} clinics</p>
               </div>
             </div>
           </div>

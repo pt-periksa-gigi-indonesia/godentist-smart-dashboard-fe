@@ -28,3 +28,4 @@ export async function getUserRole() {
     const role = cookies().get('role');
     return role.value;
 }
+

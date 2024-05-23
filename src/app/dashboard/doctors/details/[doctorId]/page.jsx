@@ -3,8 +3,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import Sidebar from "@/components/Navigation/Sidebar";
-import Navbar from "@/components/Navigation/Navbar";
 import { getDoctorById } from "@/api/lib/doctorHandler";
 
 export default function DoctorDetailPage() {

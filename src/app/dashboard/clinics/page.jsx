@@ -1,13 +1,11 @@
 "use client";
 import { useEffect, useState } from 'react';
-
-import Sidebar from "@/components/Navigation/Sidebar";
-import Navbar from "@/components/Navigation/Navbar";
-
 import { FaHospital, FaMoneyCheckAlt } from 'react-icons/fa';
 
 import ClinicTable from '@/components/Tables/ClinicTable';
 import { SkeletonClinicTable } from '@/components/Tables/SkeletonClinicTable';
+
+import { getClinics, getClinicTransactions } from '@/api/lib/clinicHandler';
 
 export default function ClinicsPage() {
     const [clinics, setClinics] = useState([]);
@@ -18,22 +16,42 @@ export default function ClinicsPage() {
     const fetchClinics = async () => {
         setIsLoading(true);
         try {
-            // Dummy data
-            const data = [
-                { id: 1, name: "Clinic A", transactions: 150 },
-                { id: 2, name: "Clinic B", transactions: 200 },
-                { id: 3, name: "Clinic C", transactions: 250 },
-            ];
-            setClinics(data);
-            setTotalClinics(data.length);
-            setTotalTransactions(data.reduce((sum, clinic) => sum + clinic.transactions, 0));
+            const data = await getClinics();
+            setClinics(data.results);
+            const test = data.results[0].id;
+            console.log(test);
+            const clinicsData = data.results;
+            console.log(data);
+            setTotalClinics(data.totalResults);
+           
+            const transactionsData = await Promise.all(data.results.map(async (clinic) => {
+                try {
+                    const { totalAmountClinic } = await getClinicTransactions(clinic.id);
+                    return {
+                        ...clinic,
+                        transactions: totalAmountClinic
+                    };
+                } catch (transactionError) {
+                    console.error(`Failed to fetch transactions for clinic ${clinic.id}:`, transactionError);
+                    return {
+                        ...clinic,
+                        transactions: 0 // Set default value if fetching transactions fails
+                    };
+                }
+            }));
+
+            setClinics(transactionsData);
+            setTotalTransactions(transactionsData.reduce((sum, clinic) => sum + clinic.transactions, 0));
+
+            console.log(transactionsData);
         } catch (error) {
             console.error('Failed to fetch clinics:', error);
         }
         finally {
             setIsLoading(false);
         }
-    };
+
+    }
 
     useEffect(() => {
         fetchClinics();
