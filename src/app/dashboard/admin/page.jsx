@@ -27,16 +27,16 @@ export default function Page() {
   async function fetchAllUsers(page, searchTerm = '') {
     setIsLoading(true);
     try {
+      const data = await getAllUsers()
       const { results, totalPages } = await getAllUsers({
         limit: itemsPerPage,
         page,
         name: searchTerm,
       });
+      const adminsCount = data.rolesCount[0].count;
+      const usersCount = data.rolesCount[1].count;
       setAllUsers(results);
       setTotalPages(Math.ceil(totalPages));
-
-      const adminsCount = results.filter(user => user.role === 'admin').length;
-      const usersCount = results.length - adminsCount;
       setTotalAdmins(adminsCount);
       setTotalUsers(usersCount);
 
@@ -113,8 +113,6 @@ export default function Page() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
-  console.log('allUsers:', allUsers);
 
   return (
     <>

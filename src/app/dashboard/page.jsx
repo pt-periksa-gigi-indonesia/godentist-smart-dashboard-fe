@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaUserClock, FaUserCheck, FaClinicMedical, FaUserInjured, FaMoneyCheckAlt, FaCommentDots, FaStar } from 'react-icons/fa';
+import { FaUserInjured, FaMoneyCheckAlt, FaCommentDots, FaStar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 import { checkToken } from '@/api/auth/validateAccessToken';
@@ -11,6 +11,9 @@ import { getDoctors } from '@/api/lib/doctorHandler';
 import { getClinics } from '@/api/lib/clinicHandler';
 
 import PartnerStats from '@/components/cards/PartnerAcc';
+import FeedbackCard from '@/components/cards/FeedbackCard';
+
+import { getClinicFeedbacks, getDoctorFeedbacks } from '@/api/lib/feedbacksHandler';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444', '#ffa07a', '#dda0dd', '#8b0000', '#00bfff', '#228b22', '#6a5acd'];
 
@@ -22,6 +25,23 @@ export default function DoctorDashboard() {
 
   const [totalVerDoctor, setTotalVerifiedDoctor] = useState(0);
   const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
+
+  const [feedbackData, setFeedbackData] = useState([]);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+        try {
+            const clinicFeedbacks = await getClinicFeedbacks();
+            const doctorFeedbacks = await getDoctorFeedbacks();
+            const concatenatedFeedbacks = [...clinicFeedbacks.results, ...doctorFeedbacks.results];
+            setFeedbackData(concatenatedFeedbacks);
+        } catch (error) {
+            console.error('Failed to fetch feedbacks:', error);
+        }
+    };
+
+    fetchFeedbacks();
+}, []);
 
   const fetchDoctors = async () => {
     try {
@@ -152,7 +172,7 @@ export default function DoctorDashboard() {
 
   const [clinics, setClinics] = useState([]);
   const [totalClinics, setTotalClinics] = useState(0);
-  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [totalAmountTransactions, setTotalTransactions] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchClinics = async () => {
@@ -160,10 +180,9 @@ export default function DoctorDashboard() {
     try {
       const data = await getClinics();
       setClinics(data.results);
-      const test = data.results[0].id;
-      console.log(test);
+      const totalAmountTransactions = data.totalAmountTransactions;
+      setTotalTransactions(totalAmountTransactions);
       const clinicsData = data.results;
-      console.log(data);
       setTotalClinics(data.totalResults);
     } catch (error) {
       console.error('Failed to fetch clinics:', error);
@@ -222,7 +241,8 @@ export default function DoctorDashboard() {
           </div>
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
-              <p className="text-2xl font-bold">${dummyData.totalTransactions}</p>
+              {/* dalam rupiah */}
+              <p className="text-2xl font-bold">Rp {totalAmountTransactions}</p>
               <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+26% from last month</h3>
             </div>
           </div>
@@ -255,7 +275,7 @@ export default function DoctorDashboard() {
         </div>
 
         {/* Feedback */}
-        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        {/* <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-medium text-gray-800">Feedback</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -271,7 +291,9 @@ export default function DoctorDashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
+
+        <FeedbackCard feedback={feedbackData} />
 
         {/* Popular Services */}
         <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
