@@ -1,15 +1,13 @@
 "use client";
 import { useEffect, useState } from 'react';
-
-import Sidebar from "@/components/Navigation/Sidebar";
-import Navbar from "@/components/Navigation/Navbar";
-
 import { FaUserClock, FaUserCheck, FaUser } from 'react-icons/fa';
 
 import { getDoctors } from '@/api/lib/doctorHandler';
 
 import DoctorTable from '@/components/Tables/DoctorTable';
 import { SkeletonDoctorTable } from '@/components/Tables/SkeletonDoctorTable';
+
+import DoctorStats from '@/components/cards/DoctorStats';
 
 export default function DoctorsPage() {
     const [doctors, setDoctors] = useState([]);

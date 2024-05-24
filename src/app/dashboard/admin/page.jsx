@@ -10,6 +10,8 @@ import SuccessModal from "@/components/Utilities/SuccesModal";
 import UserTable from "@/components/Tables/UserTable";
 import { SkeletonUserTable } from "@/components/Tables/SkeletonUserTable";
 
+import UserRoleStats from "@/components/cards/UserRoleStats";
+
 export default function Page() {
   const [allUsers, setAllUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +21,8 @@ export default function Page() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalAdmins, setTotalAdmins] = useState(0);
 
   async function fetchAllUsers(page, searchTerm = '') {
     setIsLoading(true);
@@ -30,6 +34,12 @@ export default function Page() {
       });
       setAllUsers(results);
       setTotalPages(Math.ceil(totalPages));
+
+      const adminsCount = results.filter(user => user.role === 'admin').length;
+      const usersCount = results.length - adminsCount;
+      setTotalAdmins(adminsCount);
+      setTotalUsers(usersCount);
+
     } catch (error) {
       console.error("Error fetching all users:", error);
     } finally {
@@ -116,6 +126,11 @@ export default function Page() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
           </div>
+
+          <UserRoleStats
+            totalUsers={totalUsers}
+            totalAdmins={totalAdmins}
+          />
 
           {isLoading ? (
             <SkeletonUserTable />

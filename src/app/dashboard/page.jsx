@@ -10,8 +10,7 @@ import { getUserData } from '@/api/lib/userHandler';
 import { getDoctors } from '@/api/lib/doctorHandler';
 import { getClinics } from '@/api/lib/clinicHandler';
 
-import Sidebar from "@/components/Navigation/Sidebar";
-import Navbar from "@/components/Navigation/Navbar";
+import PartnerStats from '@/components/cards/PartnerAcc';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444', '#ffa07a', '#dda0dd', '#8b0000', '#00bfff', '#228b22', '#6a5acd'];
 
@@ -121,7 +120,7 @@ export default function DoctorDashboard() {
 
   const renderChart = () => {
     const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : fetchedData.doctorsStatus;
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; // Define your colors for the pie chart
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; 
 
     if (chartType === 'bar') {
       return (
@@ -157,26 +156,26 @@ export default function DoctorDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchClinics = async () => {
-      setIsLoading(true);
-      try {
-          const data = await getClinics();
-          setClinics(data.results);
-          const test = data.results[0].id;
-          console.log(test);
-          const clinicsData = data.results;
-          console.log(data);
-          setTotalClinics(data.totalResults);
-      } catch (error) {
-          console.error('Failed to fetch clinics:', error);
-      }
-      finally {
-          setIsLoading(false);
-      }
+    setIsLoading(true);
+    try {
+      const data = await getClinics();
+      setClinics(data.results);
+      const test = data.results[0].id;
+      console.log(test);
+      const clinicsData = data.results;
+      console.log(data);
+      setTotalClinics(data.totalResults);
+    } catch (error) {
+      console.error('Failed to fetch clinics:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
 
   }
 
   useEffect(() => {
-      fetchClinics();
+    fetchClinics();
   }, []);
 
 
@@ -191,32 +190,11 @@ export default function DoctorDashboard() {
 
       <div className="grid grid-cols-4 gap-4">
         {/* Partner's Account */}
-        <div className="col-span-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl border border-gray-200 shadow-sm">
-          <h2 className="text-md font-medium text-gray-100 mb-2">Partner's Account</h2>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
-              <FaUserClock className="text-xl ml-1 mr-4" />
-              <div>
-                <h3 className="text-md font-normal">Unverified</h3>
-                <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
-              </div>
-            </div>
-            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
-              <FaUserCheck className="text-xl ml-1 mr-4" />
-              <div>
-                <h3 className="text-md font-normal">Verified</h3>
-                <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
-              </div>
-            </div>
-            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center">
-              <FaClinicMedical className="text-xl ml-1 mr-4" />
-              <div>
-                <h3 className="text-md font-normal">Total Clinics</h3>
-                <p className="text-xl font-bold">{totalClinics} clinics</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PartnerStats
+          totalUnverDoctor={totalUnverDoctor}
+          totalVerDoctor={totalVerDoctor}
+          totalClinics={totalClinics}
+        />
 
         {/* Patients */}
         <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
