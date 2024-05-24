@@ -20,32 +20,33 @@ export default function ClinicsPage() {
         try {
             const data = await getClinics();
             setClinics(data.results);
-            const test = data.results[0].id;
-            console.log(test);
-            const clinicsData = data.results;
-            console.log(data);
+            // console.log(data.results);
+            // const test = data.results[0].id;
+            // console.log(test);
+            // const clinicsData = data.results;
+            // console.log(data);
             setTotalClinics(data.totalResults);
            
-            const transactionsData = await Promise.all(data.results.map(async (clinic) => {
-                try {
-                    const { totalAmountClinic } = await getClinicTransactions(clinic.id);
-                    return {
-                        ...clinic,
-                        transactions: totalAmountClinic
-                    };
-                } catch (transactionError) {
-                    console.error(`Failed to fetch transactions for clinic ${clinic.id}:`, transactionError);
-                    return {
-                        ...clinic,
-                        transactions: 0 // Set default value if fetching transactions fails
-                    };
-                }
-            }));
+            // const transactionsData = await Promise.all(data.results.map(async (clinic) => {
+            //     try {
+            //         const { totalAmountClinic } = await getClinicTransactions(clinic.id);
+            //         return {
+            //             ...clinic,
+            //             transactions: totalAmountClinic
+            //         };
+            //     } catch (transactionError) {
+            //         console.error(`Failed to fetch transactions for clinic ${clinic.id}:`, transactionError);
+            //         return {
+            //             ...clinic,
+            //             transactions: "empty"
+            //         };
+            //     }
+            // }));
 
-            setClinics(transactionsData);
-            setTotalTransactions(transactionsData.reduce((sum, clinic) => sum + clinic.transactions, 0));
+            // setClinics(transactionsData);
+            // setTotalTransactions(transactionsData.reduce((sum, clinic) => sum + clinic.transactions, 0));
 
-            console.log(transactionsData);
+            // console.log(transactionsData);
         } catch (error) {
             console.error('Failed to fetch clinics:', error);
         }
