@@ -23,16 +23,9 @@ import {
 } from "@/components/ui/table"
 
 
-export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange,currentPage, totalPages, onPageChange }) {
+export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange, onSortChange, currentPage, totalPages, onPageChange }) {
     const router = useRouter();
-    const [sortOrder, setSortOrder] = useState("ascending");
 
-     // Function to handle sorting change
-     const handleSortChange = (order) => {
-        setSortOrder(order);
-    };
-
-    // Filter and search feedbacks
     const filteredFeedbacks = feedbacks.filter(feedback => {
         const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesFilter = filter === 'all' || feedback.type === filter;
@@ -47,13 +40,10 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                            Filter <ChevronDown className="ml-2 h-4 w-4" />
+                            {filter === 'doctor' ? 'Doctor Feedbacks' : 'Clinic Feedbacks'} <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onFilterChange("all")}>
-                            Show All
-                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => onFilterChange("doctor")}>
                             Filter by Doctor
                         </DropdownMenuItem>
@@ -63,21 +53,21 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-4">
                             Sort <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleSortChange("ascending")}>
+                        <DropdownMenuItem onClick={() => onSortChange("desc")}>
                             Newest
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleSortChange("descending")}>
+                        <DropdownMenuItem onClick={() => onSortChange("asc")}>
                             Oldest
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </div>
             
             

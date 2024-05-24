@@ -1,7 +1,7 @@
 import { getCookies } from '@/api/auth/cookiesHandler';
 
 // get all clinic feedbacks from /feedbacks/clinic
-export async function getClinicFeedbacks({ limit = 10, page = 1, id = '' , name = ''} = {}) {
+export async function getClinicFeedbacks({ limit = 10, page = 1, id = '' , name = '', sortBy = ''} = {}) {
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
 
@@ -9,12 +9,12 @@ export async function getClinicFeedbacks({ limit = 10, page = 1, id = '' , name 
         limit,
         page,
         ...(id && { id }),
-        // clinic name
         ...(name && { name }),
+        ...(sortBy && { sortBy })
 
     }).toString();
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feedbacks/clinic`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feedbacks/clinic?${queryParams}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

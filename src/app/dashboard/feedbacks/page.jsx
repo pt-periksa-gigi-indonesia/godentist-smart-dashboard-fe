@@ -16,39 +16,57 @@ export default function FeedbacksPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [totalClinicFeedbacks, setTotalClinicFeedbacks] = useState(0);
     const [totalDoctorFeedbacks, setTotalDoctorFeedbacks] = useState(0);
-    const [filter, setFilter] = useState('all');
+    const [filter, setFilter] = useState('doctor');
     const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState("createdAt:asc");
 
-    const fetchFeedbacks = async (searchTerm, page = 1 , sortType = 'ascending') => {
+
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
+        setCurrentPage(1); 
+        fetchFeedbacks(searchTerm, 1, newFilter); 
+    };
+
+    const handleSortChange = (order) => {
+        const sortOrder = `createdAt:${order}`;
+        setSortOrder(sortOrder);
+        fetchFeedbacks(searchTerm, currentPage, filter, sortOrder);
+    };
+    
+    const fetchFeedbacks = async (searchTerm, page = 1, filter = 'doctor', sort = sortOrder) => {
         setIsLoading(true);
         try {
-            const clinicFeeds = await getClinicFeedbacks(searchTerm, page);
-            const doctorFeeds = await getDoctorFeedbacks(searchTerm, page);
-            const combinedFeeds = [
-                ...clinicFeeds.results.map(feedback => ({ ...feedback, type: 'clinic' })),
-                ...doctorFeeds.results.map(feedback => ({ ...feedback, type: 'doctor' }))
-            ];
-            
-
-            setFeedbacks(combinedFeeds);
-            setTotalFeedbacks(clinicFeeds.totalResults + doctorFeeds.totalResults);
-            setTotalClinicFeedbacks(clinicFeeds.totalResults);
-            setTotalDoctorFeedbacks(doctorFeeds.totalResults);
-
-            const totalResults = clinicFeeds.totalResults + doctorFeeds.totalResults;
-            const totalPages = Math.ceil(totalResults / itemsPerPage);
-            setTotalPages(totalPages);
+            let feeds = [];
+            let totalResults = 0;
+            const options = {
+                page: page,
+                sortBy: sort,
+                filter: filter
+            };
+    
+            if (filter === 'clinic') {
+                const clinicFeeds = await getClinicFeedbacks(searchTerm, options);
+                feeds = clinicFeeds.results.map(feedback => ({ ...feedback, type: 'clinic' }));
+                totalResults = clinicFeeds.totalResults;
+            } else { 
+                const doctorFeeds = await getDoctorFeedbacks(searchTerm, options);
+                feeds = doctorFeeds.results.map(feedback => ({ ...feedback, type: 'doctor' }));
+                totalResults = doctorFeeds.totalResults;
+            }
+    
+            setFeedbacks(feeds);
+            setTotalFeedbacks(totalResults);
+            setTotalPages(Math.ceil(totalResults / 8));
         } catch (error) {
             console.error('Failed to fetch feedbacks:', error);
         } finally {
             setIsLoading(false);
         }
-    
     };
 
     useEffect(() => {
-        fetchFeedbacks(searchTerm, currentPage);
-    }, [searchTerm, currentPage]);
+        fetchFeedbacks(searchTerm, currentPage, filter, sortOrder);
+    }, [searchTerm, currentPage, filter, sortOrder]);
 
     const handleSearchChange = (event) => { 
         setSearchTerm(event.target.value);
@@ -76,8 +94,9 @@ export default function FeedbacksPage() {
                         feedbacks={feedbacks}
                         filter={filter}
                         searchTerm={searchTerm}
-                        onFilterChange={setFilter}
+                        onFilterChange={handleFilterChange}
                         onSearchChange={handleSearchChange}
+                        onSortChange={handleSortChange}
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}

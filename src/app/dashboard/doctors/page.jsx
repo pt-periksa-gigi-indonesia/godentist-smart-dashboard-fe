@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { FaUserClock, FaUserCheck, FaUser } from 'react-icons/fa';
 
 import { getDoctors } from '@/api/lib/doctorHandler';
@@ -7,7 +7,7 @@ import { getDoctors } from '@/api/lib/doctorHandler';
 import DoctorTable from '@/components/Tables/DoctorTable';
 import { SkeletonDoctorTable } from '@/components/Tables/SkeletonDoctorTable';
 
-import DoctorStats from '@/components/cards/DoctorStats';
+// import DoctorStats from '@/components/cards/DoctorStats';
 
 export default function DoctorsPage() {
     const [doctors, setDoctors] = useState([]);
@@ -54,12 +54,19 @@ export default function DoctorsPage() {
         setSearchTerm(event.target.value);
     };
 
+
     return (
         <>
             <main className="flex-grow px-6 mt-16">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">Manage Doctors</h1>
                 </div>
+
+                {/* <DoctorStats
+                    totalDoctors={totalDoctor}
+                    totalVerifiedDoctors={totalVerDoctor}
+                    totalUnverifiedDoctors={totalUnverDoctor}
+                /> */}
 
                 <div className="col-span-2 p-4  bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
                     <div className="grid grid-cols-3 gap-2">
