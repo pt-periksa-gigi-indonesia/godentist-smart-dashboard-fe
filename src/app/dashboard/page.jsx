@@ -32,18 +32,18 @@ export default function DoctorDashboard() {
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
-        try {
-            const clinicFeedbacks = await getClinicFeedbacks();
-            const doctorFeedbacks = await getDoctorFeedbacks();
-            const concatenatedFeedbacks = [...clinicFeedbacks.results, ...doctorFeedbacks.results];
-            setFeedbackData(concatenatedFeedbacks);
-        } catch (error) {
-            console.error('Failed to fetch feedbacks:', error);
-        }
+      try {
+        const clinicFeedbacks = await getClinicFeedbacks();
+        const doctorFeedbacks = await getDoctorFeedbacks();
+        const concatenatedFeedbacks = [...clinicFeedbacks.results, ...doctorFeedbacks.results];
+        setFeedbackData(concatenatedFeedbacks);
+      } catch (error) {
+        console.error('Failed to fetch feedbacks:', error);
+      }
     };
 
     fetchFeedbacks();
-}, []);
+  }, []);
 
   const fetchDoctors = async () => {
     try {
@@ -103,9 +103,6 @@ export default function DoctorDashboard() {
   };
 
   const dummyData = {
-    unverifiedDoctors: 5,
-    verifiedDoctors: 20,
-    totalClinics: 10,
     totalPatients: 150,
     totalTransactions: 424200,
     transactionsPerMonth: [
@@ -122,15 +119,6 @@ export default function DoctorDashboard() {
       { month: 'Nov', total: 4500 },
       { month: 'Dec', total: 4200 }
     ],
-    doctorsStatus: [
-      { status: 'Unverified Doctors', total: 5 },
-      { status: 'Verified Doctors', total: 20 }
-    ],
-    feedback: [
-      { id: 1, user: 'Patient A', feedback: 'Dr. Smith was very helpful and kind.', date: '2024-05-10' },
-      { id: 2, user: 'Patient B', feedback: 'Clinic XYZ provided excellent service.', date: '2024-05-11' },
-      { id: 3, user: 'Patient C', feedback: 'Dr. Jones could improve communication.', date: '2024-05-12' }
-    ],
     popularServices: [
       { id: 1, service: 'Teeth Whitening', count: 150 },
       { id: 2, service: 'Dental Cleaning', count: 120 },
@@ -142,7 +130,7 @@ export default function DoctorDashboard() {
 
   const renderChart = () => {
     const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : fetchedData.doctorsStatus;
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; 
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
     if (chartType === 'bar') {
       return (
@@ -210,7 +198,7 @@ export default function DoctorDashboard() {
         <SeedButton />
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Partner's Account */}
         <PartnerStats
           totalUnverDoctor={totalUnverDoctor}
@@ -219,7 +207,7 @@ export default function DoctorDashboard() {
         />
 
         {/* Patients */}
-        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-md font-medium text-gray-800">Total Patients</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -235,7 +223,7 @@ export default function DoctorDashboard() {
         </div>
 
         {/* Transactions */}
-        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-md font-medium text-gray-800">Total Transactions</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -245,7 +233,7 @@ export default function DoctorDashboard() {
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
               {/* dalam rupiah */}
-              <p className="text-2xl font-bold">Rp {(totalAmountTransactions > 0) &&(totalAmountTransactions !== undefined) ? `${totalAmountTransactions}` : "-" }</p>
+              <p className="text-2xl font-bold">Rp {(totalAmountTransactions > 0) && (totalAmountTransactions !== undefined) ? `${totalAmountTransactions}` : "-"}</p>
               <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+26% from last month</h3>
             </div>
           </div>
@@ -253,9 +241,9 @@ export default function DoctorDashboard() {
 
         {/* Overview */}
         <div className="col-span-2 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-medium text-gray-800 pb-4">Overview</h2>
-            <div className="flex space-x-2">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 space-y-2 md:space-y-0 md:space-x-2">
+            <h2 className="text-lg font-medium text-gray-800 pb-4 md:pb-0">Overview</h2>
+            <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
               <select
                 value={dataType}
                 onChange={(e) => setDataType(e.target.value)}
@@ -277,29 +265,10 @@ export default function DoctorDashboard() {
           {renderChart()}
         </div>
 
-        {/* Feedback */}
-        {/* <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-medium text-gray-800">Feedback</h2>
-            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
-              <FaCommentDots className="text-lg text-blue-dentist" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            {dummyData.feedback.map(feedback => (
-              <div key={feedback.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <p className="text-md text-gray-800 font-bold">{feedback.user}</p>
-                <p className="text-sm text-gray-600">{feedback.feedback}</p>
-                <p className="text-xs text-blue-dentist">{feedback.date}</p>
-              </div>
-            ))}
-          </div>
-        </div> */}
-
         <FeedbackCard feedback={feedbackData} />
 
         {/* Popular Services */}
-        <div className="col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-medium text-gray-800">Popular Services</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
