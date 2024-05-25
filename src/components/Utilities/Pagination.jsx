@@ -4,7 +4,7 @@ import { faAnglesLeft, faAngleRight, faAnglesRight, faAngleLeft } from '@fortawe
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     return (
-        <div className="flex justify-center mt-4 space-x-4 w-full lg:space-x-4 lg:mt-4 md:space-x-3 md:mt-3 sm:space-x-2 sm:mt-2">
+        <div className="flex justify-center mt-4 mb-6 space-x-4 w-full lg:space-x-4 lg:mt-4 md:space-x-3 md:mt-3 sm:space-x-2 sm:mt-2">
             <span className="py-2 text-gray-800 font-medium lg:text-base md:text-sm sm:text-xs">Page {currentPage} of {totalPages}</span>
             <button
                 className={`text-gray-800 cursor-pointer flex items-center border border-gray-300 rounded-md py-1 px-2 hover:bg-gray-100 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""} lg:py-2 lg:px-4 md:py-2 md:px-3 sm:py-1 sm:px-2`}
