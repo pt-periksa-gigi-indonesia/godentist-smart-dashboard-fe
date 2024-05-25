@@ -1,5 +1,6 @@
 "use server"
-import {getCookies} from '@/api/auth/cookiesHandler';
+import {getCookies,  getUserRole, getUserId, deleteCookies} from '@/api/auth/cookiesHandler';
+import { getUserData } from '../lib/userHandler';
 import jwt from 'jsonwebtoken';
 
 export async function checkToken() {
@@ -14,4 +15,19 @@ export async function checkToken() {
         return false;
     }
     return true;
+}
+
+export async function validateUserRole() {
+    try {
+        const currentRole = await getUserRole();
+        const userId = await getUserId();
+        const userData = await getUserData(userId);
+        const userRole = userData.role;
+
+        if (currentRole !== userRole) {
+            await deleteCookies();
+        }
+    } catch (error) {
+        console.error("Error validating user role:", error);
+    }
 }

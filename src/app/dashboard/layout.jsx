@@ -1,10 +1,10 @@
-// make the layout component
 "use client";
 import React from 'react';
 import { useState } from 'react';
 
 import Sidebar from '@/components/Navigation/Sidebar';
 import Navbar from '@/components/Navigation/Navbar';
+import { validateUserRole } from '@/api/auth/validateAccessToken';
 
 export default function DashboardLayout({ children }) {
     const [isCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -13,6 +13,11 @@ export default function DashboardLayout({ children }) {
         setIsSidebarCollapsed(!isCollapsed);
         console.log(isCollapsed);
     };
+
+    React.useEffect(() => {
+        validateUserRole();
+    }, []);
+
 
     return (
         <div className='flex flex-row min-h-screen'>
