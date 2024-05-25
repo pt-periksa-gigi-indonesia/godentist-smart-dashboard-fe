@@ -8,6 +8,8 @@ import { getClinicFeedbacks, getDoctorFeedbacks } from '@/api/lib/feedbacksHandl
 
 import FeedbackStats from '@/components/cards/FeedbackStats';
 
+import SeedButton from '@/components/seedButton';
+
 export default function FeedbacksPage() {
     const [feedbacks, setFeedbacks] = useState([]);
     const [totalFeedbacks, setTotalFeedbacks] = useState(0);
@@ -19,7 +21,6 @@ export default function FeedbacksPage() {
     const [filter, setFilter] = useState('doctor');
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState("createdAt:asc");
-
 
     const handleFilterChange = (newFilter) => {
         setFilter(newFilter);
@@ -64,8 +65,22 @@ export default function FeedbacksPage() {
         }
     };
 
+    const getTotalFeedbacks = async () => {
+        try {
+            const clinicFeeds = await getClinicFeedbacks();
+            setTotalClinicFeedbacks(clinicFeeds.totalClinicFeedbacks);
+            const doctorFeeds = await getDoctorFeedbacks();
+            setTotalDoctorFeedbacks(doctorFeeds.totalDoctorFeedbacks);
+            const totalFeedbacks = clinicFeeds.totalClinicFeedbacks + doctorFeeds.totalDoctorFeedbacks;
+        }
+        catch (error) {
+            console.error('Failed to fetch feedbacks:', error);
+        }
+    };
+
     useEffect(() => {
         fetchFeedbacks(searchTerm, currentPage, filter, sortOrder);
+        getTotalFeedbacks();
     }, [searchTerm, currentPage, filter, sortOrder]);
 
     const handleSearchChange = (event) => { 
@@ -75,11 +90,11 @@ export default function FeedbacksPage() {
 
     return (
         <>
-            <main className="flex-grow px-6 mt-5">
+            <main className="flex-grow px-6 mt-16">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">Manage Feedbacks</h1>
+                    <SeedButton />
                 </div>
-
 
                 <FeedbackStats
                     totalFeedbacks={totalFeedbacks}

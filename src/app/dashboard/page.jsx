@@ -15,6 +15,8 @@ import FeedbackCard from '@/components/cards/FeedbackCard';
 
 import { getClinicFeedbacks, getDoctorFeedbacks } from '@/api/lib/feedbacksHandler';
 
+import SeedButton from '@/components/seedButton';
+
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444', '#ffa07a', '#dda0dd', '#8b0000', '#00bfff', '#228b22', '#6a5acd'];
 
 export default function DoctorDashboard() {
@@ -200,11 +202,12 @@ export default function DoctorDashboard() {
 
 
   return (
-    <main className="flex-grow px-6 mt-5">
+    <main className="flex-grow px-6 mt-16">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">
           {greeting}, <span className="text-blue-dentist">Team!</span>
         </h1>
+        <SeedButton />
       </div>
 
       <div className="grid grid-cols-4 gap-4">

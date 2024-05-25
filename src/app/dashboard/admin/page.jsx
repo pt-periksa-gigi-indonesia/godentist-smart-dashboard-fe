@@ -10,6 +10,7 @@ import SuccessModal from "@/components/Utilities/SuccesModal";
 import UserTable from "@/components/Tables/UserTable";
 import { SkeletonUserTable } from "@/components/Tables/SkeletonUserTable";
 import UserRoleStats from "@/components/cards/UserRoleStats";
+import SeedButton from "@/components/seedButton";
 
 export default function Page() {
   const [allUsers, setAllUsers] = useState([]);
@@ -129,9 +130,10 @@ export default function Page() {
         <SuccessModal message={successMessage} onClose={closeModalOnSuccess} />
       )}
 
-      <div className="flex flex-col w-full px-6 mt-5">
+      <div className="flex flex-col w-full px-6 mt-16">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
+          <SeedButton />
         </div>
 
         <UserRoleStats

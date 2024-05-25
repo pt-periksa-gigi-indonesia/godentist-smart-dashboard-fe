@@ -26,22 +26,24 @@ export default function SeedButton() {
         setTimeout(() => {
             setIsLoading(false);
             setSeedMessage("Database seeded successfully!");
+            window.location.reload();
         }, 2000);
     };
 
     return (
-        <div div className="flex ml-5 mt-10 items-center space-x-4">
+        <div div className="flex ml-5 items-center space-x-4">
+            {isLoading ? (
+                <p className="text-sm">Loading...</p>
+            ) : (
+                seedMessage && <p className="text-sm">{seedMessage}</p>
+            )}
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full flex items-center"
                 onClick={handleSeedDatabase}
             >
                 <FontAwesomeIcon icon={faSyncAlt} />
             </button>
-            {isLoading ? (
-                <p className="text-sm">Loading...</p>
-            ) : (
-                seedMessage && <p className="text-sm">{seedMessage}</p>
-            )}
+
         </div>
     )
 }

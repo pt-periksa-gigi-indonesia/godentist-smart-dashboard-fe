@@ -23,8 +23,7 @@ export default function DashboardLayout({ children }) {
                 <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
                 <main className={`flex-grow w-full pt-6 ${isCollapsed ? 'px-4' : 'pr-4 lg:pl-12 sm:pl-3'}`}>
                     
-                    <SeedButton />
-
+                    
                     {children}
                 
                 </main>

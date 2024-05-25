@@ -27,7 +27,7 @@ export default function ClinicTable({ clinics }) {
                                     <div className="text-sm text-gray-900">{clinic.name}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                    <div className="text-sm text-gray-900 text-center">{clinic.transactions}</div>
+                                    <div className="text-sm text-gray-900 text-center">{clinic.totalAmountTransactions > 0 ?`${clinic.totalAmountTransactions}` : "it is empty"}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <Link href={`/dashboard/clinics/details/${clinic.id}`} className="text-blue-600 hover:text-blue-900">

@@ -7,7 +7,9 @@ import { getDoctors } from '@/api/lib/doctorHandler';
 import DoctorTable from '@/components/Tables/DoctorTable';
 import { SkeletonDoctorTable } from '@/components/Tables/SkeletonDoctorTable';
 
-// import DoctorStats from '@/components/cards/DoctorStats';
+import DoctorStats from '@/components/cards/DoctorStats';
+
+import SeedButton from '@/components/seedButton';
 
 export default function DoctorsPage() {
     const [doctors, setDoctors] = useState([]);
@@ -57,9 +59,10 @@ export default function DoctorsPage() {
 
     return (
         <>
-            <main className="flex-grow px-6 mt-5">
+            <main className="flex-grow px-6 mt-16">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">Manage Doctors</h1>
+                    <SeedButton/>
                 </div>
 
                 {/* <DoctorStats
