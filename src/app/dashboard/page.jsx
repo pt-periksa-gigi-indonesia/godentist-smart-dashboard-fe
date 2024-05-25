@@ -242,7 +242,7 @@ export default function DoctorDashboard() {
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
               {/* dalam rupiah */}
-              <p className="text-2xl font-bold">Rp {totalAmountTransactions}</p>
+              <p className="text-2xl font-bold">Rp {(totalAmountTransactions > 0) &&(totalAmountTransactions !== undefined) ? `${totalAmountTransactions}` : "-" }</p>
               <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+26% from last month</h3>
             </div>
           </div>

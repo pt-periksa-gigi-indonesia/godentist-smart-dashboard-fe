@@ -74,7 +74,7 @@ export default function DoctorsPage() {
                             <FaUser className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Total Doctor</h3>
-                                <p className="text-xl font-bold">{totalDoctor} doctors</p>
+                                <p className="text-xl font-bold">{totalDoctor  ? `${totalDoctor} doctors` : "-"} </p>
                             </div>
                         </div>
 
@@ -82,14 +82,14 @@ export default function DoctorsPage() {
                             <FaUserClock className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Unverified</h3>
-                                <p className="text-xl font-bold">{totalUnverDoctor} doctors</p>
+                                <p className="text-xl font-bold">{totalUnverDoctor ? `${totalUnverDoctor} doctors` : "-"} </p>
                             </div>
                         </div>
                         <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
                             <FaUserCheck className="text-xl ml-4 mr-4 text-gray-100" />
                             <div>
                                 <h3 className="text-md font-normal">Verified</h3>
-                                <p className="text-xl font-bold">{totalVerDoctor} doctors</p>
+                                <p className="text-xl font-bold">{totalVerDoctor ? `${totalVerDoctor} doctors` : "-"} </p>
                             </div>
                         </div>
 
