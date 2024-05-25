@@ -26,17 +26,17 @@ import {
 export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange, onSortChange, currentPage, totalPages, onPageChange }) {
     const router = useRouter();
 
-    if (feedbacks && feedbacks.length > 0) {
-        const filteredFeedbacks = feedbacks.filter(feedback => {
-            const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesFilter = filter === 'all' || feedback.type === filter;
-            return matchesSearch && matchesFilter;
-        });
-    }
+
+    const filteredFeedbacks = feedbacks.filter(feedback => {
+        const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = filter === 'all' || feedback.type === filter;
+        return matchesSearch && matchesFilter;
+    });
+
 
     return (
-        <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            {feedbacks  && feedbacks.length > 0 ? (
+        <div>
+            {feedbacks && feedbacks.length > 0 ? (
                 <>
                     <div className="flex py-4">
                         <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />

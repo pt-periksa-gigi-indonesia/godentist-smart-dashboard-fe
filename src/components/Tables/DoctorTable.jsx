@@ -63,17 +63,16 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         documentPhoto: 'https://i.pinimg.com/736x/e1/91/d2/e191d205da482b7433b9edb62c921a4d.jpg'
     };
 
-    if (doctors && doctors.length > 0) {
     const filteredDoctors = doctors.filter(doctor => {
         const includesSearchTerm = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
         const passesFilter = !filter || doctor.verificationStatus === filter;
         return includesSearchTerm && passesFilter;
     });
-    }
+
 
     return (
-        <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            {doctors  && doctors.length > 0 ? (
+        <div >
+            {doctors && doctors.length > 0 ? (
                 <>
                     <div className="flex py-4">
                         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
