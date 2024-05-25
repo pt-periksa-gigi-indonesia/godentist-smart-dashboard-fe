@@ -6,6 +6,8 @@ import { useState } from 'react';
 import Sidebar from '@/components/Navigation/Sidebar';
 import Navbar from '@/components/Navigation/Navbar';
 
+import SeedButton from '@/components/seedButton';
+
 export default function DashboardLayout({ children }) {
     const [isCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -16,11 +18,15 @@ export default function DashboardLayout({ children }) {
 
     return (
         <div className='flex flex-row min-h-screen'>
-            <Sidebar isCollapsed={isCollapsed}/>     
+            <Sidebar isCollapsed={isCollapsed} />
             <div className="flex-grow flex flex-col h-screen w-full">
                 <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
-                <main className={`flex-grow w-full pt-6 ${isCollapsed ? 'px-4' :'pr-4 lg:pl-12 sm:pl-3'}`}>
+                <main className={`flex-grow w-full pt-6 ${isCollapsed ? 'px-4' : 'pr-4 lg:pl-12 sm:pl-3'}`}>
+                    
+                    <SeedButton />
+
                     {children}
+                
                 </main>
             </div>
         </div>
