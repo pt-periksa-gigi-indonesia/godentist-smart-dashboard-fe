@@ -34,6 +34,7 @@ export default function DoctorsPage() {
             setTotalDoctor(data.results.length);
             setTotalPages(data.totalPages);
         } catch (error) {
+            setDoctors([]);
             console.error('Failed to fetch doctors:', error);
         }
         finally {
@@ -65,13 +66,13 @@ export default function DoctorsPage() {
                     <SeedButton/>
                 </div>
 
-                {/* <DoctorStats
+                <DoctorStats
                     totalDoctors={totalDoctor}
                     totalVerifiedDoctors={totalVerDoctor}
                     totalUnverifiedDoctors={totalUnverDoctor}
-                /> */}
+                />
 
-                <div className="col-span-2 p-4  bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
+                {/* <div className="col-span-2 p-4  bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
                     <div className="grid grid-cols-3 gap-2">
                         <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
                             <FaUser className="text-xl ml-4 mr-4 text-gray-100" />
@@ -97,7 +98,7 @@ export default function DoctorsPage() {
                         </div>
 
                     </div>
-                </div>
+                </div> */}
 
 
                 {isLoading ? (

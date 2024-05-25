@@ -6,8 +6,6 @@ import { useState } from 'react';
 import Sidebar from '@/components/Navigation/Sidebar';
 import Navbar from '@/components/Navigation/Navbar';
 
-import SeedButton from '@/components/seedButton';
-
 export default function DashboardLayout({ children }) {
     const [isCollapsed, setIsSidebarCollapsed] = useState(false);
 

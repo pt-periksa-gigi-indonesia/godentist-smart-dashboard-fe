@@ -14,30 +14,28 @@ export async function middleware(req) {
     const waitingUrl = req.nextUrl.clone();
     waitingUrl.pathname = '/waiting';
     
-    if (!isTokenValid && (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/admin')) {
+    if (!isTokenValid &&  (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/dashboard/admin' || req.nextUrl.pathname === '/dashboard/settings' || req.nextUrl.pathname === '/dashboard/doctors'|| req.nextUrl.pathname === '/dashboard/clinics' || req.nextUrl.pathname === '/dashboard/feedbacks' )) {
         return NextResponse.redirect(url.toString());
     } 
     
-    else if (isTokenValid && req.nextUrl.pathname === '/admin') {
-        const role = await getUserRole(req);
-        if (role !== 'master') {
-            return NextResponse.redirect(homeUrl.toString());
-        }
-    }
-    else if (isTokenValid && (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/settings')) {
+    else if (isTokenValid && req.nextUrl.pathname === '/dashboard/admin') {
         const role = await getUserRole(req);
         if (role === 'user') {
             return NextResponse.redirect(waitingUrl.toString());
         }
-        else if (role === 'admin') {
+        else if (role !== 'master' ) {
             return NextResponse.redirect(homeUrl.toString());
         }
     }
-    
-
+    else if (isTokenValid && (req.nextUrl.pathname === '/dashboard' || req.nextUrl.pathname === '/dashboard/settings' || req.nextUrl.pathname === '/dashboard/doctors'|| req.nextUrl.pathname === '/dashboard/clinics' || req.nextUrl.pathname === '/dashboard/feedbacks' )) {
+        const role = await getUserRole(req);
+        if (role === 'user') {
+            return NextResponse.redirect(waitingUrl.toString());
+        }
+    }
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: [ '/dashboard/:path*','/admin', '/login', '/register', '/settings', '/waiting'], 
+    matcher: [ '/dashboard/:path*','/dashboard/admin', '/login', '/register', '/dashboard/settings', '/waiting', "/dashboard/doctors", "/dashboard/clinics", "/dashboard/feedbacks"] 
 };
