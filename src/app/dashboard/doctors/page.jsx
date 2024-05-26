@@ -84,7 +84,7 @@ export default function DoctorsPage() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
-
+                        refreshDoctors={fetchDoctors}
                     />
                 )}
 

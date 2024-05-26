@@ -20,8 +20,6 @@ export async function getDoctors({ limit = 10, page = 1, name = '' } = {}){
         },
     });
 
-
-
     const data = await response.json();
 
     return data;
@@ -45,3 +43,21 @@ export async function getDoctorById(doctor_id){
     return data;
 }
 
+// Change doctor verification status
+export async function changeDoctorVerificationStatus(doctor_id, verificationStatus){
+    const cookies = await getCookies();
+    const access_token = cookies.access_token.value;
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors/verify/${doctor_id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+        },
+        body: JSON.stringify({ verificationStatus })
+    });
+
+    const data = await response.json();
+
+    return data;
+}

@@ -56,7 +56,7 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
                     <MobileSidebar />
                 </div>
             </div>
-            <div className="relative flex items-center space-x-4 lg:mr-6 mt-4 sm:mr-4">
+            <div className="relative flex items-center space-x-4 md:mr-6 mt-4 sm:mr-4">
                 <FontAwesomeIcon icon={faBell} className="text-blue-dentist cursor-pointer text-xl pr-3" />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

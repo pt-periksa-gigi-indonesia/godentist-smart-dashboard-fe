@@ -24,7 +24,9 @@ import {
 
 import Modal from '@/components/Utilities/Modal';
 
-const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange }) => {
+import { changeDoctorVerificationStatus } from '@/api/lib/doctorHandler';
+
+const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange, refreshDoctors }) => {
     const router = useRouter();
 
     const [filter, setFilter] = useState(null);
@@ -49,11 +51,16 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         setSelectedDoctor(null);
     };
 
-    const handleStatusUpdate = (status) => {
-        // Logic to update the doctor's status
-        console.log(`Updating status to ${status}...`);
-        // After updating the status, close the modal
-        closeModal();
+    const handleStatusUpdate = async (newStatus) => {
+        console.log(`Updating status for ${selectedDoctor.name} to ${newStatus}...`);
+        try {
+            const response = await changeDoctorVerificationStatus(selectedDoctor.id, newStatus);
+            console.log('Status updated successfully', response);
+            closeModal();
+            refreshDoctors();
+        } catch (error) {
+            console.error('Failed to update status:', error);
+        }
     };
 
     const dummyOCRData = {
@@ -111,7 +118,13 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 <TableRow key={doctor.id}>
                                     <TableCell className="font-medium">{index + 1}</TableCell>
                                     <TableCell>{doctor.name}</TableCell>
-                                    <TableCell>{doctor.verificationStatus}</TableCell>
+                                    <TableCell className={
+                                        `${doctor.verificationStatus === "verified" ? "text-green-500" : 
+                                        doctor.verificationStatus === "rejected" ? "text-red-500" : 
+                                        "text-gray-500"}`
+                                    }>
+                                        {doctor.verificationStatus}
+                                    </TableCell>
                                     <TableCell className="text-center">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -136,7 +149,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
                     <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
 
-                    {isModalOpen && (
+                    {isModalOpen && selectedDoctor &&  (
                         <Modal isOpen={isModalOpen} onClose={closeModal}>
                             <h2 className="text-xl font-semibold mb-4">Doctor Details</h2>
                             <div className="mb-4">
@@ -145,7 +158,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             <p><strong>Documents:</strong></p>
                             <ul className="mb-4">
                                 <li>Document Type: {dummyOCRData.documentType}</li>
-                                <li>Name: {dummyOCRData.name}</li>
+                                <li>Name: {selectedDoctor.name}</li>
                                 <li>Registration Number: {dummyOCRData.registrationNumber}</li>
                             </ul>
                             <p><strong>Status:</strong> {selectedDoctor.verificationStatus}</p>
@@ -159,10 +172,10 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem onClick={() => handleStatusUpdate('verified')}>
-                                        Verify
+                                        Verified
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleStatusUpdate('unverified')}>
-                                        Unverify
+                                    <DropdownMenuItem onClick={() => handleStatusUpdate('rejected')}>
+                                        Rejected
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
