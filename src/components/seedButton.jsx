@@ -31,7 +31,7 @@ export default function SeedButton() {
     };
 
     return (
-        <div div className="flex ml-5 items-center space-x-4">
+        <div div className="flex ml-5 items-center space-x-4 justify-end">
             {isLoading ? (
                 <p className="text-sm">Loading...</p>
             ) : (

@@ -72,6 +72,7 @@ export default function FeedbacksPage() {
             const doctorFeeds = await getDoctorFeedbacks();
             setTotalDoctorFeedbacks(doctorFeeds.totalDoctorFeedbacks);
             const totalFeedbacks = clinicFeeds.totalClinicFeedbacks + doctorFeeds.totalDoctorFeedbacks;
+            setTotalFeedbacks(totalFeedbacks);
         }
         catch (error) {
             console.error('Failed to fetch feedbacks:', error);

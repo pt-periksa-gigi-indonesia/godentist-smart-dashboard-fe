@@ -33,6 +33,8 @@ export default function DoctorsPage() {
             setTotalUnverifiedDoctor(unverifiedDoctors.length);
             setTotalDoctor(data.results.length);
             setTotalPages(data.totalPages);
+
+
         } catch (error) {
             setDoctors([]);
             console.error('Failed to fetch doctors:', error);
@@ -44,7 +46,7 @@ export default function DoctorsPage() {
 
     useEffect(() => {
         fetchDoctors();
-    }, [currentPage, searchTerm]);
+    }, [currentPage, searchTerm, totalVerDoctor, totalUnverDoctor]);
 
 
     const handlePageChange = (newPage) => {
@@ -67,39 +69,10 @@ export default function DoctorsPage() {
                 </div>
 
                 <DoctorStats
-                    totalDoctors={totalDoctor}
-                    totalVerifiedDoctors={totalVerDoctor}
-                    totalUnverifiedDoctors={totalUnverDoctor}
+                    totalDoctor={totalDoctor}
+                    totalVerDoctor={totalVerDoctor}
+                    totalUnverDoctor={totalUnverDoctor}
                 />
-
-                {/* <div className="col-span-2 p-4  bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl border border-gray-200 shadow-md">
-                    <div className="grid grid-cols-3 gap-2">
-                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
-                            <FaUser className="text-xl ml-4 mr-4 text-gray-100" />
-                            <div>
-                                <h3 className="text-md font-normal">Total Doctor</h3>
-                                <p className="text-xl font-bold">{totalDoctor  ? `${totalDoctor} doctors` : "-"} </p>
-                            </div>
-                        </div>
-
-                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
-                            <FaUserClock className="text-xl ml-4 mr-4 text-gray-100" />
-                            <div>
-                                <h3 className="text-md font-normal">Unverified</h3>
-                                <p className="text-xl font-bold">{totalUnverDoctor ? `${totalUnverDoctor} doctors` : "-"} </p>
-                            </div>
-                        </div>
-                        <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-gray-100 rounded-xl flex items-center shadow">
-                            <FaUserCheck className="text-xl ml-4 mr-4 text-gray-100" />
-                            <div>
-                                <h3 className="text-md font-normal">Verified</h3>
-                                <p className="text-xl font-bold">{totalVerDoctor ? `${totalVerDoctor} doctors` : "-"} </p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div> */}
-
 
                 {isLoading ? (
                     <SkeletonDoctorTable />

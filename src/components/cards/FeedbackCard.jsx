@@ -11,8 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function FeedbackCard({ feedback }) {
     return (
-        <Card className="col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+        <Card className="bg-white rounded-xl border border-gray-200 shadow-sm p-0 flex flex-col flex-grow md:col-span-2 col-span-2 lg:col-span-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 w-full">
                 <CardTitle className="text-lg font-medium text-gray-800">Feedback</CardTitle>
                 <CardDescription className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
                     <FaCommentDots className="text-lg text-blue-dentist" />

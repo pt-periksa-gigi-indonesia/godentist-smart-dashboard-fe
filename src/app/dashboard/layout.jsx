@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }) {
             <Sidebar isCollapsed={isCollapsed} />
             <div className="flex-grow flex flex-col h-screen w-full">
                 <Navbar toggleSidebar={toggleSidebar} isCollapsed={isCollapsed} />
-                <main className={`flex-grow w-full pt-6 ${isCollapsed ? 'px-4' : 'pr-4 lg:pl-12 sm:pl-3'}`}>
+                <main className={`flex-grow w-full pt-6 ${isCollapsed ? 'px-4' : 'lg:pr-4 lg:pl-12 sm:px-3'}`}>
                     
                     
                     {children}
