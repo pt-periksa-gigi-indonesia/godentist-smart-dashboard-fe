@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaUserInjured, FaMoneyCheckAlt} from 'react-icons/fa';
+import { FaUserInjured, FaMoneyCheckAlt } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 import { checkToken } from '@/api/auth/validateAccessToken';
@@ -109,7 +109,6 @@ export default function DoctorDashboard() {
       month: item.month,
       total: item.totalRevenue
     }))
-    
   };
 
   useEffect(() => {
@@ -124,9 +123,9 @@ export default function DoctorDashboard() {
       return (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
-            <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} />
-            <YAxis />
-            <Tooltip />
+            <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} tick={{ fontSize: 15 }} />
+            <YAxis tick={{ fontSize: 13 }} />
+            <Tooltip contentStyle={{ fontSize: 15 }} />
             <Bar dataKey="total" fill="#3a5fd9" radius={[10, 10, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -135,18 +134,17 @@ export default function DoctorDashboard() {
       return (
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={data} dataKey="total" nameKey={dataType === 'transactions' ? 'month' : 'status'} cx="50%" cy="50%" outerRadius={100} fill="#4A5568" label>
+            <Pie data={data} dataKey="total" nameKey={dataType === 'transactions' ? 'month' : 'status'} cx="50%" cy="50%" outerRadius={100} fill="#4A5568" label={{ fontSize: 12 }}>
               {
                 data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
               }
             </Pie>
-            <Tooltip />
+            <Tooltip contentStyle={{ fontSize: 12 }} />
           </PieChart>
         </ResponsiveContainer>
       );
     }
   };
-
 
   return (
     <main className="flex-grow flex-col px-6 xl:mt-16 md:mt-10 sm:mt-6">
