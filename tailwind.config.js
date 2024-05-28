@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        'sm': '320px',
+      },
       colors: {
         'blue-dentist': '#3a5fd9',
         'blue-dentist-dark': '#3150b5',
