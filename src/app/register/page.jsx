@@ -64,25 +64,25 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen">
+    <main className="flex flex-col md:flex-row min-h-screen">
       {/* Left Column for the Image */}
-      <div className="w-1/2 flex flex-col items-center justify-center bg-gray-100">
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-100 p-4">
         <Image
           src="/static/images/godentist_logo.jpeg"
           alt="Logo"
           width={1488}
           height={423}
-          className="max-w-xs md:max-w-sm lg:max-w-base mb-8"
+          className="max-w-xs md:max-w-sm lg:max-w-base mb-8 px-12 md:px-0"
         />
         <Carousel images={images} />
       </div>
 
       {/* Right Column for the Registration Form */}
-      <div className="w-1/2 flex flex-col items-center justify-center bg-white p-12">
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white p-4 md:p-12">
         {/* Logo and Greeting */}
-        <div className="mb-8 flex flex-col items-center">
-          <h1 className="text-5xl font-bold text-blue-dentist mt-4">Join us today 🚀</h1>
-          <p className="text-gray-700 text-lg py-3">Create your account and get started!</p>
+        <div className="mb-8 flex flex-col items-center px-3 md:px-0">
+          <h1 className="text-4xl md:text-5xl text-center md:text-left font-bold text-blue-dentist mt-4">Join us today 🚀</h1>
+          <p className="text-gray-700 text-base md:text-lg py-3 text-center md:text-left">Create your account and get started!</p>
         </div>
 
         {/* Error Alert */}
@@ -93,7 +93,7 @@ export default function RegisterPage() {
         )}
 
         {/* Form */}
-        <form className="w-full max-w-sm flex flex-col space-y-6" onSubmit={handleRegister}>
+        <form className="w-full max-w-sm flex flex-col space-y-6 px-6 md:px-0" onSubmit={handleRegister}>
           <label className="flex flex-col">
             <span className="text-gray-700">Full Name</span>
             <input
