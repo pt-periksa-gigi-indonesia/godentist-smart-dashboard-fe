@@ -22,6 +22,7 @@ const UserTable = ({
     users,
     handleDelete,
     handleEdit,
+    handleCreate,
     searchTerm,
     handleSearchChange,
     currentPage,
@@ -32,11 +33,17 @@ const UserTable = ({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState({
         id: "",
         name: "",
         email: "",
         role: "",
+    });
+    const [newUser, setNewUser] = useState({
+        name: "",
+        email: "",
+        role: "user",
     });
     const [filter, setFilter] = useState(null);
 
@@ -45,9 +52,14 @@ const UserTable = ({
         setIsEditModalOpen(true);
     };
 
+    const openCreateModal = () => {
+        setIsCreateModalOpen(true);
+    };
+
     const closeModal = () => {
         setIsModalOpen(false);
         setIsEditModalOpen(false);
+        setIsCreateModalOpen(false);
     };
 
     const confirmDelete = () => {
@@ -63,6 +75,12 @@ const UserTable = ({
         closeModal();
     };
 
+    const handleCreateSubmit = async (e) => {
+        e.preventDefault();
+        handleCreate(newUser);
+        closeModal();
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCurrentUser((prevUser) => ({
@@ -71,8 +89,23 @@ const UserTable = ({
         }));
     };
 
+    const handleNewUserInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewUser((prevUser) => ({
+            ...prevUser,
+            [name]: value,
+        }));
+    };
+
     const handleRoleChange = (e) => {
         setCurrentUser((prevUser) => ({
+            ...prevUser,
+            role: e.target.value,
+        }));
+    };
+
+    const handleNewUserRoleChange = (e) => {
+        setNewUser((prevUser) => ({
             ...prevUser,
             role: e.target.value,
         }));
@@ -90,27 +123,29 @@ const UserTable = ({
 
     return (
         <div>
-            <div className="flex py-4">
+            <div className="flex py-4 flex-col md:flex-row">
                 <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Filter <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleFilterChange(null)}>
-                            All Roles
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleFilterChange("user")}>
-                            User
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleFilterChange("admin")}>
-                            Admin
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex mt-4 md:mt-0 md:ml-auto">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="mr-2">
+                                Filter <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleFilterChange(null)}>
+                                All Roles
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleFilterChange("user")}>
+                                User
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleFilterChange("admin")}>
+                                Admin
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button variant="outline" onClick={openCreateModal}>Create a new user</Button>
+                </div>
             </div>
 
             <Table>
@@ -182,7 +217,6 @@ const UserTable = ({
                 </div>
             )}
 
-
             {/* Edit User Modal */}
             {isEditModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
@@ -251,6 +285,81 @@ const UserTable = ({
                                     className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                                 >
                                     Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Create User Modal */}
+            {isCreateModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+                    <div className="bg-white rounded-lg p-4 sm:p-6 space-y-4 w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">
+                        <h3 className="text-lg font-semibold text-gray-800">Create New User</h3>
+                        <form onSubmit={handleCreateSubmit}>
+                            <label className="block text-gray-700">
+                                Name:
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={newUser.name}
+                                    onChange={handleNewUserInputChange}
+                                    className="text-gray-700 mt-1 p-2 w-full border rounded"
+                                />
+                            </label>
+                            <label className="block text-gray-700 mt-3">
+                                Email:
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={newUser.email}
+                                    onChange={handleNewUserInputChange}
+                                    className="text-gray-700 mt-1 p-2 w-full border rounded"
+                                />
+                            </label>
+                            <fieldset className="mt-4">
+                                <legend className="text-sm font-medium text-gray-700">
+                                    Role:
+                                </legend>
+                                <div className="mt-2">
+                                    <label className="inline-flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="role"
+                                            value="user"
+                                            checked={newUser.role === "user"}
+                                            onChange={handleNewUserRoleChange}
+                                            className="form-radio h-4 w-4 text-blue-600"
+                                        />
+                                        <span className="ml-2 text-gray-700">User</span>
+                                    </label>
+                                    <label className="inline-flex items-center ml-6">
+                                        <input
+                                            type="radio"
+                                            name="role"
+                                            value="admin"
+                                            checked={newUser.role === "admin"}
+                                            onChange={handleNewUserRoleChange}
+                                            className="form-radio h-4 w-4 text-blue-600"
+                                        />
+                                        <span className="ml-2 text-gray-700">Admin</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                            <div className="flex justify-end space-x-4 mt-4">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                                    onClick={closeModal}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                >
+                                    Create
                                 </button>
                             </div>
                         </form>
