@@ -147,8 +147,8 @@ export default function ClinicDetailPage() {
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
                                     <FaChartBar className="mr-2" />Statistics
                                 </h3>
-                                <div className="flex items-center mb-4">
-                                    <div className="mr-4">
+                                <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start mb-4 space-y-2 md:space-y-4 lg:space-y-4">
+                                    <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
                                         <label htmlFor="viewType" className="mr-2 text-gray-600">Select View Type:</label>
                                         <select
                                             id="viewType"
@@ -161,7 +161,7 @@ export default function ClinicDetailPage() {
                                         </select>
                                     </div>
                                     {viewType === 'Chart' && (
-                                        <div>
+                                        <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
                                             <label htmlFor="chartType" className="mr-2 text-gray-600">Select Chart Type:</label>
                                             <select
                                                 id="chartType"
@@ -178,7 +178,6 @@ export default function ClinicDetailPage() {
                                 </div>
                                 {viewType === 'Chart' ? renderChart() : renderText()}
                             </div>
-
 
 
                             <div className="bg-white p-6 rounded-lg shadow-md">
