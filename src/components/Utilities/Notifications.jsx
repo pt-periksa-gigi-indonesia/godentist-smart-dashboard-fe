@@ -10,10 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getDashboardInfo } from '@/api/lib/dashboardHandler';
 
+import { useRouter } from 'next/navigation';
+
 const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [lastNotifiedDoctors, setLastNotifiedDoctors] = useState(new Set());
+    const router = useRouter();
 
     // Request permission for desktop notifications
     useEffect(() => {
@@ -81,7 +84,10 @@ const Notifications = () => {
                 <DropdownMenuContent className="w-64" align="end" forceMount>
                     {notifications.length > 0 ? (
                         notifications.map((notification, index) => (
-                            <DropdownMenuItem key={index}>
+                            <DropdownMenuItem key={index}
+                                // redirect to /dashboard/doctors page
+                                onClick={() => router.push(`/dashboard/doctors`)}
+                            >
                                 {notification.doctorName} is unverified
                             </DropdownMenuItem>
                         ))
