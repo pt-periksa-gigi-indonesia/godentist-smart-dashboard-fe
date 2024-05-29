@@ -25,6 +25,7 @@ const UserTable = ({
     users,
     handleDelete,
     handleEdit,
+    handleFilterChange,
     searchTerm,
     handleSearchChange,
     currentPage,
@@ -32,6 +33,7 @@ const UserTable = ({
     onPageChange,
     itemsPerPage,
     setCreateSuccessMessage,
+    filterRole,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -62,8 +64,6 @@ const UserTable = ({
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-
-    const [filter, setFilter] = useState(null);
 
     const openEditModal = (user) => {
         setCurrentUser(user);
@@ -155,14 +155,9 @@ const UserTable = ({
         }));
     };
 
-    const handleFilterChange = (filterValue) => {
-        setFilter(filterValue);
-    };
-
     const filteredUsers = users.filter(user => {
         const includesSearchTerm = user.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const passesFilter = !filter || user.role === filter;
-        return includesSearchTerm && passesFilter;
+        return includesSearchTerm;
     });
 
     return (
@@ -172,12 +167,14 @@ const UserTable = ({
                 <div className="flex mt-4 md:mt-0 md:ml-auto">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="mr-2">
-                                Filter <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
+                        <Button variant="outline" className="mr-2">
+                            {filterRole === 'user' ? 'Filter: User' : filterRole === 'admin' ? 'Filter: Admin' : 'Filter: All Roles'}
+                            <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleFilterChange(null)}>
+                            <DropdownMenuItem onClick={() => handleFilterChange('All Roles')}>
                                 All Roles
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleFilterChange("user")}>
