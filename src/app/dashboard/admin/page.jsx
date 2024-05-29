@@ -24,6 +24,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
+  const [createSuccessMessage, setCreateSuccessMessage] = useState(null);
+
 
   const fetchAllUsers = async (page, searchTerm = '') => {
     setIsLoading(true);
@@ -130,6 +132,11 @@ export default function Page() {
         <SuccessModal message={successMessage} onClose={closeModalOnSuccess} />
       )}
 
+      {createSuccessMessage && (
+          <SuccessModal message={createSuccessMessage} onClose={() => setCreateSuccessMessage(null)} />
+      )}
+
+
       <div className="flex flex-col w-full px-6 mt-16">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
@@ -154,6 +161,7 @@ export default function Page() {
             onPageChange={handlePageChange}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            setCreateSuccessMessage={setCreateSuccessMessage}
           />
         )}
       </div>

@@ -17,18 +17,21 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { createUser } from '@/api/lib/userHandler';
 
 const UserTable = ({
     users,
     handleDelete,
     handleEdit,
-    handleCreate,
     searchTerm,
     handleSearchChange,
     currentPage,
     totalPages,
     onPageChange,
     itemsPerPage,
+    setCreateSuccessMessage,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -44,7 +47,22 @@ const UserTable = ({
         name: "",
         email: "",
         role: "user",
+        password: "",
     });
+
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     const [filter, setFilter] = useState(null);
 
     const openEditModal = (user) => {
@@ -75,23 +93,10 @@ const UserTable = ({
         closeModal();
     };
 
-    const handleCreateSubmit = async (e) => {
-        e.preventDefault();
-        handleCreate(newUser);
-        closeModal();
-    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCurrentUser((prevUser) => ({
-            ...prevUser,
-            [name]: value,
-        }));
-    };
-
-    const handleNewUserInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewUser((prevUser) => ({
             ...prevUser,
             [name]: value,
         }));
@@ -104,10 +109,49 @@ const UserTable = ({
         }));
     };
 
-    const handleNewUserRoleChange = (e) => {
+
+    // Create user form handlers
+    const handleCreateSubmit = async (e) => {
+        e.preventDefault();
+        if (newUser.password !== confirmPassword) {
+            setErrorMessage('Passwords do not match.');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000); 
+            return;
+        }
+        setErrorMessage('');
+
+        try {
+            const { name, role ,email, password } = newUser; 
+            const response = await createUser({ name,role, email, password });
+
+            if (response) {
+                setCreateSuccessMessage("User created successfully!");
+                setNewUser({
+                    name: "",
+                    email: "",
+                    role: "user",
+                    password: "",
+                });
+                setConfirmPassword("");
+                setIsCreateModalOpen(false);
+            }
+
+        } catch (error) {
+            setErrorMessage(error.message);
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+        }
+    };
+
+
+    const handleNewUserInputChange = (e) => {
+        const { name, value } = e.target;
         setNewUser((prevUser) => ({
             ...prevUser,
-            role: e.target.value,
+            [name]: value,
         }));
     };
 
@@ -318,6 +362,48 @@ const UserTable = ({
                                     className="text-gray-700 mt-1 p-2 w-full border rounded"
                                 />
                             </label>
+                            <label className="block text-gray-700 mt-3">
+                                Password:
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={newUser.password}
+                                        onChange={handleNewUserInputChange}
+                                        className="text-gray-700 mt-1 p-2 w-full border rounded"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                                    >
+                                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-gray-400" />
+                                    </button>
+                                </div>
+                            </label>
+                            <label className="block text-gray-700 mt-3">
+                                Confirm Password:
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        value={confirmPassword}
+                                        onChange={handleConfirmPasswordChange}
+                                        className="text-gray-700 mt-1 p-2 w-full border rounded"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                                    >
+                                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-gray-400" />
+                                    </button>
+                                </div>
+                            </label>
+                            {errorMessage && (
+                                <div className="text-red-500 mt-2">{errorMessage}</div>
+                            )}
                             <fieldset className="mt-4">
                                 <legend className="text-sm font-medium text-gray-700">
                                     Role:
@@ -329,7 +415,7 @@ const UserTable = ({
                                             name="role"
                                             value="user"
                                             checked={newUser.role === "user"}
-                                            onChange={handleNewUserRoleChange}
+                                            onChange={handleNewUserInputChange}
                                             className="form-radio h-4 w-4 text-blue-600"
                                         />
                                         <span className="ml-2 text-gray-700">User</span>
@@ -340,7 +426,7 @@ const UserTable = ({
                                             name="role"
                                             value="admin"
                                             checked={newUser.role === "admin"}
-                                            onChange={handleNewUserRoleChange}
+                                            onChange={handleNewUserInputChange}
                                             className="form-radio h-4 w-4 text-blue-600"
                                         />
                                         <span className="ml-2 text-gray-700">Admin</span>

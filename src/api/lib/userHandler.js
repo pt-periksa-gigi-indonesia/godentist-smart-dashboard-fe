@@ -234,6 +234,7 @@ export async function resetPassword(token, password){
     }
 }
 
+// Create a new user
 export async function createUser(user) {
     const cookies = await getCookies();
     const access_token = cookies.access_token?.value;
