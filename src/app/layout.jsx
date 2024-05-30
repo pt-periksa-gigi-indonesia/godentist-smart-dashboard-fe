@@ -17,7 +17,10 @@ export default function RootLayout({ children }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="apple-mobile-web-app-status-bar" content="#FFE1C4" />
         {/* add */}
+        <link rel='manifest' href='/manifest.json' />
+        <meta name="theme-color" content="#2766EC" />
         <title>{metadata.title}</title>
       </head>
       <body className={fontSans.className}>{children}</body>
