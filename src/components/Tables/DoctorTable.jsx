@@ -63,13 +63,6 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         }
     };
 
-    const dummyOCRData = {
-        name: 'John Doe',
-        registrationNumber: '123456789',
-        documentType: 'Medical License',
-        documentPhoto: 'https://i.pinimg.com/736x/e1/91/d2/e191d205da482b7433b9edb62c921a4d.jpg'
-    };
-
     const filteredDoctors = doctors.filter(doctor => {
         const includesSearchTerm = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
         const passesFilter = !filter || doctor.verificationStatus === filter;
@@ -79,7 +72,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
     return (
         <div >
-            {doctors && doctors.length > 0 ? (
+            {doctors ? (
                 <>
                     <div className="flex py-4">
                         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
@@ -87,7 +80,12 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" className="ml-auto">
-                                    Filter <ChevronDown className="ml-2 h-4 w-4" />
+                                    {filter === 'verified' ? 'Filter: Verified Doctors' : 
+                                    filter === 'unverified' ? 'Filter: Unverified Doctors' : 
+                                    filter === 'rejected' ? 'Filter: Rejected Doctors' : 
+                                    filter === 'pending' ? 'Filter: Pending Doctors' : 
+                                    'Filter: All Doctors'}       
+                                    <ChevronDown className="ml-2 h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
@@ -99,6 +97,14 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleFilterChange("unverified")}>
                                     Unverified Doctors
+                                </DropdownMenuItem>
+                                {/* add rejected */}
+                                <DropdownMenuItem onClick={() => handleFilterChange("rejected")}>
+                                    Rejected Doctors
+                                </DropdownMenuItem>
+                                {/* add pending */}
+                                <DropdownMenuItem onClick={() => handleFilterChange("pending")}>
+                                    Pending Doctors
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -114,42 +120,56 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredDoctors.map((doctor, index) => (
-                                <TableRow key={doctor.id}>
-                                    <TableCell className="font-medium">{index + 1}</TableCell>
-                                    <TableCell>{doctor.name}</TableCell>
-                                    <TableCell className={
-                                        `${doctor.verificationStatus === "verified" ? "text-green-500" : 
-                                        doctor.verificationStatus === "rejected" ? "text-red-500" : 
-                                        "text-gray-500"}`
-                                    }>
-                                        {doctor.verificationStatus}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                                    <Edit className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleViewDetails(doctor.id)}>
-                                                    View Doctor Details
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleChangeStatus(doctor)}>
-                                                    Change Doctor Status
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                            {/* if doctor length > 0 */}
+                            {/* Check if doctors list is empty */}
+                            {doctors.length > 0 ? (
+                                filteredDoctors.map((doctor, index) => (
+                                    <TableRow key={doctor.id}>
+                                        <TableCell className="font-medium">{index + 1}</TableCell>
+                                        <TableCell>{doctor.name}</TableCell>
+                                        <TableCell
+                                            className={
+                                                doctor.verificationStatus === "verified"
+                                                    ? "text-green-500"
+                                                    : doctor.verificationStatus === "rejected"
+                                                        ? "text-red-500"
+                                                        : "text-gray-500"
+                                            }
+                                        >
+                                            {doctor.verificationStatus}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <Edit className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => handleViewDetails(doctor.id)}>
+                                                        View Doctor Details
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleChangeStatus(doctor)}>
+                                                        Change Doctor Status
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} className="text-center">
+                                        No doctors found.
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
 
                     <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
 
-                    {isModalOpen && selectedDoctor &&  (
+                    {isModalOpen && selectedDoctor && (
                         <Modal isOpen={isModalOpen} onClose={closeModal}>
                             <h2 className="text-xl font-semibold mb-4">Doctor Details</h2>
                             <div className="mb-4">

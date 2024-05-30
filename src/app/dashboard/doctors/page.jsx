@@ -1,7 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from 'react';
-import { FaUserClock, FaUserCheck, FaUser } from 'react-icons/fa';
-
+import { useEffect, useState} from 'react';
 import { getDoctors } from '@/api/lib/doctorHandler';
 
 import DoctorTable from '@/components/Tables/DoctorTable';
@@ -21,20 +19,24 @@ export default function DoctorsPage() {
     const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [displayedDoctors, setDisplayedDoctors] = useState([]);
+    const [filter, setFilter] = useState('All');
+    const itemsPerPage = 8;
+
     const fetchDoctors = async () => {
         setIsLoading(true);
         try {
-            const data = await getDoctors({ page: currentPage, name: searchTerm });
+            const data = await getDoctors({ limit: 100 });
             setDoctors(data.results);
             console.log(data.results);
+            setTotalDoctor(data.results.length);
             const verifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "verified");
             setTotalVerifiedDoctor(verifiedDoctors.length);
             const unverifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "unverified");
             setTotalUnverifiedDoctor(unverifiedDoctors.length);
-            setTotalDoctor(data.results.length);
-            setTotalPages(data.totalPages);
 
-
+            setTotalPages(Math.ceil(data.results.length / itemsPerPage));
+            setDisplayedDoctors(data.results.slice(0, itemsPerPage));
         } catch (error) {
             setDoctors([]);
             console.error('Failed to fetch doctors:', error);
@@ -46,17 +48,37 @@ export default function DoctorsPage() {
 
     useEffect(() => {
         fetchDoctors();
-    }, [currentPage, searchTerm, totalVerDoctor, totalUnverDoctor]);
+    }, []);
 
 
     const handlePageChange = (newPage) => {
-        if (newPage > 0 && newPage <= totalPages) {
-            setCurrentPage(newPage);
-        }
+        setCurrentPage(newPage);
+        const startIndex = (newPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        applyFilters(startIndex, endIndex);
     };
 
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+        setSearchTerm(event.target.value.toLowerCase());
+        applyFilters(0, itemsPerPage, event.target.value.toLowerCase(), filter);
+    };
+
+    const applyFilters = (startIndex, endIndex, searchTerm = '', filter = 'All') => {
+        let filteredDoctors = doctors;
+
+        if (filter !== 'All') {
+            filteredDoctors = filteredDoctors.filter(doctor => doctor.verificationStatus.toLowerCase() === filter.toLowerCase());
+        }
+
+        if (searchTerm) {
+            filteredDoctors = filteredDoctors.filter(doctor =>
+                doctor.name.toLowerCase().includes(searchTerm) 
+            );
+        }
+
+        setDisplayedDoctors(filteredDoctors.slice(startIndex, endIndex));
+        setTotalPages(Math.ceil(filteredDoctors.length / itemsPerPage));
+        setCurrentPage(1);
     };
 
 
@@ -78,13 +100,14 @@ export default function DoctorsPage() {
                     <SkeletonDoctorTable />
                 ) : (
                     <DoctorTable
-                        doctors={doctors}
+                        doctors={displayedDoctors}
                         searchTerm={searchTerm}
                         handleSearchChange={handleSearchChange}
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
                         refreshDoctors={fetchDoctors}
+
                     />
                 )}
 
