@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { debounce } from "lodash";
 import { checkToken } from "@/api/auth/validateAccessToken";
 import { getUserRole } from "@/api/auth/cookiesHandler";
 import { getAllUsers, deleteUser, updateUser, updateUserRole } from "@/api/lib/userHandler";
@@ -20,33 +19,12 @@ export default function Page() {
   const itemsPerPage = 8;
   const [successMessage, setSuccessMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
-
-  const fetchAllUsers = async (page, searchTerm = '') => {
-    setIsLoading(true);
-    try {
-      const data = await getAllUsers()
-      const { results, totalPages } = await getAllUsers({
-        limit: itemsPerPage,
-        page,
-        name: searchTerm,
-      });
-      const adminsCount = data.rolesCount[0].count;
-      const usersCount = data.rolesCount[1].count;
-      setAllUsers(results);
-      setTotalPages(Math.ceil(totalPages));
-      setTotalAdmins(adminsCount);
-      setTotalUsers(usersCount);
-
-    } catch (error) {
-      console.error("Error fetching all users:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [createSuccessMessage, setCreateSuccessMessage] = useState(null);
+  const [filter, setFilter] = useState('All Roles'); 
+  const [displayedUsers, setDisplayedUsers] = useState([]);
 
   const authCheck = async () => {
     const isValid = await checkToken();
@@ -58,29 +36,137 @@ export default function Page() {
     } else {
       router.push("/login");
     }
-  };
+  };  
 
+  const fetchUserCount = async () => {
+    try {
+      const data = await getAllUsers();
+  
+      // Using reduce to create a count object by role
+      const roleCounts = data.rolesCount.reduce((acc, roleObj) => {
+        acc[roleObj.role] = roleObj.count;
+        return acc;
+      }, {});
+  
+      // Set the counts using the role names
+      setTotalAdmins(roleCounts['admin'] || 0);
+      setTotalUsers(roleCounts['user'] || 0);
+    } catch (error) {
+      console.error("Error fetching user count:", error);
+      setTotalAdmins(0);
+      setTotalUsers(0);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchUserCount();
+  }, []
+  );
+  
+  const fetchAllUsers = async () => {
+    setIsLoading(true);
+    try {
+      const { results } = await getAllUsers({ limit: 100 });
+      setAllUsers(results);
+      setTotalPages(Math.ceil(results.length / itemsPerPage));
+      setDisplayedUsers(results.slice(0, itemsPerPage));
+    } catch (error) {
+      console.error("Error fetching all users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   useEffect(() => {
     const fetchData = async () => {
       const isValid = await authCheck();
       if (isValid) {
-        fetchAllUsers(currentPage, debouncedSearchTerm);
+        fetchAllUsers();
       } else {
         router.push("/");
       }
     };
     fetchData();
-  }, [currentPage, debouncedSearchTerm]);
+  }, []);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setSearchTerm(debouncedSearchTerm);
-    }, 500);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [debouncedSearchTerm]);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    const startIndex = (newPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+  
+    let filteredUsers;
+    if (filter === 'All Roles') {
+      filteredUsers = [...allUsers];
+    } else {
+      filteredUsers = allUsers.filter(user => {
+        const userRole = user.role ? user.role.toLowerCase() : '';
+        const roleMatch = userRole === filter.toLowerCase();
+        return roleMatch;
+      });
+    }
+  
+    const finalFilteredUsers = searchTerm
+      ? filteredUsers.filter(user =>
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm) ||
+          (user.role ? user.role.toLowerCase().includes(searchTerm) : false)
+        )
+      : filteredUsers;
+  
+    setDisplayedUsers(finalFilteredUsers.slice(startIndex, endIndex));
+  };
+  
+  
+  const handleSearchChange = (event) => {
+    const newSearchTerm = event.target.value.toLowerCase();
+    setSearchTerm(newSearchTerm);
 
+    const filteredUsers = allUsers.filter(user =>
+      user.name.toLowerCase().includes(newSearchTerm) ||
+      user.email.toLowerCase().includes(newSearchTerm) ||
+      user.role.toLowerCase().includes(newSearchTerm)
+    );
+
+    // keep the role that is selected too:
+    const finalFilteredUsers = filter === 'All Roles'
+      ? filteredUsers
+      : filteredUsers.filter(user => user.role.toLowerCase() === filter.toLowerCase());
+
+    setDisplayedUsers(finalFilteredUsers.slice(0, itemsPerPage));
+    setTotalPages(Math.ceil(finalFilteredUsers.length / itemsPerPage));
+    setCurrentPage(1);
+  };
+
+  const handleFilterChange = (filterValue) => {
+    setFilter(filterValue);
+    setCurrentPage(1);
+  
+    let filteredUsers;
+    if (filterValue === 'All Roles') {
+      // If "All Roles" is selected, ignore role filtering
+      filteredUsers = [...allUsers];
+    } else {
+      // Only filter by role if a specific role is selected
+      filteredUsers = allUsers.filter(user => {
+        const userRole = user.role ? user.role.toLowerCase() : '';
+        return userRole === filterValue.toLowerCase();
+      });
+    }
+  
+    // Apply search term if it exists
+    const finalFilteredUsers = searchTerm
+      ? filteredUsers.filter(user =>
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm) ||
+          (user.role ? user.role.toLowerCase().includes(searchTerm) : false)
+        )
+      : filteredUsers;
+  
+    setDisplayedUsers(finalFilteredUsers.slice(0, itemsPerPage));
+    setTotalPages(Math.ceil(finalFilteredUsers.length / itemsPerPage));
+  };
+  
   const handleDelete = async (userId) => {
     console.log("Deleting user with id:", userId);
     try {
@@ -92,14 +178,6 @@ export default function Page() {
     } catch (error) {
       console.error("Error deleting user:", error);
     }
-  };
-
-  const closeModalOnSuccess = () => {
-    setSuccessMessage(null);
-  };
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
   };
 
   const handleEdit = async (updatedUser) => {
@@ -120,8 +198,8 @@ export default function Page() {
     }
   };
 
-  const handleSearchChange = (event) => {
-    setDebouncedSearchTerm(event.target.value);
+  const closeModalOnSuccess = () => {
+    setSuccessMessage(null);
   };
 
   return (
@@ -129,6 +207,11 @@ export default function Page() {
       {successMessage && (
         <SuccessModal message={successMessage} onClose={closeModalOnSuccess} />
       )}
+
+      {createSuccessMessage && (
+          <SuccessModal message={createSuccessMessage} onClose={() => setCreateSuccessMessage(null)} />
+      )}
+
 
       <div className="flex flex-col w-full px-6 mt-16">
         <div className="flex justify-between items-center mb-6">
@@ -145,7 +228,7 @@ export default function Page() {
           <SkeletonUserTable />
         ) : (
           <UserTable
-            users={allUsers}
+            users={displayedUsers}
             searchTerm={searchTerm}
             handleSearchChange={handleSearchChange}
             itemsPerPage={itemsPerPage}
@@ -154,6 +237,9 @@ export default function Page() {
             onPageChange={handlePageChange}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            handleFilterChange={handleFilterChange}
+            setCreateSuccessMessage={setCreateSuccessMessage}
+            filterRole={filter}
           />
         )}
       </div>

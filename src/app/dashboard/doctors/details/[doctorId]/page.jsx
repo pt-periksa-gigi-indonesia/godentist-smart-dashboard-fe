@@ -111,8 +111,8 @@ export default function DoctorDetailPage() {
                     <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="flex items-center mb-4 lg:mb-0">
 
-                            <div className="w-32 h-32 rounded-full mr-4 flex items-center justify-center bg-gray-200">
-                                <FaUser className="text-gray-500 text-6xl" />
+                            <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-full mr-4 flex items-center justify-center bg-gray-200">
+                                <FaUser className="text-gray-500 text-3xl sm:text-6xl" />
                             </div>
 
                             <div>
@@ -142,8 +142,8 @@ export default function DoctorDetailPage() {
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
                                     <FaChartBar className="mr-2" />Statistics
                                 </h3>
-                                <div className="flex items-center mb-4">
-                                    <div className="mr-4">
+                                <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start mb-4 space-y-2 md:space-y-4 lg:space-y-4">
+                                    <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
                                         <label htmlFor="viewType" className="mr-2 text-gray-600">Select View Type:</label>
                                         <select
                                             id="viewType"
@@ -156,7 +156,7 @@ export default function DoctorDetailPage() {
                                         </select>
                                     </div>
                                     {viewType === 'Chart' && (
-                                        <div>
+                                        <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
                                             <label htmlFor="chartType" className="mr-2 text-gray-600">Select Chart Type:</label>
                                             <select
                                                 id="chartType"
@@ -173,6 +173,7 @@ export default function DoctorDetailPage() {
                                 </div>
                                 {viewType === 'Chart' ? renderChart() : renderText()}
                             </div>
+
 
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">

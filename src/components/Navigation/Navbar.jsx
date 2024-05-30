@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData } from '@/api/lib/userHandler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket, faBell, faGear, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faGear } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {
 import { deleteCookies } from '@/api/auth/cookiesHandler';
 import MobileSidebar from '../mobile-sidebar';
 import { cn } from '@/lib/utils';
-
+import Notifications from '@/components/Utilities/Notifications'; // Import the Notifications component
 
 const Navbar = ({ toggleSidebar, isCollapsed }) => {
     const router = useRouter();
@@ -57,7 +57,7 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
                 </div>
             </div>
             <div className="relative flex items-center space-x-4 md:mr-6 mt-4 sm:mr-4">
-                <FontAwesomeIcon icon={faBell} className="text-blue-dentist cursor-pointer text-xl pr-3" />
+                <Notifications />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative flex items-center space-x-2 h-8 rounded-lg border border-gray-300 p-2 py-5 pl-4 pr-12">

@@ -2,11 +2,15 @@
 
 import Link from 'next/link';
 
+import {
+    Table,
+} from "@/components/ui/table"
+
 export default function ClinicTable({ clinics }) {
     return (
-        <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="mt-6 mb-6 bg-white rounded-lg border border-gray-200 shadow-sm">
             {clinics && clinics.length > 0 ? (
-                <table className="min-w-full divide-y divide-gray-200">
+                <Table>
                     <thead className="bg-gray-50">
                         <tr>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -37,7 +41,7 @@ export default function ClinicTable({ clinics }) {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </Table>
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch clinic information right now.</div>
             )}

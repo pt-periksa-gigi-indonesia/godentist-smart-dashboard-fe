@@ -1,67 +1,43 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaUserInjured, FaMoneyCheckAlt, FaCommentDots, FaStar } from 'react-icons/fa';
+import { FaUserInjured, FaMoneyCheckAlt } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 import { checkToken } from '@/api/auth/validateAccessToken';
 import { getUserId } from '@/api/auth/cookiesHandler';
 import { getUserData } from '@/api/lib/userHandler';
-import { getDoctors } from '@/api/lib/doctorHandler';
-import { getClinics } from '@/api/lib/clinicHandler';
 
 import PartnerStats from '@/components/cards/PartnerAcc';
 import FeedbackCard from '@/components/cards/FeedbackCard';
+import PopularServicesCard from '@/components/cards/PopularServiceCard';
 
-import { getClinicFeedbacks, getDoctorFeedbacks } from '@/api/lib/feedbacksHandler';
+import { getDashboardInfo } from '@/api/lib/dashboardHandler';
 
 import SeedButton from '@/components/seedButton';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444', '#ffa07a', '#dda0dd', '#8b0000', '#00bfff', '#228b22', '#6a5acd'];
 
 export default function DoctorDashboard() {
+  const router = useRouter();
   const [chartType, setChartType] = useState('bar');
   const [dataType, setDataType] = useState('transactions');
   const [greeting, setGreeting] = useState('');
-  const router = useRouter();
 
   const [totalVerDoctor, setTotalVerifiedDoctor] = useState(0);
   const [totalUnverDoctor, setTotalUnverifiedDoctor] = useState(0);
 
   const [feedbackData, setFeedbackData] = useState([]);
 
-  useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        const clinicFeedbacks = await getClinicFeedbacks();
-        const doctorFeedbacks = await getDoctorFeedbacks();
-        const concatenatedFeedbacks = [...clinicFeedbacks.results, ...doctorFeedbacks.results];
-        setFeedbackData(concatenatedFeedbacks);
-      } catch (error) {
-        console.error('Failed to fetch feedbacks:', error);
-      }
-    };
+  const [totalClinics, setTotalClinics] = useState(0);
+  const [totalAmountTransactions, setTotalTransactions] = useState(0);
+  const [totalConsulPatients, setTotalPatients] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-    fetchFeedbacks();
-  }, []);
-
-  const fetchDoctors = async () => {
-    try {
-      const data = await getDoctors({});
-      console.log('data:', data);
-      const verifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "verified");
-      setTotalVerifiedDoctor(verifiedDoctors.length);
-      const unverifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "unverified");
-      setTotalUnverifiedDoctor(unverifiedDoctors.length);
-      setTotalDoctor(data.results.length);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error('Failed to fetch doctors:', error);
-    }
-  };
+  const [popularServices, setPopularServices] = useState([]);
+  const [transactionsPerMonth, setTransactionsPerMonth] = useState([]);
 
   useEffect(() => {
-    fetchDoctors();
     setGreeting(getGreeting());
   }, []);
 
@@ -95,50 +71,61 @@ export default function DoctorDashboard() {
     authCheck();
   }, []);
 
+  const fetchDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getDashboardInfo();
+      console.log('data:', data);
+      // Feedback
+      setFeedbackData(data.latestFeedbacks);
+      // Clinic
+      setTotalClinics(data.clinicCount);
+      setTotalTransactions(data.totalAmountFromClinic);
+      setTotalPatients(data.consultationPatientsCount);
+      // Doctor
+      const verifiedDoctors = data.doctorCount.find(doctor => doctor.verificationStatus === 'verified');
+      const unverifiedDoctors = data.doctorCount.find(doctor => doctor.verificationStatus === 'unverified');
+      setTotalVerifiedDoctor(verifiedDoctors ? verifiedDoctors.count : 0);
+      setTotalUnverifiedDoctor(unverifiedDoctors ? unverifiedDoctors.count : 0);
+      // Services
+      setPopularServices(data.popularServices);
+      // Transactions
+      setTransactionsPerMonth(data.totalTransactionsEachMonth);
+
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
   const fetchedData = {
     doctorsStatus: [
       { status: 'Unverified Doctors', total: totalUnverDoctor },
       { status: 'Verified Doctors', total: totalVerDoctor }
-    ]
+    ],
+    transactionsData: transactionsPerMonth.map(item => ({
+      month: item.month,
+      total: item.totalRevenue
+    }))
   };
 
-  const dummyData = {
-    totalPatients: 150,
-    totalTransactions: 424200,
-    transactionsPerMonth: [
-      { month: 'Jan', total: 3000 },
-      { month: 'Feb', total: 3200 },
-      { month: 'Mar', total: 1800 },
-      { month: 'Apr', total: 6000 },
-      { month: 'May', total: 4000 },
-      { month: 'Jun', total: 7000 },
-      { month: 'Jul', total: 3300 },
-      { month: 'Aug', total: 2600 },
-      { month: 'Sep', total: 3500 },
-      { month: 'Oct', total: 2000 },
-      { month: 'Nov', total: 4500 },
-      { month: 'Dec', total: 4200 }
-    ],
-    popularServices: [
-      { id: 1, service: 'Teeth Whitening', count: 150 },
-      { id: 2, service: 'Dental Cleaning', count: 120 },
-      { id: 3, service: 'Root Canal Treatment', count: 100 },
-      { id: 4, service: 'Dental Implants', count: 90 },
-      { id: 5, service: 'Orthodontics', count: 80 }
-    ]
-  };
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const renderChart = () => {
-    const data = dataType === 'transactions' ? dummyData.transactionsPerMonth : fetchedData.doctorsStatus;
+    const data = dataType === 'transactions' ? fetchedData.transactionsData : fetchedData.doctorsStatus;
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
     if (chartType === 'bar') {
       return (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
-            <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} />
-            <YAxis />
-            <Tooltip />
+            <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} tick={{ fontSize: 15 }} />
+            <YAxis tick={{ fontSize: 13 }} />
+            <Tooltip contentStyle={{ fontSize: 15 }} />
             <Bar dataKey="total" fill="#3a5fd9" radius={[10, 10, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -147,47 +134,17 @@ export default function DoctorDashboard() {
       return (
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={data} dataKey="total" nameKey={dataType === 'transactions' ? 'month' : 'status'} cx="50%" cy="50%" outerRadius={100} fill="#4A5568" label>
+            <Pie data={data} dataKey="total" nameKey={dataType === 'transactions' ? 'month' : 'status'} cx="50%" cy="50%" outerRadius={100} fill="#4A5568" label={{ fontSize: 12 }}>
               {
                 data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
               }
             </Pie>
-            <Tooltip />
+            <Tooltip contentStyle={{ fontSize: 12 }} />
           </PieChart>
         </ResponsiveContainer>
       );
     }
   };
-
-
-  const [clinics, setClinics] = useState([]);
-  const [totalClinics, setTotalClinics] = useState(0);
-  const [totalAmountTransactions, setTotalTransactions] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchClinics = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getClinics();
-      setClinics(data.results);
-      const totalAmountTransactions = data.totalAmountTransactions;
-      setTotalTransactions(totalAmountTransactions);
-      const clinicsData = data.results;
-      setTotalClinics(data.totalResults);
-    } catch (error) {
-      console.error('Failed to fetch clinics:', error);
-    }
-    finally {
-      setIsLoading(false);
-    }
-
-  }
-
-  useEffect(() => {
-    fetchClinics();
-  }, []);
-
-
 
   return (
     <main className="flex-grow flex-col px-6 xl:mt-16 md:mt-10 sm:mt-6">
@@ -216,7 +173,7 @@ export default function DoctorDashboard() {
           </div>
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
-              <p className="text-2xl font-bold">{dummyData.totalPatients} people</p>
+              <p className="text-2xl font-bold">{totalConsulPatients} people</p>
               <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+31 from last month</h3>
             </div>
           </div>
@@ -265,25 +222,12 @@ export default function DoctorDashboard() {
           {renderChart()}
         </div>
 
+        {/* Feedback */}
         <FeedbackCard feedback={feedbackData} />
 
         {/* Popular Services */}
-        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-medium text-gray-800">Popular Services</h2>
-            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
-              <FaStar className="text-lg text-blue-dentist" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            {dummyData.popularServices.map(service => (
-              <div key={service.id} className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <p className="text-md text-gray-800 font-bold">{service.service}</p>
-                <p className="text-sm text-blue-dentist">Number of times booked: {service.count}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PopularServicesCard services={popularServices} />
+        
       </div>
     </main>
   );

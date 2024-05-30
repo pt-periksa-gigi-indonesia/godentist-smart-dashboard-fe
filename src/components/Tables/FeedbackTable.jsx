@@ -38,16 +38,16 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
         <div>
             {feedbacks && feedbacks.length > 0 ? (
                 <>
-                    <div className="flex py-4">
+                    <div className="flex flex-col sm:flex-row py-4 space-y-2 sm:space-y-0 sm:space-x-2">
                         <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="ml-auto">
+                                <Button variant="outline" className="sm:ml-auto">
                                     {filter === 'doctor' ? 'Doctor Feedbacks' : 'Clinic Feedbacks'} <ChevronDown className="ml-2 h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="start" className="sm:align-end">
                                 <DropdownMenuItem onClick={() => onFilterChange("doctor")}>
                                     Filter by Doctor
                                 </DropdownMenuItem>
@@ -56,22 +56,6 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-
-                        {/* <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-4">
-                            Sort <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onSortChange("desc")}>
-                            Newest
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onSortChange("asc")}>
-                            Oldest
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu> */}
                     </div>
 
 
