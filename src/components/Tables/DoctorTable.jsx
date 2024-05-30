@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Edit } from 'lucide-react';
 
 import SearchBar from '@/components/Utilities/SearchBar';
 import Pagination from '../Utilities/Pagination';
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
     Table,
@@ -24,7 +26,9 @@ import {
 
 import Modal from '@/components/Utilities/Modal';
 
-import { changeDoctorVerificationStatus } from '@/api/lib/doctorHandler';
+import { changeDoctorVerificationStatus, getDoctorById, doctorsOcr } from '@/api/lib/doctorHandler';
+
+import { FaAddressCard } from "react-icons/fa";
 
 const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange, refreshDoctors }) => {
     const router = useRouter();
@@ -32,6 +36,42 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
     const [filter, setFilter] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [doctorDetails, setDoctorDetails] = useState(null);
+    const [OCRData, setOCRData] = useState(null);
+
+    // get doctor details
+    const fetchDoctorDetails = async (doctorId) => {
+        try {
+            const data = await getDoctorById(doctorId);
+            setDoctorDetails(data[0]);
+        } catch (error) {
+            console.error('Failed to fetch doctor details:', error);
+        }
+    };
+
+    // get doctor ocr data
+    const fetchDoctorOCRData = async (doctorId) => {
+        try {
+            const data = await doctorsOcr(doctorId);
+            console.log('Doctor OCR data:', data);
+            setOCRData(data);
+        } catch (error) {
+            console.error('Failed to fetch doctor OCR data:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedDoctor) {
+            fetchDoctorDetails(selectedDoctor.id);
+            fetchDoctorOCRData(selectedDoctor.id);
+        }
+
+        return () => {
+            setDoctorDetails(null);
+            setOCRData(null);
+        };
+    }, [selectedDoctor]);
+
 
     const handleViewDetails = (doctorId) => {
         router.push(`/dashboard/doctors/details/${doctorId}`);
@@ -63,6 +103,12 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         }
     };
 
+    const renderFieldData = (data, fieldName) => {
+        if (!data) return <Skeleton className="h-6" />;
+    
+        return data[fieldName] || "-";
+    };
+
     const filteredDoctors = doctors.filter(doctor => {
         const includesSearchTerm = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
         const passesFilter = !filter || doctor.verificationStatus === filter;
@@ -80,11 +126,11 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" className="ml-auto">
-                                    {filter === 'verified' ? 'Filter: Verified Doctors' : 
-                                    filter === 'unverified' ? 'Filter: Unverified Doctors' : 
-                                    filter === 'rejected' ? 'Filter: Rejected Doctors' : 
-                                    filter === 'pending' ? 'Filter: Pending Doctors' : 
-                                    'Filter: All Doctors'}       
+                                    {filter === 'verified' ? 'Filter: Verified Doctors' :
+                                        filter === 'unverified' ? 'Filter: Unverified Doctors' :
+                                            filter === 'rejected' ? 'Filter: Rejected Doctors' :
+                                                filter === 'pending' ? 'Filter: Pending Doctors' :
+                                                    'Filter: All Doctors'}
                                     <ChevronDown className="ml-2 h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
@@ -120,8 +166,6 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {/* if doctor length > 0 */}
-                            {/* Check if doctors list is empty */}
                             {doctors.length > 0 ? (
                                 filteredDoctors.map((doctor, index) => (
                                     <TableRow key={doctor.id}>
@@ -169,18 +213,34 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
                     <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
 
-                    {isModalOpen && selectedDoctor && (
+                    {isModalOpen && selectedDoctor ? (
                         <Modal isOpen={isModalOpen} onClose={closeModal}>
                             <h2 className="text-xl font-semibold mb-4">Doctor Details</h2>
                             <div className="mb-4">
-                                <img src={dummyOCRData.documentPhoto} alt="Document" className="w-40 h-auto mx-auto rounded-md" />
+                                {doctorDetails?.cardUrl ? (
+                                    <img src={doctorDetails.cardUrl} alt="Document" className="w-40 h-auto mx-auto rounded-md" />
+                                ) : (
+                                    <FaAddressCard className="mx-auto text-3xl" />
+                                )}
                             </div>
                             <p><strong>Documents:</strong></p>
-                            <ul className="mb-4">
-                                <li>Document Type: {dummyOCRData.documentType}</li>
-                                <li>Name: {selectedDoctor.name}</li>
-                                <li>Registration Number: {dummyOCRData.registrationNumber}</li>
+                            {OCRData ? (
+                                <ul className="mb-4">
+                                    <li>Nama: {renderFieldData(OCRData, 'NAMA')}</li>
+                                    <li>NIK: {renderFieldData(OCRData, 'NIK')}</li>
+                                    <li>Tempat Tanggal Lahir: {renderFieldData(OCRData, 'Tempat Tanggal Lahir')}</li>
+                                    <li>Alamat: {renderFieldData(OCRData, 'ALAMAT')}</li>
+                                    <li>Jenis Kelamin: {renderFieldData(OCRData, 'JENIS KELAMIN')}</li>
+                                </ul>
+                            ) : (
+                                <ul className="mb-4">
+                                <li>Nama:  <Skeleton className="h-6" /> </li>
+                                <li>NIK:  <Skeleton className="h-6" /> </li>
+                                <li>Tempat Tanggal Lahir: <Skeleton className="h-6" /></li>
+                                <li>Alamat:  <Skeleton className="h-6" /> </li>
+                                <li>Jenis Kelamin:  <Skeleton className="h-6" /> </li>
                             </ul>
+                            )}
                             <p><strong>Status:</strong> {selectedDoctor.verificationStatus}</p>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -200,7 +260,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </Modal>
-                    )}
+                    ) : null}
                 </>
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch doctor information right now.</div>
