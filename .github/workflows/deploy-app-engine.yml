@@ -33,7 +33,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: capstone-godentist
-          service_account_email: deploy-front-end-app-engine@capstone-godentist.iam.gserviceaccount.com
 
       - name: Deploy to App Engine
         run: gcloud app deploy --quiet
