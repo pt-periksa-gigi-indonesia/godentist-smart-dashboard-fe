@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { debounce } from "lodash";
 import { checkToken } from "@/api/auth/validateAccessToken";
 import { getUserRole } from "@/api/auth/cookiesHandler";
 import { getAllUsers, deleteUser, updateUser, updateUserRole } from "@/api/lib/userHandler";
