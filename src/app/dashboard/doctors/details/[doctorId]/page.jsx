@@ -105,17 +105,16 @@ export default function DoctorDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-6 mt-16">
+            <main className="flex-grow p-2 md:p-6 mt-16">
                 <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Details</h1>
                 {doctor ? (
-                    <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="flex items-center mb-4 lg:mb-0">
-
-                            <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-full mr-4 flex items-center justify-center bg-gray-200">
-                                <FaUser className="text-gray-500 text-3xl sm:text-6xl" />
+                    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="flex flex-col sm:flex-col md:flex-row items-start mb-4 lg:mb-0">
+                            <div className="w-32 h-32 sm:w-32 sm:h-32 rounded-full mb-4 sm:mb-4 sm:mr-4 flex items-center justify-center bg-gray-200">
+                                <FaUser className="text-gray-500 text-6xl" />
                             </div>
 
-                            <div>
+                            <div className="sm:text-left">
                                 <h2 className="text-gray-800 text-2xl font-semibold">{doctor.name || '-'}</h2>
                                 <p className="text-gray-600">{doctor.specialization || '-'}</p>
                                 <p className="text-gray-600">{doctor.workPlace || '-'}</p>
