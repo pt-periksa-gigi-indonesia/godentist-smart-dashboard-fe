@@ -195,7 +195,7 @@ export default function DoctorDetailPage() {
                                         <p className="text-gray-800"><strong>Message:</strong> {feedback.message || '-'}</p>
                                         <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
                                     </div>
-                                )) : <p className="text-gray-800">-</p>}
+                                )) : <p className="text-gray-800">Feedback is currently empty.</p>}
                             </div>
                         </div>
                     </div>

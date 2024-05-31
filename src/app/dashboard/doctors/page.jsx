@@ -28,7 +28,6 @@ export default function DoctorsPage() {
         try {
             const data = await getDoctors({ limit: 100 });
             setDoctors(data.results);
-            console.log(data.results);
             setTotalDoctor(data.results.length);
             const verifiedDoctors = data.results.filter(doctor => doctor.verificationStatus === "verified");
             setTotalVerifiedDoctor(verifiedDoctors.length);
