@@ -55,20 +55,20 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                         </DropdownMenu>
                     </div>
 
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto rounded-2xl border border-gray-200">
                         <Table className="min-w-full table-auto">
-                            <TableHeader className="bg-gray-50 border border-gray-200">
+                            <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600 border border-gray-200">
                                 <TableRow>
-                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         No.
                                     </TableHead>
-                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         Recipient
                                     </TableHead>
-                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         Feedback
                                     </TableHead>
-                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         Date
                                     </TableHead>
                                 </TableRow>
