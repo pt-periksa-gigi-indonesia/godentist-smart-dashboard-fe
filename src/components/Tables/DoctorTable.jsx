@@ -190,12 +190,12 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                     </div>
 
                     <Table>
-                        <TableHeader className="bg-gray-50 border border-gray-200">
+                        <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600">
                             <TableRow>
-                                <TableHead className="w-[100px]">No.</TableHead>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-center">Action</TableHead>
+                                <TableHead className="w-[100px] text-white rounded-tl-2xl">No.</TableHead>
+                                <TableHead  className="text-white">Name</TableHead>
+                                <TableHead  className="text-white">Status</TableHead>
+                                <TableHead className="text-white text-center rounded-tr-2xl">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
