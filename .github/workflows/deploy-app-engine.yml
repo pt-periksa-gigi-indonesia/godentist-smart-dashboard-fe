@@ -35,4 +35,4 @@ jobs:
           project_id: capstone-godentist
 
       - name: Deploy to App Engine
-        run: gcloud app deploy --quiet
+        run: gcloud app deploy
