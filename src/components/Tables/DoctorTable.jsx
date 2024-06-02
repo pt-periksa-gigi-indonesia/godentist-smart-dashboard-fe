@@ -8,6 +8,9 @@ import SearchBar from '@/components/Utilities/SearchBar';
 import Pagination from '../Utilities/Pagination';
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+
 import {
     Table,
     TableBody,
@@ -26,7 +29,7 @@ import {
 
 import Modal from '@/components/Utilities/Modal';
 
-import { changeDoctorVerificationStatus, getDoctorById, doctorsOcr } from '@/api/lib/doctorHandler';
+import { changeDoctorVerificationStatus, getDoctorById, doctorsOcr, doctorOcrLatest } from '@/api/lib/doctorHandler';
 
 import { FaAddressCard } from "react-icons/fa";
 
@@ -38,6 +41,10 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [doctorDetails, setDoctorDetails] = useState(null);
     const [OCRData, setOCRData] = useState(null);
+    const [isImageOpen, setIsImageOpen] = useState(false);
+    const [isOCRLoading, setIsOCRLoading] = useState(false);
+
+
 
     // get doctor details
     const fetchDoctorDetails = async (doctorId) => {
@@ -57,8 +64,28 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
             setOCRData(data);
         } catch (error) {
             console.error('Failed to fetch doctor OCR data:', error);
-        }
+        }        
     };
+
+    const fetchDoctorOCRLatest = async (doctorId) => {
+        setIsOCRLoading(true);
+        try {
+            const data = await doctorOcrLatest(doctorId);
+            console.log('Doctor OCR data latest:', data);
+            setOCRData(data);
+        } catch (error) {
+            console.error('Failed to fetch doctor OCR data:', error);
+        } finally {
+            setIsOCRLoading(false); 
+        }
+        
+    };
+
+    useEffect(() => {
+        if (selectedDoctor && selectedDoctor.id) {
+            fetchDoctorOCRLatest(selectedDoctor.id);
+        }
+    }, [selectedDoctor]);
 
     useEffect(() => {
         if (selectedDoctor) {
@@ -91,6 +118,11 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         setSelectedDoctor(null);
     };
 
+    const toggleImageView = () => {
+        setIsImageOpen(!isImageOpen);
+    };
+
+
     const handleStatusUpdate = async (newStatus) => {
         console.log(`Updating status for ${selectedDoctor.name} to ${newStatus}...`);
         try {
@@ -105,7 +137,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
     const renderFieldData = (data, fieldName) => {
         if (!data) return <Skeleton className="h-6" />;
-    
+
         return data[fieldName] || "-";
     };
 
@@ -118,6 +150,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
     return (
         <div >
+            
             {doctors ? (
                 <>
                     <div className="flex py-4">
@@ -218,50 +251,81 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             <h2 className="text-xl font-semibold mb-4">Doctor Details</h2>
                             <div className="mb-4">
                                 {doctorDetails?.cardUrl ? (
-                                    <img src={doctorDetails.cardUrl} alt="Document" className="w-40 h-auto mx-auto rounded-md" />
+                                    <img
+                                        src={doctorDetails.cardUrl}
+                                        alt="Document"
+                                        onClick={toggleImageView}
+                                        className="w-40 h-auto mx-auto rounded-md hover:cursor-pointer"
+                                    />
+
                                 ) : (
                                     <FaAddressCard className="mx-auto text-3xl" />
                                 )}
                             </div>
-                            <p><strong>Documents:</strong></p>
-                            {OCRData ? (
+                            <p><strong>Data KTP:</strong></p>
+                            
+                            {isOCRLoading ?  (
                                 <ul className="mb-4">
-                                    <li>Nama: {renderFieldData(OCRData, 'NAMA')}</li>
-                                    <li>NIK: {renderFieldData(OCRData, 'NIK')}</li>
-                                    <li>Tempat Tanggal Lahir: {renderFieldData(OCRData, 'Tempat Tanggal Lahir')}</li>
-                                    <li>Alamat: {renderFieldData(OCRData, 'ALAMAT')}</li>
-                                    <li>Jenis Kelamin: {renderFieldData(OCRData, 'JENIS KELAMIN')}</li>
+                                    <li>Nama:  <Skeleton className="h-6" /> </li>
+                                    <li>NIK:  <Skeleton className="h-6" /> </li>
+                                    <li>Tempat Tanggal Lahir: <Skeleton className="h-6" /></li>
+                                    <li>Alamat:  <Skeleton className="h-6" /> </li>
+                                    <li>Jenis Kelamin:  <Skeleton className="h-6" /> </li>
                                 </ul>
-                            ) : (
+                            ) : OCRData ? (
                                 <ul className="mb-4">
-                                <li>Nama:  <Skeleton className="h-6" /> </li>
-                                <li>NIK:  <Skeleton className="h-6" /> </li>
-                                <li>Tempat Tanggal Lahir: <Skeleton className="h-6" /></li>
-                                <li>Alamat:  <Skeleton className="h-6" /> </li>
-                                <li>Jenis Kelamin:  <Skeleton className="h-6" /> </li>
-                            </ul>
-                            )}
+                                    <li>Nama: {renderFieldData(OCRData, 'nama')}</li>
+                                    <li>NIK: {renderFieldData(OCRData, 'nik')}</li>
+                                    <li>Tempat Tanggal Lahir: {renderFieldData(OCRData, 'tempatTanggalLahir')}</li>
+                                    <li>Alamat: {renderFieldData(OCRData, 'alamat')}</li>
+                                    <li>Jenis Kelamin: {renderFieldData(OCRData, 'jenisKelamin')}</li>
+                                </ul>
+                            ) : ( <p>No OCR data available.</p> )}
                             <p><strong>Status:</strong> {selectedDoctor.verificationStatus}</p>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                    >
-                                        Change Status
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => handleStatusUpdate('verified')}>
-                                        Verified
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleStatusUpdate('rejected')}>
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className='flex justify-between'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                        >
+                                            Change Status
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => handleStatusUpdate('verified')}>
+                                            Verified
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleStatusUpdate('rejected')}>
+                                            Rejected
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                <button
+                                    className='items-center mt-4 bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600'
+                                    onClick={() => fetchDoctorOCRLatest(selectedDoctor.id)}
+                                >
+                                    <FontAwesomeIcon icon={faSyncAlt} />
+                                </button>
+                            </div>
+
                         </Modal>
                     ) : null}
+                    {isImageOpen && (
+                        <div
+                            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50"
+                            onClick={toggleImageView}
+                        >
+                            <img
+                                src={doctorDetails.cardUrl}
+                                alt="Enlarged document"
+                                className="max-w-full max-h-full"
+                            />
+                        </div>
+                    )}
                 </>
+
+
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch doctor information right now.</div>
             )}

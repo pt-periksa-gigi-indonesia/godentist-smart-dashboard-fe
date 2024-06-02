@@ -62,12 +62,36 @@ export async function changeDoctorVerificationStatus(doctor_id, verificationStat
     return data;
 }
 
-// doctors ocr it will need doctor id
+
 export async function doctorsOcr(doctor_id){
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors/ocr`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+        },
+        body: JSON.stringify({ doctorId: doctor_id }) 
+    });
+
+    // if (!response.ok) {
+    //     throw new Error(response.statusText);
+    // }
+
+    const data = await response.json();
+
+    return data;
+}
+
+
+// refresh ocr data
+export async function doctorOcrLatest(doctor_id){
+    const cookies = await getCookies();
+    const access_token = cookies.access_token.value;
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors/ocr-card`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
