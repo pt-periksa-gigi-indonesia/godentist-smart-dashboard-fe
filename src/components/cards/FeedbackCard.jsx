@@ -21,8 +21,8 @@ export default function FeedbackCard({ feedback }) {
             <CardContent className="space-y-2 p-4 pt-0">
                 <ScrollArea className="h-80">
                     {feedback.length > 0 ? (
-                        feedback.map((item) => (
-                            <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
+                        feedback.map((item, index) => (
+                            <div key={index}  className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
                                 <p className="text-md text-gray-800 font-bold">to: {item.name} </p>
                                 <p className="text-sm text-gray-600">{item.feedback}</p>
                                 <p className="text-xs text-blue-dentist">{new Date(item.createdAt).toLocaleDateString()}</p>
