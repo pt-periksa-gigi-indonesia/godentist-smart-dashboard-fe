@@ -21,10 +21,10 @@ export default function PopularServicesCard ({ services }) {
             <CardContent className="space-y-2 p-4 pt-0">
                 <ScrollArea className="h-80">
                     {services.length > 0 ? (
-                        services.map((services) => (
-                            <div className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
-                                <p className="text-md text-gray-800 font-bold">{services.serviceName} </p>
-                                <p className="text-sm text-blue-dentist">Number of times booked: {services.timesBooked}</p>
+                        services.map((service, index) => (
+                            <div key={service.id || service.serviceName || index} className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
+                                <p className="text-md text-gray-800 font-bold">{service.serviceName} </p>
+                                <p className="text-sm text-blue-dentist">Number of times booked: {service.timesBooked}</p>
                             </div>
                         ))
                     ) : (

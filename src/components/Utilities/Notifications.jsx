@@ -81,7 +81,7 @@ const Notifications = () => {
                 </Button>
             </DropdownMenuTrigger>
             {isNotificationOpen && (
-                <DropdownMenuContent className="w-64" align="end" forceMount>
+                <DropdownMenuContent className="w-64 custom-dropdown" align="end" forceMount>
                     {notifications.length > 0 ? (
                         notifications.map((notification, index) => (
                             <DropdownMenuItem key={index}

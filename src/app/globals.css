@@ -75,3 +75,15 @@
     }
   }
 
+
+.custom-dropdown {
+  right: 25%;
+  transform: translateX(25%);
+}
+
+@media (min-width: 600px) {
+  .custom-dropdown {
+      right: 0;
+      transform: none;
+  }
+}

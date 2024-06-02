@@ -261,7 +261,7 @@ const UserTable = ({
             {/* Edit User Modal */}
             {isEditModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
-                    <div className="bg-white rounded-lg p-6 space-y-4 w-11/12 sm:w-1/2 md:w-1/3 lg:w-1/4">
+                    <div className="bg-white rounded-lg p-6 space-y-4 w-11/12 sm:w-2/3 md:w-1/3 lg:w-1/4">
                         <h3 className="text-lg font-semibold text-gray-800">Edit User</h3>
                         <form onSubmit={handleSubmit}>
                             <label className="block text-gray-700">
@@ -336,7 +336,7 @@ const UserTable = ({
             {/* Create User Modal */}
             {isCreateModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
-                    <div className="bg-white rounded-lg p-4 sm:p-6 space-y-4 w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">
+                    <div className="bg-white rounded-lg p-4 sm:p-6 space-y-4 w-11/12 sm:w-2/3 md:w-1/3 lg:w-1/4 xl:w-1/4">
                         <h3 className="text-lg font-semibold text-gray-800">Create New User</h3>
                         <form onSubmit={handleCreateSubmit}>
                             <label className="block text-gray-700">
