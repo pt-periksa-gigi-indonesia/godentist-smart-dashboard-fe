@@ -22,17 +22,14 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-
 export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange, onSortChange, currentPage, totalPages, onPageChange }) {
     const router = useRouter();
-
 
     const filteredFeedbacks = feedbacks.filter(feedback => {
         const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesFilter = filter === 'all' || feedback.type === filter;
         return matchesSearch && matchesFilter;
     });
-
 
     return (
         <div>
@@ -58,50 +55,50 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                         </DropdownMenu>
                     </div>
 
-
-                    <Table>
-                        <TableHeader className="bg-gray-50 border border-gray-200">
-                            <TableRow>
-                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    No.
-                                </TableHead>
-                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Recipient
-                                </TableHead>
-                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Feedback
-                                </TableHead>
-                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filteredFeedbacks.map((feedback, index) => (
-                                <TableRow key={feedback.id}>
-                                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{index + 1}</div>
-                                    </TableCell>
-                                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{feedback.name}</div>
-                                    </TableCell>
-                                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{feedback.feedback}</div>
-                                    </TableCell>
-                                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{new Date(feedback.createdAt).toLocaleString()}</div>
-                                    </TableCell>
+                    <div className="overflow-x-auto">
+                        <Table className="min-w-full table-auto">
+                            <TableHeader className="bg-gray-50 border border-gray-200">
+                                <TableRow>
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        No.
+                                    </TableHead>
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Recipient
+                                    </TableHead>
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Feedback
+                                    </TableHead>
+                                    <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date
+                                    </TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredFeedbacks.map((feedback, index) => (
+                                    <TableRow key={feedback.id}>
+                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {feedback.name}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 whitespace-normal text-sm text-gray-900 max-w-lg break-words">
+                                            {feedback.feedback}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {new Date(feedback.createdAt).toLocaleString()}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
 
                     <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
                 </>
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch feedback information right now.</div>
             )}
-
         </div>
     );
 }
