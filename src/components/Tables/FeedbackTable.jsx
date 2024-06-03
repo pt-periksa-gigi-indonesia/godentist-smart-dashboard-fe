@@ -50,7 +50,7 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                     <div className="overflow-x-auto rounded-2xl border border-gray-200">
                         <Table className="min-w-full table-auto">
                             <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600 border border-gray-200">
-                                <TableRow>
+                                <TableRow className="bg-gradient-to-r hover:from-blue-600 hover:to-blue-700">
                                     <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         No.
                                     </TableHead>
