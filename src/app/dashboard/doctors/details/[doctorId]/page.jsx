@@ -4,6 +4,14 @@ import { useEffect, useState } from "react";
 import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { getDoctorById } from "@/api/lib/doctorHandler";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function DoctorDetailPage() {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -105,8 +113,24 @@ export default function DoctorDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-2 md:p-6 mt-16">
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Details</h1>
+            <main className="flex-grow p-2 md:p-6 mt-9">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/dashboard/doctors">Doctors</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{doctor?.name || 'Doctor Details'}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+
+                <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-4">Doctor Details</h1>
                 {doctor ? (
                     <div className="bg-white p-4 md:p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="flex flex-col sm:flex-col md:flex-row items-start mb-4 lg:mb-0">
