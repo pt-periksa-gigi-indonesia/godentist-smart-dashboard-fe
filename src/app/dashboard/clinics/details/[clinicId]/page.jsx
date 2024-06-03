@@ -4,6 +4,14 @@ import { useParams } from 'next/navigation';
 import { getClinicById } from '@/api/lib/clinicHandler';
 import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function ClinicDetailPage() {
     const params = useParams();
@@ -102,8 +110,25 @@ export default function ClinicDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-6 mt-16">
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">Clinic Details</h1>
+            <main className="flex-grow p-6 mt-9">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/dashboard/clinics">Clinics</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            {clinic && (
+                                <BreadcrumbPage>{clinic.clinicName || '-'}</BreadcrumbPage>
+                            )}
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+                <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-4">Clinic Details</h1>
                 {clinic ? (
                     <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="flex items-center mb-4 lg:mb-0">
