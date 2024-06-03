@@ -9,6 +9,7 @@ import { getClinics } from '@/api/lib/clinicHandler';
 
 import ClinicStats from '@/components/cards/ClinicStats';
 import SeedButton from '@/components/seedButton';
+import { set } from 'lodash';
 
 export default function ClinicsPage() {
     const [clinics, setClinics] = useState([]);
@@ -16,14 +17,19 @@ export default function ClinicsPage() {
     const [totalAmountTransactions, setTotalAmountTransactions] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchClinics = async () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const fetchClinics = async (page = 1) => {
         setIsLoading(true);
         try {
-            const data = await getClinics();
+            const data = await getClinics({ page, limit: 8 });
             setClinics(data.results);
             console.log(data);
             setTotalClinics(data.totalResults);
             setTotalAmountTransactions(data.totalAmountTransactions);
+            setTotalPages(Math.ceil(data.totalResults / 8));
+
         } catch (error) {
             console.error('Failed to fetch clinics:', error);
         }
@@ -34,8 +40,8 @@ export default function ClinicsPage() {
     }
 
     useEffect(() => {
-        fetchClinics();
-    }, []);
+        fetchClinics(currentPage);
+    }, [currentPage]);
 
     return (
         <>
@@ -55,6 +61,10 @@ export default function ClinicsPage() {
                 ) : (
                     <ClinicTable
                         clinics={clinics}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+
                     />
                 )}
             </main>

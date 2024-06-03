@@ -197,7 +197,7 @@ export default function ClinicDetailPage() {
                         </div>
                     </div>
                 ) : (
-                    <p>Loading clinic information...</p>
+                    <p>Clinic information is currently none...</p>
                 )}
             </main>
         </>
