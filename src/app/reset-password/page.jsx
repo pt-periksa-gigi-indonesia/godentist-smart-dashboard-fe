@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Carousel from "@/components/Utilities/Carousel";
@@ -18,7 +18,7 @@ export default function ResetPassword() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
+  const searchParams = useSearchParams();
 
   async function handleResetPassword(event) {
     event.preventDefault();
@@ -29,7 +29,7 @@ export default function ResetPassword() {
     }
 
     setIsLoading(true);
-    const token = router.query.token;
+    const token = searchParams.get('token');
 
     try {
       await resetPassword(token, newPassword);
@@ -43,8 +43,6 @@ export default function ResetPassword() {
     } finally {
       setIsLoading(false);
     }
-
-
   }
 
   const images = [
@@ -95,7 +93,6 @@ export default function ResetPassword() {
         <form className="w-full max-w-sm flex flex-col space-y-6 px-6 md:px-0" onSubmit={handleResetPassword}>
           <label className="flex flex-col relative">
             <span className="text-gray-700">New Password</span>
-            {/* <p>Your reset token is: {token}</p> */}
             <input
               type={showPassword ? "text" : "password"}
               name="newPassword"
