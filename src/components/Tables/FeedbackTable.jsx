@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Edit } from 'lucide-react';
 
@@ -22,20 +21,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange, onSortChange, currentPage, totalPages, onPageChange }) {
-    const router = useRouter();
-
-    const filteredFeedbacks = feedbacks.filter(feedback => {
-        const matchesSearch = feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesFilter = filter === 'all' || feedback.type === filter;
-        return matchesSearch && matchesFilter;
-    });
+export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterChange, onSearchChange, currentPage, totalPages, onPageChange }) {
 
     return (
         <div>
-            {feedbacks && feedbacks.length > 0 ? (
+            {feedbacks ? (
                 <>
-                    <div className="flex flex-col sm:flex-row py-4 space-y-2 sm:space-y-0 sm:space-x-2">
+                    <div className="flex flex-col sm:flex-row py-4 space-y-2 sm:space-y-0 sm:space-x-2 justify-between">
                         <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />
 
                         <DropdownMenu>
@@ -74,23 +66,32 @@ export default function FeedbackTable({ feedbacks, filter, searchTerm, onFilterC
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredFeedbacks.map((feedback, index) => (
-                                    <TableRow key={feedback.id}>
-                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {index + 1}
-                                        </TableCell>
-                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {feedback.name}
-                                        </TableCell>
-                                        <TableCell className="px-6 py-4 whitespace-normal text-sm text-gray-900 max-w-lg break-words">
-                                            {feedback.feedback}
-                                        </TableCell>
-                                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {new Date(feedback.createdAt).toLocaleString()}
+                                {feedbacks.length > 0 ? (
+                                    feedbacks.map((feedback, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {(currentPage - 1) * 8 + index + 1}
+                                            </TableCell>
+                                            <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {feedback.name}
+                                            </TableCell>
+                                            <TableCell className="px-6 py-4 whitespace-normal text-sm text-gray-900 max-w-lg break-words">
+                                                {feedback.feedback}
+                                            </TableCell>
+                                            <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {new Date(feedback.createdAt).toLocaleString()}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="px-6 py-4 text-center text-sm text-gray-900">
+                                            No results found
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
+
                         </Table>
                     </div>
 
