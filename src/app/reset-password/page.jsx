@@ -10,7 +10,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 import { resetPassword } from "@/api/lib/userHandler";
 
-export default function ResetPassword(params) {
+export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
