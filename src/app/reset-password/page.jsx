@@ -8,6 +8,8 @@ import Carousel from "@/components/Utilities/Carousel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
+import { resetPassword } from "@/api/lib/userHandler";
+
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,31 +29,22 @@ export default function ResetPassword() {
     }
 
     setIsLoading(true);
-    const token = router.query.token; // Assuming the token is passed in the query string
-    const body = JSON.stringify({ password: newPassword, token });
+    const token = router.query.token;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: body
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setSuccessMessage("Your password has been reset successfully.");
-        setErrorMessage("");
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      } else {
-        setErrorMessage(data.message || "Failed to reset password. Please try again.");
-      }
+      await resetPassword(token, newPassword);
+      setSuccessMessage("Your password has been reset successfully.");
+      setErrorMessage("");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (error) {
-      setErrorMessage("An unexpected error occurred: " + error.message);
+      setErrorMessage(error.message);
     } finally {
       setIsLoading(false);
     }
+
+
   }
 
   const images = [
@@ -102,6 +95,7 @@ export default function ResetPassword() {
         <form className="w-full max-w-sm flex flex-col space-y-6 px-6 md:px-0" onSubmit={handleResetPassword}>
           <label className="flex flex-col relative">
             <span className="text-gray-700">New Password</span>
+            {/* <p>Your reset token is: {token}</p> */}
             <input
               type={showPassword ? "text" : "password"}
               name="newPassword"
@@ -122,10 +116,10 @@ export default function ResetPassword() {
               />
             </button>
           </label>
-          <label className="flex flex-col">
+          <label className="flex flex-col relative">
             <span className="text-gray-700">Confirm New Password</span>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -133,6 +127,16 @@ export default function ResetPassword() {
               className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-dentist text-gray-900"
               placeholder="Confirm your new password"
             />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-9 focus:outline-none"
+            >
+              <FontAwesomeIcon
+                icon={showPassword ? faEye : faEyeSlash}
+                className="text-gray-400"
+              />
+            </button>
           </label>
 
           <button
