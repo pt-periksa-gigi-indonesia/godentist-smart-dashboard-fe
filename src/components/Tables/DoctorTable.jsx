@@ -191,7 +191,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
                     <Table>
                         <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600">
-                            <TableRow>
+                            <TableRow className="bg-gradient-to-r hover:from-blue-600 hover:to-blue-700">
                                 <TableHead className="w-[100px] text-white rounded-tl-2xl">No.</TableHead>
                                 <TableHead  className="text-white">Name</TableHead>
                                 <TableHead  className="text-white">Status</TableHead>
