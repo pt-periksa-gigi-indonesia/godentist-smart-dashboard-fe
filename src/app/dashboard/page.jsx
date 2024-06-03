@@ -174,7 +174,7 @@ export default function DoctorDashboard() {
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
               <p className="text-2xl font-bold">{totalConsulPatients} people</p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+31 from last month</h3>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function DoctorDashboard() {
             <div>
               {/* dalam rupiah */}
               <p className="text-2xl font-bold">Rp {(totalAmountTransactions > 0) && (totalAmountTransactions !== undefined) ? `${totalAmountTransactions}` : "-"}</p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">+26% from last month</h3>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
             </div>
           </div>
         </div>
