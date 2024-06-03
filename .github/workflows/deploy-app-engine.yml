@@ -32,7 +32,7 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2  
         with:
-          project_id: capstone-godentist
+          project_id: ${{ secrets.GCP_PROJECT }}
 
       - name: Deploy to App Engine
         run: gcloud app deploy
