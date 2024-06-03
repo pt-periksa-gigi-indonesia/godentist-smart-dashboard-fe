@@ -51,7 +51,7 @@ export default function SeedButton() {
             {isFetchingLastSeed ? (
                 <Skeleton className="h-4 w-24" />
             ) : (
-                <p className='md:text-sm sm:text-xs'>Seeded at: {lastSeed}</p>
+                <p className='md:text-sm sm:text-xs'>Last seed: {lastSeed}</p>
             )}
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full flex items-center"
