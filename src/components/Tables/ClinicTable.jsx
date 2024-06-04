@@ -22,7 +22,7 @@ export default function ClinicTable({ clinics , currentPage, totalPages, onPageC
                     <div className="mt-6 mb-6 overflow-x-auto rounded-2xl border border-gray-200">
                         <Table className="min-w-full table-auto">
                             <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600">
-                                <TableRow>
+                                <TableRow className="bg-gradient-to-r hover:from-blue-600 hover:to-blue-700">
                                     <TableHead className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-2xl">
                                         Clinic Name
                                     </TableHead>
