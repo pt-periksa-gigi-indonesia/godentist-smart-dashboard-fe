@@ -117,14 +117,14 @@ const UserTable = ({
             setErrorMessage('Passwords do not match.');
             setTimeout(() => {
                 setErrorMessage('');
-            }, 5000); 
+            }, 5000);
             return;
         }
         setErrorMessage('');
 
         try {
-            const { name, role ,email, password } = newUser; 
-            const response = await createUser({ name,role, email, password });
+            const { name, role, email, password } = newUser;
+            const response = await createUser({ name, role, email, password });
 
             if (response) {
                 setCreateSuccessMessage("User created successfully!");
@@ -167,10 +167,10 @@ const UserTable = ({
                 <div className="flex mt-4 md:mt-0 md:ml-auto">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="mr-2">
-                            {filterRole === 'user' ? 'Filter: User' : filterRole === 'admin' ? 'Filter: Admin' : 'Filter: All Roles'}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
+                            <Button variant="outline" className="mr-2">
+                                {filterRole === 'user' ? 'Filter: User' : filterRole === 'admin' ? 'Filter: Admin' : 'Filter: All Roles'}
+                                <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
 
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -191,7 +191,7 @@ const UserTable = ({
 
             <Table>
                 <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600">
-                    <TableRow>
+                    <TableRow className="bg-gradient-to-r hover:from-blue-600 hover:to-blue-700">
                         <TableHead className="w-[100px] text-white rounded-tl-2xl">#</TableHead>
                         <TableHead className="text-white">Name</TableHead>
                         <TableHead className="text-white">Email</TableHead>
@@ -229,6 +229,7 @@ const UserTable = ({
                     ))}
                 </TableBody>
             </Table>
+
 
             {/* Confirmation Modal */}
             {isModalOpen && (
