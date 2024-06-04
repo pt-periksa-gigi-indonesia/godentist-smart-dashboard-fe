@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
+import {  useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Carousel from "@/components/Utilities/Carousel";
@@ -17,8 +17,9 @@ export default function ResetPassword() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const searchParams = useSearchParams();
+  
+  const router = useRouter();
+  const { token } = useParams();
 
   async function handleResetPassword(event) {
     event.preventDefault();
@@ -29,7 +30,6 @@ export default function ResetPassword() {
     }
 
     setIsLoading(true);
-    const token = searchParams.get('token');
 
     try {
       await resetPassword(token, newPassword);
@@ -90,6 +90,7 @@ export default function ResetPassword() {
         )}
 
         {/* Form */}
+        <Suspense fallback={<div>Loading...</div>}>
         <form className="w-full max-w-sm flex flex-col space-y-6 px-6 md:px-0" onSubmit={handleResetPassword}>
           <label className="flex flex-col relative">
             <span className="text-gray-700">New Password</span>
@@ -150,6 +151,7 @@ export default function ResetPassword() {
             <Link href="/login" className="text-blue-dentist hover:text-blue-dentist-dark">Login Now</Link>
           </p>
         </form>
+      </Suspense>
       </div>
     </main>
   );
