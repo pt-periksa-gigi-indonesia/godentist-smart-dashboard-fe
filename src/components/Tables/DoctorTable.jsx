@@ -297,11 +297,26 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 </ul>
                             ) : OCRData ? (
                                 <ul className="mb-4">
-                                    <li>Nama: {renderFieldData(OCRData, 'nama')}</li>
-                                    <li>NIK: {renderFieldData(OCRData, 'nik')}</li>
-                                    <li>Tempat Tanggal Lahir: {renderFieldData(OCRData, 'tempatTanggalLahir')}</li>
-                                    <li>Alamat: {renderFieldData(OCRData, 'alamat')}</li>
-                                    <li>Jenis Kelamin: {renderFieldData(OCRData, 'jenisKelamin')}</li>
+                                    <li className="mb-2">
+                                        <span className="font-semibold">Nama:</span>
+                                        <span className="block mt-1">{renderFieldData(OCRData, 'nama')}</span>
+                                    </li>
+                                    <li className="mb-2">
+                                        <span className="font-semibold">NIK:</span>
+                                        <span className="block mt-1">{renderFieldData(OCRData, 'nik')}</span>
+                                    </li>
+                                    <li className="mb-2">
+                                        <span className="font-semibold">Tempat Tanggal Lahir:</span>
+                                        <span className="block mt-1">{renderFieldData(OCRData, 'tempatTanggalLahir')}</span>
+                                    </li>
+                                    <li className="mb-2">
+                                        <span className="font-semibold">Alamat:</span>
+                                        <span className="block mt-1">{renderFieldData(OCRData, 'alamat')}</span>
+                                    </li>
+                                    <li className="mb-2">
+                                        <span className="font-semibold">Jenis Kelamin:</span>
+                                        <span className="block mt-1">{renderFieldData(OCRData, 'jenisKelamin')}</span>
+                                    </li>
                                 </ul>
                             ) : (
                                 <p>No OCR data available.</p>
