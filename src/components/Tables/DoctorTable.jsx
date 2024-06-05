@@ -43,9 +43,10 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
     const [OCRData, setOCRData] = useState(null);
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [isOCRLoading, setIsOCRLoading] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [editFormData, setEditFormData] = useState({});
 
+
+
+    // get doctor details
     const fetchDoctorDetails = async (doctorId) => {
         try {
             const data = await getDoctorById(doctorId);
@@ -55,6 +56,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         }
     };
 
+    // get doctor ocr data
     const fetchDoctorOCRData = async (doctorId) => {
         try {
             const data = await doctorsOcr(doctorId);
@@ -62,7 +64,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
             setOCRData(data);
         } catch (error) {
             console.error('Failed to fetch doctor OCR data:', error);
-        }
+        }        
     };
 
     const fetchDoctorOCRLatest = async (doctorId) => {
@@ -74,8 +76,9 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         } catch (error) {
             console.error('Failed to fetch doctor OCR data:', error);
         } finally {
-            setIsOCRLoading(false);
+            setIsOCRLoading(false); 
         }
+        
     };
 
     useEffect(() => {
@@ -95,6 +98,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
             setOCRData(null);
         };
     }, [selectedDoctor]);
+
 
     const handleViewDetails = (doctorId) => {
         router.push(`/dashboard/doctors/details/${doctorId}`);
@@ -118,6 +122,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         setIsImageOpen(!isImageOpen);
     };
 
+
     const handleStatusUpdate = async (newStatus) => {
         console.log(`Updating status for ${selectedDoctor.name} to ${newStatus}...`);
         try {
@@ -136,46 +141,16 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         return data[fieldName] || "-";
     };
 
-    const handleEditButtonClick = () => {
-        setEditFormData({
-            nama: OCRData?.nama || "",
-            nik: OCRData?.nik || "",
-            tempatTanggalLahir: OCRData?.tempatTanggalLahir || "",
-            alamat: OCRData?.alamat || "",
-            jenisKelamin: OCRData?.jenisKelamin || "",
-        });
-        setIsEditModalOpen(true);
-    };
-
-    const handleEditFormChange = (e) => {
-        const { name, value } = e.target;
-        setEditFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const handleEditFormSubmit = async (e) => {
-        e.preventDefault();
-        // Implement your edit logic here, such as making an API call to update the doctor details
-        console.log('Submitting edited data:', editFormData);
-        // Close the edit modal after submission
-        setIsEditModalOpen(false);
-        // Optionally, refresh the doctor data to reflect the changes
-        if (selectedDoctor) {
-            fetchDoctorDetails(selectedDoctor.id);
-            fetchDoctorOCRData(selectedDoctor.id);
-        }
-    };
-
     const filteredDoctors = doctors.filter(doctor => {
         const includesSearchTerm = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
         const passesFilter = !filter || doctor.verificationStatus === filter;
         return includesSearchTerm && passesFilter;
     });
 
+
     return (
-        <div>
+        <div >
+            
             {doctors ? (
                 <>
                     <div className="flex py-4">
@@ -202,9 +177,11 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                 <DropdownMenuItem onClick={() => handleFilterChange("unverified")}>
                                     Unverified Doctors
                                 </DropdownMenuItem>
+                                {/* add rejected */}
                                 <DropdownMenuItem onClick={() => handleFilterChange("rejected")}>
                                     Rejected Doctors
                                 </DropdownMenuItem>
+                                {/* add pending */}
                                 <DropdownMenuItem onClick={() => handleFilterChange("pending")}>
                                     Pending Doctors
                                 </DropdownMenuItem>
@@ -216,8 +193,8 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                         <TableHeader className="bg-gradient-to-r from-blue-500 to-blue-600">
                             <TableRow className="bg-gradient-to-r hover:from-blue-600 hover:to-blue-700">
                                 <TableHead className="w-[100px] text-white rounded-tl-2xl">No.</TableHead>
-                                <TableHead className="text-white">Name</TableHead>
-                                <TableHead className="text-white">Status</TableHead>
+                                <TableHead  className="text-white">Name</TableHead>
+                                <TableHead  className="text-white">Status</TableHead>
                                 <TableHead className="text-white text-center rounded-tr-2xl">Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -287,7 +264,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             </div>
                             <p><strong>Data KTP:</strong></p>
                             
-                            {isOCRLoading ? (
+                            {isOCRLoading ?  (
                                 <ul className="mb-4">
                                     <li>Nama:  <Skeleton className="h-6" /> </li>
                                     <li>NIK:  <Skeleton className="h-6" /> </li>
@@ -303,15 +280,13 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                     <li>Alamat: {renderFieldData(OCRData, 'alamat')}</li>
                                     <li>Jenis Kelamin: {renderFieldData(OCRData, 'jenisKelamin')}</li>
                                 </ul>
-                            ) : (
-                                <p>No OCR data available.</p>
-                            )}
+                            ) : ( <p>No OCR data available.</p> )}
                             <p><strong>Status:</strong> {selectedDoctor.verificationStatus}</p>
                             <div className='flex justify-between'>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button
-                                            className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                                         >
                                             Change Status
                                         </Button>
@@ -325,25 +300,17 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                
-                                <button
-                                    className='items-center mt-4 bg-blue-500 text-white px-8 py-2 rounded hover:bg-blue-600'
-                                    onClick={handleEditButtonClick}
-                                >
-                                    Edit
-                                </button>
 
                                 <button
-                                    className='items-center mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600'
+                                    className='items-center mt-4 bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600'
                                     onClick={() => fetchDoctorOCRLatest(selectedDoctor.id)}
                                 >
                                     <FontAwesomeIcon icon={faSyncAlt} />
                                 </button>
-
                             </div>
+
                         </Modal>
                     ) : null}
-
                     {isImageOpen && (
                         <div
                             className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50"
@@ -356,72 +323,15 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
                             />
                         </div>
                     )}
-
-                    {isEditModalOpen && (
-                        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-                            <h2 className="text-xl font-semibold mb-4">Edit Doctor Information</h2>
-                            <form onSubmit={handleEditFormSubmit}>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Nama:</label>
-                                    <input
-                                        type="text"
-                                        name="nama"
-                                        value={editFormData.nama}
-                                        onChange={handleEditFormChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block mb-2">NIK:</label>
-                                    <input
-                                        type="text"
-                                        name="nik"
-                                        value={editFormData.nik}
-                                        onChange={handleEditFormChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Tempat Tanggal Lahir:</label>
-                                    <input
-                                        type="text"
-                                        name="tempatTanggalLahir"
-                                        value={editFormData.tempatTanggalLahir}
-                                        onChange={handleEditFormChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Alamat:</label>
-                                    <input
-                                        type="text"
-                                        name="alamat"
-                                        value={editFormData.alamat}
-                                        onChange={handleEditFormChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Jenis Kelamin:</label>
-                                    <input
-                                        type="text"
-                                        name="jenisKelamin"
-                                        value={editFormData.jenisKelamin}
-                                        onChange={handleEditFormChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                </div>
-                                <Button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                    Save
-                                </Button>
-                            </form>
-                        </Modal>
-                    )}
                 </>
+
+
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch doctor information right now.</div>
             )}
+
         </div>
+
     );
 };
 
