@@ -29,7 +29,7 @@ export async function getClinicFeedbacks({ limit = 10, page = 1, id = '' , name 
 
 
 // get doctor feedbacks from /feedbacks/doctor
-export async function getDoctorFeedbacks({ limit = 10, page = 1, id = '', name = '', sortBy = '' } = {}) {
+export async function getDoctorFeedbacks({ limit = 10, page = 1, id = '', name = '', sortBy = 'createdAt:desc' } = {}) {
     const cookies = await getCookies();
     const access_token = cookies.access_token.value;
 

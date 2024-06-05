@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { getDoctorById } from "@/api/lib/doctorHandler";
+import {  getDoctorFeedbacks } from "@/api/lib/feedbacksHandler";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -12,6 +13,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function DoctorDetailPage() {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -20,6 +22,7 @@ export default function DoctorDetailPage() {
     const [doctor, setDoctor] = useState(null);
     const [viewType, setViewType] = useState('Chart');
     const [chartType, setChartType] = useState('Bar');
+    const [feedbackData, setFeedbackData] = useState([]);
 
     async function fetchDoctorById(doctorId) {
         try {
@@ -30,8 +33,19 @@ export default function DoctorDetailPage() {
         }
     }
 
+    async function fetchFeedbackByDoctorId(doctorId) {
+        try {
+            const data = await getDoctorFeedbacks(doctorId);
+            console.log(data);
+            setFeedbackData(data.results);
+        } catch (error) {
+            console.error('Error fetching feedback data:', error);
+        }
+    }
+
     useEffect(() => {
         fetchDoctorById(doctorId);
+        fetchFeedbackByDoctorId(doctorId);
     }, [doctorId]);
 
     const toggleSidebar = () => {
@@ -214,12 +228,14 @@ export default function DoctorDetailPage() {
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
                                     <FaComments className="mr-2" />Feedback
                                 </h3>
-                                {doctor.feedback.length > 0 ? doctor.feedback.map((feedback) => (
+                                <ScrollArea className="h-80">
+                                {feedbackData.length > 0 ? feedbackData.map((feedback) => (
                                     <div key={feedback.id} className="border p-4 rounded-lg mb-2">
-                                        <p className="text-gray-800"><strong>Message:</strong> {feedback.message || '-'}</p>
+                                        <p className="text-gray-800"><strong>Message:</strong> {feedback.feedback || '-'}</p>
                                         <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
                                     </div>
                                 )) : <p className="text-gray-800">Feedback is currently empty.</p>}
+                                </ScrollArea>
                             </div>
                         </div>
                     </div>
