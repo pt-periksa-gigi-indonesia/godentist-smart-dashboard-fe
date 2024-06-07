@@ -133,7 +133,7 @@ export default function ClinicDetailPage() {
                     <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="flex items-center mb-4 lg:mb-0">
                             <div className="w-32 h-32 rounded-full mr-4 flex items-center justify-center bg-gray-200">
-                                <FaUser className="text-gray-500 text-6xl" />
+                                <FaUser className=" text-6xl text-gray-500" />
                             </div>
 
                             <div>
@@ -146,7 +146,7 @@ export default function ClinicDetailPage() {
                         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaBriefcase className="mr-2" />Doctors
+                                    <FaBriefcase className="mr-2 text-blue-dentist" />Doctors
                                 </h3>
                                 {clinic.clinicDoctorStats?.length > 0 ? clinic.clinicDoctorStats.map((doctor) => (
                                     <div key={doctor.idDoctor} className="border p-4 rounded-lg mb-2">
@@ -159,7 +159,7 @@ export default function ClinicDetailPage() {
 
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaComments className="mr-2" />Feedback
+                                    <FaComments className="mr-2 text-blue-dentist" />Feedback
                                 </h3>
                                 {clinic.clinicFeedback?.length > 0 ? clinic.clinicFeedback.map((feedback) => (
                                     <div key={feedback.id} className="border p-4 rounded-lg mb-2">
@@ -170,7 +170,7 @@ export default function ClinicDetailPage() {
                             </div>
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaChartBar className="mr-2" />Statistics
+                                    <FaChartBar className="mr-2 text-blue-dentist" />Statistics
                                 </h3>
                                 <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start mb-4 space-y-2 md:space-y-4 lg:space-y-4">
                                     <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
@@ -207,7 +207,7 @@ export default function ClinicDetailPage() {
 
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaCalendarAlt className="mr-2" />Services
+                                    <FaCalendarAlt className="mr-2 text-blue-dentist" />Services
                                 </h3>
                                 {clinic.clinicServiceStats?.length > 0 ? clinic.clinicServiceStats.map((service) => (
                                     <div key={service.serviceName} className="border p-4 rounded-lg mb-2">

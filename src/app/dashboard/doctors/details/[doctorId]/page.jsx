@@ -127,7 +127,7 @@ export default function DoctorDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-2 md:p-6 mt-9">
+            <main className="flex-grow p-2 md:p-6 mt-9 bg-blue-dentist-light">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -144,9 +144,9 @@ export default function DoctorDetailPage() {
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-4">Doctor Details</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-4 ">Doctor Details</h1>
                 {doctor ? (
-                    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6 border-2 border-blue-dentist-border">
                         <div className="flex flex-col sm:flex-col md:flex-row items-start mb-4 lg:mb-0">
                             <div className="w-32 h-32 sm:w-32 sm:h-32 rounded-full mb-4 sm:mb-4 sm:mr-4 flex items-center justify-center bg-gray-200">
                                 <FaUser className="text-gray-500 text-6xl" />
@@ -161,9 +161,9 @@ export default function DoctorDetailPage() {
                         </div>
 
                         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-dentist-border">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaCalendarAlt className="mr-2" />Work Schedule
+                                    <FaCalendarAlt className="mr-2 text-blue-dentist" />Work Schedule
                                 </h3>
                                 {doctor.DoctorWorkSchedule.length > 0 ? doctor.DoctorWorkSchedule.map((schedule) => (
                                     <div key={schedule.id} className="border p-4 rounded-lg mb-2">
@@ -175,9 +175,9 @@ export default function DoctorDetailPage() {
                                 )) : <p className="text-gray-800">-</p>}
                             </div>
 
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-dentist-border">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaChartBar className="mr-2" />Statistics
+                                    <FaChartBar className="mr-2 text-blue-dentist" />Statistics
                                 </h3>
                                 <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start mb-4 space-y-2 md:space-y-4 lg:space-y-4">
                                     <div className="flex flex-col md:flex-col lg:flex-col md:items-start lg:items-start">
@@ -212,9 +212,9 @@ export default function DoctorDetailPage() {
                             </div>
 
 
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-dentist-border">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaBriefcase className="mr-2" />Experience
+                                    <FaBriefcase className="mr-2 text-blue-dentist" />Experience
                                 </h3>
                                 {doctor.DoctorExperience.length > 0 ? doctor.DoctorExperience.map((experience) => (
                                     <div key={experience.id} className="border p-4 rounded-lg mb-2">
@@ -224,9 +224,9 @@ export default function DoctorDetailPage() {
                                 )) : <p className="text-gray-800">-</p>}
                             </div>
 
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-dentist-border">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaComments className="mr-2" />Feedback
+                                    <FaComments className="mr-2 text-blue-dentist" />Feedback
                                 </h3>
                                 <ScrollArea className="h-80">
                                 {feedbackData.length > 0 ? feedbackData.map((feedback) => (
