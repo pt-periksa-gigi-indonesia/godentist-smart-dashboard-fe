@@ -33,6 +33,8 @@ import { changeDoctorVerificationStatus, getDoctorById, doctorsOcr, doctorOcrLat
 
 import { FaAddressCard } from "react-icons/fa";
 
+import { editDoctorOcr } from '@/api/lib/doctorHandler';
+
 const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, totalPages, onPageChange, refreshDoctors }) => {
     const router = useRouter();
 
@@ -58,7 +60,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
     const fetchDoctorOCRData = async (doctorId) => {
         try {
             const data = await doctorsOcr(doctorId);
-            console.log('Doctor OCR data:', data);
+            // console.log('Doctor OCR data:', data);
             setOCRData(data);
         } catch (error) {
             console.error('Failed to fetch doctor OCR data:', error);
@@ -69,10 +71,10 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         setIsOCRLoading(true);
         try {
             const data = await doctorOcrLatest(doctorId);
-            console.log('Doctor OCR data latest:', data);
+            // console.log('Doctor OCR data latest:', data);
             setOCRData(data);
         } catch (error) {
-            console.error('Failed to fetch doctor OCR data:', error);
+            // console.error('Failed to fetch doctor OCR data:', error);
         } finally {
             setIsOCRLoading(false);
         }
@@ -122,7 +124,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
         console.log(`Updating status for ${selectedDoctor.name} to ${newStatus}...`);
         try {
             const response = await changeDoctorVerificationStatus(selectedDoctor.id, newStatus);
-            console.log('Status updated successfully', response);
+            // console.log('Status updated successfully', response);
             closeModal();
             refreshDoctors();
         } catch (error) {
@@ -138,6 +140,7 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
     const handleEditButtonClick = () => {
         setEditFormData({
+            doctorId: selectedDoctor.id,
             nama: OCRData?.nama || "",
             nik: OCRData?.nik || "",
             tempatTanggalLahir: OCRData?.tempatTanggalLahir || "",
@@ -157,11 +160,18 @@ const DoctorTable = ({ doctors, searchTerm, handleSearchChange, currentPage, tot
 
     const handleEditFormSubmit = async (e) => {
         e.preventDefault();
-        // Implement your edit logic here, such as making an API call to update the doctor details
-        console.log('Submitting edited data:', editFormData);
+        // console.log('Submitting edited data:', editFormData);
+        try {
+            const result = await editDoctorOcr(editFormData);
+            // console.log('Doctor data edited successfully:', result);
+        } catch (error) {
+            console.error('Failed to edit doctor data:', error);
+        }
+
         // Close the edit modal after submission
         setIsEditModalOpen(false);
-        // Optionally, refresh the doctor data to reflect the changes
+
+        // Refresh the doctor data to reflect the changes
         if (selectedDoctor) {
             fetchDoctorDetails(selectedDoctor.id);
             fetchDoctorOCRData(selectedDoctor.id);

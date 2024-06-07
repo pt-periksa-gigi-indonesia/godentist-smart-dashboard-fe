@@ -58,9 +58,3 @@ export async function getDoctorFeedbacks({ limit = 10, page = 1, id = '', name =
 }
 
 
-
-// get doctor feedback by doctor id
-
-
-// get clinic feedback by clinic id
-
