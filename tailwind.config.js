@@ -23,6 +23,9 @@ module.exports = {
       colors: {
         'blue-dentist': '#3a5fd9',
         'blue-dentist-dark': '#3150b5',
+        'blue-dentist-border': '#EBF1FF',
+        'blue-dentist-light': '#F8F9FB',
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

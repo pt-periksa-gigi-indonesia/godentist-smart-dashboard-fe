@@ -110,3 +110,31 @@ export async function doctorOcrLatest(doctor_id){
 }
 
 
+// Edit OCR data
+export async function editDoctorOcr(ocrData){
+    const cookies = await getCookies();
+    const access_token = cookies.access_token.value;
+
+    const bodyPayload = {
+        doctorId: ocrData.doctorId,
+        ...ocrData
+    };
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors/edit-ocr`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+        },
+        body: JSON.stringify(bodyPayload)
+    });
+
+    // if response is not ok
+    // if (!response.ok) {
+    //     throw new Error(response.statusText);
+    // }
+    
+    const data = await response.json();
+
+    return data;
+}

@@ -25,7 +25,6 @@ export default function ClinicsPage() {
         try {
             const data = await getClinics({ page, limit: 8 });
             setClinics(data.results);
-            console.log(data);
             setTotalClinics(data.totalResults);
             setTotalAmountTransactions(data.totalAmountTransactions);
             setTotalPages(Math.ceil(data.totalResults / 8));
