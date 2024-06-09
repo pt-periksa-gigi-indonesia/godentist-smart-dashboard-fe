@@ -30,8 +30,12 @@ export default function DoctorDashboard() {
   const [feedbackData, setFeedbackData] = useState([]);
 
   const [totalClinics, setTotalClinics] = useState(0);
+  const [totalAmountClinicTransactions, setTotalClinicTransactions] = useState(0);
+  const [totalAmountConsultations, setTotalConsultationsTransactions] = useState(0);
   const [totalAmountTransactions, setTotalTransactions] = useState(0);
-  const [totalConsulPatients, setTotalPatients] = useState(0);
+  const [totalConsultPatients, setTotalConsultPatients] = useState(0);
+  const [totalClinicPatients, setTotalClinicPatients] = useState(0);
+  const [totalPatients, setTotalPatients] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const [popularServices, setPopularServices] = useState([]);
@@ -75,12 +79,17 @@ export default function DoctorDashboard() {
     setIsLoading(true);
     try {
       const data = await getDashboardInfo();
+      console.log(data);
       // Feedback
       setFeedbackData(data.latestFeedbacks);
       // Clinic
       setTotalClinics(data.clinicCount);
-      setTotalTransactions(data.totalAmountFromClinic);
-      setTotalPatients(data.consultationPatientsCount);
+      setTotalClinicTransactions(data.totalAmountFromClinic);
+      setTotalConsultationsTransactions(data.totalAmountFromConsultation);
+      setTotalTransactions(data.totalAmountFromClinic + data.totalAmountFromConsultation);
+      setTotalConsultPatients(data.consultationPatientsCount);
+      setTotalClinicPatients(data.clinicPatientsCount);
+      setTotalPatients(data.consultationPatientsCount + data.clinicPatientsCount);
       // Doctor
       const verifiedDoctors = data.doctorCount.find(doctor => doctor.verificationStatus === 'verified');
       const unverifiedDoctors = data.doctorCount.find(doctor => doctor.verificationStatus === 'unverified');
@@ -164,6 +173,7 @@ export default function DoctorDashboard() {
 
         {/* Patients */}
         <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-md font-medium text-gray-800">Total Patients</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -172,16 +182,31 @@ export default function DoctorDashboard() {
           </div>
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
-              <p className="text-2xl font-bold">{totalConsulPatients} people</p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
+              <p className="text-2xl font-bold">{totalPatients} people</p>
+              {/* <p className="text-2xl font-bold">{totalConsultPatients} <span className='text-sm text-blue-dentist-dark font-normal'>people from consults</span></p> */}
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">Clinic Patients: {totalClinicPatients}, Consult Patients: {totalConsultPatients}</h3>
             </div>
           </div>
+
+          {/* <div className="flex justify-between items-center mb-2">
+            <h2 className="text-md font-medium text-gray-800">Consult Patients</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaUserInjured className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
+            <div>
+              <p className="text-2xl font-bold">{totalConsultPatients} people</p>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
+            </div>
+          </div> */}
+
         </div>
 
         {/* Transactions */}
         <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-md font-medium text-gray-800">Total Transactions</h2>
+          <div className="flex justify-between items-center mb-2 ">
+            <h2 className="text-md font-medium text-gray-800">Clinic Revenue</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
               <FaMoneyCheckAlt className="text-lg text-blue-dentist" />
             </div>
@@ -190,9 +215,25 @@ export default function DoctorDashboard() {
             <div>
               {/* dalam rupiah */}
               <p className="text-2xl font-bold">Rp {(totalAmountTransactions > 0) && (totalAmountTransactions !== undefined) ? `${totalAmountTransactions}` : "-"}</p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
+              {/* <p className="text-2xl font-bold">Rp {(totalAmountConsultations > 0) && (totalAmountConsultations !== undefined) ? `${totalAmountConsultations}` : "-"} <span className='text-sm text-blue-dentist-dark font-normal'>from consults</span></p> */}
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">Clinic: Rp {(totalAmountClinicTransactions > 0) && (totalAmountClinicTransactions !== undefined) ? `${totalAmountClinicTransactions}` : "-"}, Consult: Rp {(totalAmountConsultations > 0) && (totalAmountConsultations !== undefined) ? `${totalAmountConsultations}` : "-"}</h3>
             </div>
           </div>
+
+
+          {/* <div className="flex justify-between items-center mb-2">
+            <h2 className="text-md font-medium text-gray-800">Consult Revenue</h2>
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
+              <FaMoneyCheckAlt className="text-lg text-blue-dentist" />
+            </div>
+          </div>
+          <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
+            <div>
+
+              <p className="text-2xl font-bold">Rp {(totalAmountConsultations > 0) && (totalAmountConsultations !== undefined) ? `${totalAmountConsultations}` : "-"}</p>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">-----</h3>
+            </div>
+          </div> */}
         </div>
 
         {/* Overview */}
