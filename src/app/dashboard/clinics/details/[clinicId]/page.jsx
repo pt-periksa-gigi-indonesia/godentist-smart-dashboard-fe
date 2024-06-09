@@ -13,6 +13,9 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
+import { getClinicFeedbacks } from '@/api/lib/feedbacksHandler';
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 export default function ClinicDetailPage() {
     const params = useParams();
     const { clinicId } = params;
@@ -21,6 +24,7 @@ export default function ClinicDetailPage() {
     const [error, setError] = useState('');
     const [viewType, setViewType] = useState('Chart');
     const [chartType, setChartType] = useState('Bar');
+    const [feedbackData, setFeedbackData] = useState([]);
 
     const fetchClinic = async () => {
         try {
@@ -34,8 +38,22 @@ export default function ClinicDetailPage() {
         }
     };
 
+    const fetchFeedbacks = async () => {
+        try {
+            const data = await getClinicFeedbacks(clinicId);
+            setFeedbackData(data.results);
+            setError('');
+        } catch (error) {
+            setError('Failed to load feedback data. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
     useEffect(() => {
         fetchClinic();
+        fetchFeedbacks();
     }, [clinicId]);
 
     const statisticsData = [
@@ -161,12 +179,14 @@ export default function ClinicDetailPage() {
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
                                     <FaComments className="mr-2 text-blue-dentist" />Feedback
                                 </h3>
-                                {clinic.clinicFeedback?.length > 0 ? clinic.clinicFeedback.map((feedback) => (
-                                    <div key={feedback.id} className="border p-4 rounded-lg mb-2">
-                                        <p className="text-gray-800"><strong>Message:</strong> {feedback.message || '-'}</p>
-                                        <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
-                                    </div>
-                                )) : <p className="text-gray-800">-</p>}
+                                <ScrollArea className="h-80">
+                                    {feedbackData.length > 0 ? feedbackData.map((feedback) => (
+                                        <div key={feedback.id} className="border p-4 rounded-lg mb-2">
+                                            <p className="text-gray-800"><strong>Message:</strong> {feedback.feedback || '-'}</p>
+                                            <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
+                                        </div>
+                                    )) : <p className="text-gray-800">-</p>}
+                                </ScrollArea>
                             </div>
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
