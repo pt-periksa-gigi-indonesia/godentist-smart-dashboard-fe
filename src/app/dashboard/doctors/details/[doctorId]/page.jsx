@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaUser, FaCalendarAlt, FaBriefcase, FaComments, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { getDoctorById } from "@/api/lib/doctorHandler";
@@ -23,11 +23,13 @@ export default function DoctorDetailPage() {
     const [viewType, setViewType] = useState('Chart');
     const [chartType, setChartType] = useState('Bar');
     const [feedbackData, setFeedbackData] = useState([]);
+    const [doctorStats, setDoctorStats] = useState({});
 
     async function fetchDoctorById(doctorId) {
         try {
             const data = await getDoctorById(doctorId);
             setDoctor(data[0]);
+            setDoctorStats(data[0].doctorStats[0]);
         } catch (error) {
             console.error('Error fetching doctor data:', error);
         }
@@ -36,7 +38,6 @@ export default function DoctorDetailPage() {
     async function fetchFeedbackByDoctorId(doctorId) {
         try {
             const data = await getDoctorFeedbacks(doctorId);
-            console.log(data);
             setFeedbackData(data.results);
         } catch (error) {
             console.error('Error fetching feedback data:', error);
@@ -53,10 +54,10 @@ export default function DoctorDetailPage() {
     };
 
     const statisticsData = [
-        { name: 'Clinic Patients', value: doctor?.clinicPatientsCount || 0 },
-        { name: 'Consultation Patients', value: doctor?.consultationPatientsCount || 0 },
-        { name: 'Clinic Revenue', value: doctor?.totalAmountFromClinic || 0 },
-        { name: 'Consultation Revenue', value: doctor?.totalAmountFromConsultation || 0 },
+        { name: 'Clinic Patients', value: doctorStats?.clinicPatientsCount || 0 },
+        { name: 'Consultation Patients', value: doctorStats?.consultationPatientsCount || 0 },
+        { name: 'Clinic Revenue', value: doctorStats?.totalAmountFromClinic || 0 },
+        { name: 'Consultation Revenue', value: doctorStats?.totalAmountFromConsultation || 0 }
     ];
 
     const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042'];
@@ -118,10 +119,20 @@ export default function DoctorDetailPage() {
 
     const renderText = () => (
         <div className="text-gray-800">
-            <p><strong>Clinic Patients Count:</strong> {doctor?.clinicPatientsCount !== null ? doctor.clinicPatientsCount : '-'}</p>
-            <p><strong>Consultation Patients Count:</strong> {doctor?.consultationPatientsCount !== null ? doctor.consultationPatientsCount : '-'}</p>
-            <p><strong>Total Amount From Clinic:</strong> {doctor?.totalAmountFromClinic !== null ? `Rp ${doctor.totalAmountFromClinic.toLocaleString()}` : '-'}</p>
-            <p><strong>Total Amount From Consultation:</strong> {doctor?.totalAmountFromConsultation !== null ? `Rp ${doctor.totalAmountFromConsultation.toLocaleString()}` : '-'}</p>
+            <p><strong>Clinic Patients Count:</strong> {doctorStats?.clinicPatientsCount !== null ? doctorStats.clinicPatientsCount : '-'}</p>
+            <p><strong>Consultation Patients Count:</strong> {doctorStats?.consultationPatientsCount !== null ? doctorStats.consultationPatientsCount : '-'}</p>
+            <p>
+            <strong>Total Amount From Clinic:</strong> 
+            {doctorStats?.totalAmountFromClinic !== null 
+                ? `${doctorStats.totalAmountFromClinic.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }).replace(/,00$/, '').replace('IDR', '')}`
+                : '-'}
+            </p>
+            <p>
+            <strong>Total Amount From Consultation:</strong> 
+            {doctorStats?.totalAmountFromConsultation !== null 
+                ? `${doctorStats.totalAmountFromConsultation.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }).replace(/,00$/, '').replace('IDR', '')}`
+                : '-'}
+            </p>
         </div>
     );
 
