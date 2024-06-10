@@ -19,9 +19,9 @@ const Sidebar = ({ isCollapsed }) => {
     return (
         <nav className={cn(`relative hidden pt-16 lg:block ${isCollapsed ? 'w-0' : 'w-64'} h-full top-0 `)}>
             <aside className={`fixed shadow-inner flex flex-col h-full ${isCollapsed ? 'w-0 overflow-hidden' : 'w-64'} z-50 top-0 left-0 bg-gradient-to-b from-blue-600 via-blue-700 to-blue-800`}>
-                <div className="bg-white rounded-xl mx-7 mt-6 p-2 flex justify-center items-center shadow-md">
+                <div className="mx-4 mt-6 p-2 flex justify-center items-center">
                     <img
-                        src="/static/images/godentist_logo.jpeg"
+                        src="/static/images/godentist_logo.png"
                         alt="GoDentist Logo"
                         className="h-13 w-auto"
                     />

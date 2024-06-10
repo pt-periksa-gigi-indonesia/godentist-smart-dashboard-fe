@@ -46,7 +46,7 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
 
     return (
         <nav className={`bg-white xl:fixed ${isCollapsed ? 'left-0 lg:px-10 sm:px-4' : 'lg:pl-16 xl:pl-8 xl:left-64 md:left-0 sm:left-0'} right-0 z-40 flex items-center justify-between p-4 h-16 transition-all duration-300`}>
-            <div className="flex items-center space-x-4 mt-4">
+            <div className="flex items-center space-x-4 mt-0">
                 <button className={cn(`relative hidden lg:block`)} onClick={toggleSidebar}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
@@ -56,7 +56,7 @@ const Navbar = ({ toggleSidebar, isCollapsed }) => {
                     <MobileSidebar />
                 </div>
             </div>
-            <div className="relative flex items-center space-x-4 md:mr-6 mt-4 sm:mr-4">
+            <div className="relative flex items-center space-x-4 md:mr-6 mt-0 sm:mr-4">
                 <Notifications />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

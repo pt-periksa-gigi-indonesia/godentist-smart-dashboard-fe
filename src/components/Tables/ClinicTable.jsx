@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/table"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye} from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
-export default function ClinicTable({ clinics , currentPage, totalPages, onPageChange  }) {
+export default function ClinicTable({ clinics, currentPage, totalPages, onPageChange }) {
     return (
         <div >
             {clinics && clinics.length > 0 ? (
@@ -42,11 +42,19 @@ export default function ClinicTable({ clinics , currentPage, totalPages, onPageC
                                                 <div className="text-sm text-gray-900">{clinic.name}</div>
                                             </TableCell>
                                             <TableCell className="px-6 py-4 whitespace-nowrap text-center">
-                                                <div className="text-sm text-gray-900 text-center">{clinic.totalAmountTransactions > 0 ? `${clinic.totalAmountTransactions}` : "it is empty"}</div>
+                                                <div className="text-sm text-gray-900 text-center">
+                                                    {clinic.totalAmountTransactions > 0
+                                                        ? `Rp${clinic.totalAmountTransactions.toLocaleString('id-ID')}`
+                                                        : "Empty"}
+                                                </div>
                                             </TableCell>
+
                                             <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center items-center">
                                                 <Link href={`/dashboard/clinics/details/${clinic.id}`} className="text-blue-600 hover:text-blue-900 flex justify-center items-center">
-                                                    <FontAwesomeIcon icon={faEye} />
+                                                    <button className="flex items-center space-x-2">
+                                                        <FontAwesomeIcon icon={faEye} />
+                                                        <span>See Detail</span>
+                                                    </button>
                                                 </Link>
                                             </TableCell>
 
@@ -63,7 +71,7 @@ export default function ClinicTable({ clinics , currentPage, totalPages, onPageC
                         </Table>
                     </div>
 
-                    <Pagination  currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
                 </div>
             ) : (
                 <div className="p-6 text-gray-500 text-center">Cannot fetch clinic information right now.</div>
