@@ -18,7 +18,7 @@ function MobileSidebar({ className }) {
             <div className="px-3 py-2">
             <div className="pt-3 flex ">
                     <img
-                        src="/static/images/godentist_logo.jpeg"
+                        src="/static/images/godentist_logo_sidebar.jpeg"
                         alt="GoDentist Logo"
                         className="h-auto w-auto"
                     />
