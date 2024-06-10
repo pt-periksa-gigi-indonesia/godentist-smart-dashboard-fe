@@ -122,7 +122,7 @@ export default function ClinicDetailPage() {
     const renderText = () => (
         <div className="text-gray-800">
             <p><strong>Total Patients:</strong> {clinic?.totalPatientClinic || '-'}</p>
-            <p><strong>Total Revenue:</strong> {clinic?.totalAmountClinic ? `Rp ${clinic.totalAmountClinic.toLocaleString()}` : '-'}</p>
+            <p><strong>Total Revenue:</strong> {clinic?.totalAmountClinic ? `Rp ${clinic.totalAmountClinic.toLocaleString('id-ID')}` : '-'}</p>
         </div>
     );
 
@@ -157,7 +157,9 @@ export default function ClinicDetailPage() {
                             <div>
                                 <h2 className="text-gray-800 text-2xl font-semibold">{clinic.clinicName || '-'}</h2>
                                 <p className="text-gray-600">Total Patients: {clinic.totalPatientClinic || '-'}</p>
-                                <p className="text-gray-600">Total Revenue: {clinic.totalAmountClinic ? `Rp ${clinic.totalAmountClinic.toLocaleString()}` : '-'}</p>
+                                <p className="text-gray-600">Total Revenue: {clinic.totalAmountClinic ? `Rp${clinic.totalAmountClinic.toLocaleString('id-ID')}` : '-'}
+                                </p>
+
                             </div>
                         </div>
 
@@ -232,12 +234,11 @@ export default function ClinicDetailPage() {
                                 {clinic.clinicServiceStats?.length > 0 ? clinic.clinicServiceStats.map((service) => (
                                     <div key={service.serviceName} className="border p-4 rounded-lg mb-2">
                                         <p className="text-gray-800"><strong>Service:</strong> {service.serviceName || '-'}</p>
-                                        <p className="text-gray-800"><strong>Price:</strong> {service.servicePrice ? `Rp ${service.servicePrice.toLocaleString()}` : '-'}</p>
+                                        <p className="text-gray-800"><strong>Price:</strong> {service.servicePrice ? `Rp${service.servicePrice.toLocaleString('id-ID')}` : '-'}</p>
                                         <p className="text-gray-800"><strong>Patients Served:</strong> {service.totalPatientService || '-'}</p>
                                     </div>
                                 )) : <p className="text-gray-800">-</p>}
                             </div>
-
 
                         </div>
                     </div>
