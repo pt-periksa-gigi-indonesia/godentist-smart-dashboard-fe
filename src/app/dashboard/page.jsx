@@ -117,7 +117,10 @@ export default function DoctorDashboard() {
 
   const renderChart = () => {
     const data = dataType === 'transactions' ? fetchedData.transactionsData : fetchedData.doctorsStatus;
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+    const formatRupiah = (value) => {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
+    };
 
     if (chartType === 'bar') {
       return (
@@ -125,7 +128,7 @@ export default function DoctorDashboard() {
           <BarChart data={data}>
             <XAxis dataKey={dataType === 'transactions' ? 'month' : 'status'} tick={{ fontSize: 15 }} />
             <YAxis tick={{ fontSize: 13 }} />
-            <Tooltip contentStyle={{ fontSize: 15 }} />
+            <Tooltip contentStyle={{ fontSize: 15 }} formatter={(value) => formatRupiah(value)} />
             <Bar dataKey="total" fill="#3a5fd9" radius={[10, 10, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -139,7 +142,7 @@ export default function DoctorDashboard() {
                 data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
               }
             </Pie>
-            <Tooltip contentStyle={{ fontSize: 12 }} />
+            <Tooltip contentStyle={{ fontSize: 12 }} formatter={(value) => formatRupiah(value)} />
           </PieChart>
         </ResponsiveContainer>
       );
