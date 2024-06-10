@@ -71,7 +71,6 @@ export default function DoctorDashboard() {
     setIsLoading(true);
     try {
       const data = await getDashboardInfo();
-      console.log(data);
       // Feedback
       setFeedbackData(data.latestFeedbacks);
       // Clinic

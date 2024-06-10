@@ -177,19 +177,20 @@ export default function ClinicDetailPage() {
                                 )) : <p className="text-gray-800">-</p>}
                             </div>
 
+
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaComments className="mr-2 text-blue-dentist" />Feedback
+                                    <FaCalendarAlt className="mr-2 text-blue-dentist" />Services
                                 </h3>
-                                <ScrollArea className="h-80">
-                                    {feedbackData.length > 0 ? feedbackData.map((feedback) => (
-                                        <div key={feedback.id} className="border p-4 rounded-lg mb-2">
-                                            <p className="text-gray-800"><strong>Message:</strong> {feedback.feedback || '-'}</p>
-                                            <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
-                                        </div>
-                                    )) : <p className="text-gray-800">-</p>}
-                                </ScrollArea>
+                                {clinic.clinicServiceStats?.length > 0 ? clinic.clinicServiceStats.map((service) => (
+                                    <div key={service.serviceName} className="border p-4 rounded-lg mb-2">
+                                        <p className="text-gray-800"><strong>Service:</strong> {service.serviceName || '-'}</p>
+                                        <p className="text-gray-800"><strong>Price:</strong> {service.servicePrice ? `Rp${service.servicePrice.toLocaleString('id-ID')}` : '-'}</p>
+                                        <p className="text-gray-800"><strong>Patients Served:</strong> {service.totalPatientService || '-'}</p>
+                                    </div>
+                                )) : <p className="text-gray-800">-</p>}
                             </div>
+
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
                                     <FaChartBar className="mr-2 text-blue-dentist" />Statistics
@@ -225,20 +226,22 @@ export default function ClinicDetailPage() {
                                 </div>
                                 {viewType === 'Chart' ? renderChart() : renderText()}
                             </div>
-
-
+                            
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <h3 className="text-gray-600 text-lg font-semibold mb-2 flex items-center">
-                                    <FaCalendarAlt className="mr-2 text-blue-dentist" />Services
+                                    <FaComments className="mr-2 text-blue-dentist" />Feedback
                                 </h3>
-                                {clinic.clinicServiceStats?.length > 0 ? clinic.clinicServiceStats.map((service) => (
-                                    <div key={service.serviceName} className="border p-4 rounded-lg mb-2">
-                                        <p className="text-gray-800"><strong>Service:</strong> {service.serviceName || '-'}</p>
-                                        <p className="text-gray-800"><strong>Price:</strong> {service.servicePrice ? `Rp${service.servicePrice.toLocaleString('id-ID')}` : '-'}</p>
-                                        <p className="text-gray-800"><strong>Patients Served:</strong> {service.totalPatientService || '-'}</p>
-                                    </div>
-                                )) : <p className="text-gray-800">-</p>}
+                                <ScrollArea className="h-80">
+                                    {feedbackData.length > 0 ? feedbackData.map((feedback) => (
+                                        <div key={feedback.id} className="border p-4 rounded-lg mb-2">
+                                            <p className="text-gray-800"><strong>Message:</strong> {feedback.feedback || '-'}</p>
+                                            <p className="text-gray-800"><strong>Date:</strong> {feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString() : '-'}</p>
+                                        </div>
+                                    )) : <p className="text-gray-800">-</p>}
+                                </ScrollArea>
                             </div>
+
+
 
                         </div>
                     </div>
