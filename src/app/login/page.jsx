@@ -88,7 +88,7 @@ export default function Page() {
         {/* Form */}
         <form className="w-full max-w-sm flex flex-col space-y-6 px-6 md:px-0" onSubmit={handleLogin}>
           <label className="flex flex-col">
-            <span className="text-gray-700">Username / Mail</span>
+            <span className="text-gray-700">Email</span>
             <input
               type="text"
               name="email"
