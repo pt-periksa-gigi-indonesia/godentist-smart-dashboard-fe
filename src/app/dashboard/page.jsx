@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaUserInjured, FaMoneyCheckAlt } from 'react-icons/fa';
+import { FaUserInjured, FaMoneyCheckAlt, FaClinicMedical, FaStethoscope } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { checkToken } from '@/api/auth/validateAccessToken';
 import { getUserId } from '@/api/auth/cookiesHandler';
@@ -176,8 +176,12 @@ export default function DoctorDashboard() {
           <div className="p-1 bg-white text-gray-800 rounded-md flex items-center">
             <div>
               <p className="text-2xl font-bold">{totalPatients} people</p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-3">Clinic Patients: {totalClinicPatients} people</h3>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">Consult Patients: {totalConsultPatients} people</h3>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-3 flex items-center">
+                <FaClinicMedical className="mr-2" />Clinic: {totalClinicPatients} people
+              </h3>
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1 flex items-center"> 
+              <FaStethoscope className="mr-2" /> Consult: {totalConsultPatients} people
+              </h3>
             </div>
           </div>
         </div>
@@ -198,13 +202,15 @@ export default function DoctorDashboard() {
                   ? `${totalAmountTransactions.toLocaleString('id-ID')}`
                   : "-"}
               </p>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-3">
-                Clinic Revenue: Rp{totalAmountClinicTransactions > 0 && totalAmountClinicTransactions !== undefined
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-3 flex items-center">
+                <FaClinicMedical className="mr-2" />
+                Clinic: Rp{totalAmountClinicTransactions > 0 && totalAmountClinicTransactions !== undefined
                   ? `${totalAmountClinicTransactions.toLocaleString('id-ID')}`
                   : "-"}
               </h3>
-              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1">
-                Consult Revenue: Rp{totalAmountConsultations > 0 && totalAmountConsultations !== undefined
+              <h3 className="text-sm text-blue-dentist-dark font-normal pt-1 flex items-center">
+                <FaStethoscope className="mr-2" />
+                Consult: Rp{totalAmountConsultations > 0 && totalAmountConsultations !== undefined
                   ? `${totalAmountConsultations.toLocaleString('id-ID')}`
                   : "-"}
               </h3>
