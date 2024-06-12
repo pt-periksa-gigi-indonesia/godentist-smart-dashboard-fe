@@ -28,6 +28,7 @@ module.exports = {
         'red-stat': '#FA7870',
         'green-stat': '#22C5A8',
         'blue-stat': '#37A5F4',
+        'yellow-stat': '#FFC107',
 
         
         border: "hsl(var(--border))",
