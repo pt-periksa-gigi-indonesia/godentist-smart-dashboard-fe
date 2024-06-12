@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTachometerAlt, faUsers, faUserMd, faHospital, faComment } from '@fortawesome/free-solid-svg-icons'
+
 
 const Sidebar = ({ isCollapsed }) => {
     const [user_role, setRole] = useState('');
@@ -27,14 +30,30 @@ const Sidebar = ({ isCollapsed }) => {
                     />
                 </div>
                 <nav className="flex-grow p-6 space-y-4">
-                    <Link href="/dashboard" className={cn("block p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard" ? "text-white font-bold" : "text-white font-medium")}>Dashboard</Link>
+                    <Link href="/dashboard" className={cn("flex items-center p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard" ? "text-white font-bold" : "text-white font-medium")}>
+                        <FontAwesomeIcon icon={faTachometerAlt} className="mr-4 w-5 h-5" />
+                        <span>Dashboard</span>
+                    </Link>
                     {user_role === 'master' && (
-                        <Link href="/dashboard/admin" className={cn("block p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/admin" ? "text-white font-bold" : "text-white font-medium")}>Users</Link>
+                        <Link href="/dashboard/admin" className={cn("flex items-center p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/admin" ? "text-white font-bold" : "text-white font-medium")}>
+                            <FontAwesomeIcon icon={faUsers} className="mr-4 w-5 h-5" />
+                            <span>Users</span>
+                        </Link>
                     )}
-                    <Link href="/dashboard/doctors" className={cn("block p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/doctors" ? "text-white font-bold" : "text-white font-medium")}>Doctors</Link>
-                    <Link href="/dashboard/clinics" className={cn("block p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/clinics" ? "text-white font-bold" : "text-white font-medium")}>Clinics</Link>
-                    <Link href="/dashboard/feedbacks" className={cn("block p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/feedbacks" ? "text-white font-bold" : "text-white font-medium")}>Feedbacks</Link>
+                    <Link href="/dashboard/doctors" className={cn("flex items-center p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/doctors" ? "text-white font-bold" : "text-white font-medium")}>
+                        <FontAwesomeIcon icon={faUserMd} className="mr-4 w-5 h-5" />
+                        <span>Doctors</span>
+                    </Link>
+                    <Link href="/dashboard/clinics" className={cn("flex items-center p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/clinics" ? "text-white font-bold" : "text-white font-medium")}>
+                        <FontAwesomeIcon icon={faHospital} className="mr-4 w-5 h-5" />
+                        <span>Clinics</span>
+                    </Link>
+                    <Link href="/dashboard/feedbacks" className={cn("flex items-center p-4 hover:bg-blue-700 hover:text-white rounded-lg", path === "/dashboard/feedbacks" ? "text-white font-bold" : "text-white font-medium")}>
+                        <FontAwesomeIcon icon={faComment} className="mr-4 w-5 h-5" />
+                        <span>Feedbacks</span>
+                    </Link>
                 </nav>
+
             </aside>
         </nav>
     );
