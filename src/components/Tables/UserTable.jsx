@@ -214,7 +214,7 @@ const UserTable = ({
                                     className="text-blue-600 hover:text-blue-900 mr-4 flex items-center"
                                     onClick={() => openEditModal(user)}
                                 >
-                                    <FaEdit className="mr-1" /> Edit
+                                    <FaEdit className="mr-1" />  Edit
                                 </button>
                                 <button
                                     className="text-red-600 hover:text-red-900 flex items-center"
@@ -223,7 +223,7 @@ const UserTable = ({
                                         setIsModalOpen(true);
                                     }}
                                 >
-                                    <FaTrashAlt className="mr-1" /> Delete
+                                    <FaTrashAlt className="mr-1" />  Delete
                                 </button>
                             </TableCell>
                         </TableRow>
