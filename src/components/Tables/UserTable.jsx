@@ -20,6 +20,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { createUser } from '@/api/lib/userHandler';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 const UserTable = ({
     users,
@@ -208,21 +209,21 @@ const UserTable = ({
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableCell className="text-center">
+                            <TableCell className="text-center flex justify-center ">
                                 <button
-                                    className="text-blue-600 hover:text-blue-900 mr-4"
+                                    className="text-blue-600 hover:text-blue-900 mr-4 flex items-center"
                                     onClick={() => openEditModal(user)}
                                 >
-                                    Edit
+                                    <FaEdit className="mr-1" /> Edit
                                 </button>
                                 <button
-                                    className="text-red-600 hover:text-red-900"
+                                    className="text-red-600 hover:text-red-900 flex items-center"
                                     onClick={() => {
                                         setSelectedUserId(user.id);
                                         setIsModalOpen(true);
                                     }}
                                 >
-                                    Delete
+                                    <FaTrashAlt className="mr-1" /> Delete
                                 </button>
                             </TableCell>
                         </TableRow>
