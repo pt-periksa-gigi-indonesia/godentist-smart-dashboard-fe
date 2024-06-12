@@ -25,6 +25,10 @@ module.exports = {
         'blue-dentist-dark': '#3150b5',
         'blue-dentist-border': '#EBF1FF',
         'blue-dentist-light': '#F8F9FB',
+        'red-stat': '#FA7870',
+        'green-stat': '#22C5A8',
+        'blue-stat': '#37A5F4',
+
         
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
