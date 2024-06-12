@@ -67,13 +67,13 @@ export default function RegisterPage() {
     <main className="flex flex-col md:flex-row min-h-screen">
       {/* Left Column for the Image */}
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-100 p-4">
-        <Image
-          src="/static/images/godentist_logo.jpeg"
+        {/* <Image
+          src="/static/images/godentist_logo_sidebar.png"
           alt="Logo"
           width={1488}
           height={423}
           className="max-w-xs md:max-w-sm lg:max-w-base mb-8 px-12 md:px-0"
-        />
+        /> */}
         <Carousel images={images} />
       </div>
 
