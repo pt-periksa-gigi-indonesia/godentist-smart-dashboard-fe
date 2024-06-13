@@ -213,7 +213,7 @@ export default function Page() {
       )}
 
 
-      <div className="flex flex-col w-full px-6 mt-16">
+      <div className="flex flex-col w-full px-6 mt-0 xl:mt-16">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Manage User Accounts</h1>
           <SeedButton />
