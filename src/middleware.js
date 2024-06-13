@@ -37,5 +37,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-    matcher: [ '/dashboard/:path*','/dashboard/admin', '/login', '/register', '/dashboard/settings', '/waiting', "/dashboard/doctors", "/dashboard/clinics", "/dashboard/feedbacks"] 
+    matcher: [ '/dashboard/:path*','/dashboard/admin', '/login', '/register', '/dashboard/settings', '/waiting', "/dashboard/doctors", "/dashboard/clinics", "/dashboard/feedbacks", "/reset-password/[token]", "/forgot-password"] 
 };
