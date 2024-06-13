@@ -11,6 +11,7 @@ import FeedbackCard from '@/components/cards/FeedbackCard';
 import PopularServicesCard from '@/components/cards/PopularServiceCard';
 import { getDashboardInfo } from '@/api/lib/dashboardHandler';
 import SeedButton from '@/components/seedButton';
+import Link from 'next/link';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#ffbb28', '#ff4444', '#ffa07a', '#dda0dd', '#8b0000', '#00bfff', '#228b22', '#6a5acd'];
 
@@ -149,7 +150,7 @@ export default function DoctorDashboard() {
   };
 
   return (
-    <main className="flex-grow flex-col px-6 xl:mt-16 md:mt-10 sm:mt-6">
+    <main className="flex-grow flex-col px-6 xl:mt-16 lg:mt-0">
       <div className="flex flex-col md:flex-row justify-between mb-6">
         <h1 className="text-2xl text-left font-bold text-gray-800">
           {greeting}, <span className="text-blue-dentist">Team!</span>
@@ -159,14 +160,14 @@ export default function DoctorDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 md:gap-4 gap-y-4">
         {/* Partner's Account */}
-        <PartnerStats
+        <PartnerStats Link href="/doctors"
           totalUnverDoctor={totalUnverDoctor}
           totalVerDoctor={totalVerDoctor}
           totalClinics={totalClinics}
         />
 
         {/* Patients */}
-        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <Link href="/dashboard/clinics" className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-0">
             <h2 className="text-md font-medium text-gray-800">Total Patients</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -184,10 +185,10 @@ export default function DoctorDashboard() {
               </h3>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Transactions */}
-        <div className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <Link href="/dashboard/clinics" className="col-span-2 md:col-span-2 lg:col-span-1 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center mb-0">
             <h2 className="text-md font-medium text-gray-800">Total Revenues</h2>
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md">
@@ -216,7 +217,7 @@ export default function DoctorDashboard() {
               </h3>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Overview */}
         <div className="col-span-2 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">

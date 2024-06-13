@@ -128,7 +128,7 @@ export default function ClinicDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-6 mt-9">
+            <main className="flex-grow p-6 mt-0 xl:mt-9">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -240,9 +240,6 @@ export default function ClinicDetailPage() {
                                     )) : <p className="text-gray-800">-</p>}
                                 </ScrollArea>
                             </div>
-
-
-
                         </div>
                     </div>
                 ) : (

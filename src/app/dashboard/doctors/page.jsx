@@ -83,7 +83,7 @@ export default function DoctorsPage() {
 
     return (
         <>
-            <main className="flex-grow px-6 mt-16">
+            <main className="flex-grow px-6 mt-0 xl:mt-16">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">Manage Doctors</h1>
                     <SeedButton/>

@@ -138,7 +138,7 @@ export default function DoctorDetailPage() {
 
     return (
         <>
-            <main className="flex-grow p-2 md:p-6 mt-9 bg-blue-dentist-light">
+            <main className="flex-grow p-2 md:p-6 mt-0 xl:mt-9 bg-blue-dentist-light">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
