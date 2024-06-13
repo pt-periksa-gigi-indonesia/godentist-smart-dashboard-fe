@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {
     Card,
     CardContent,
@@ -22,11 +23,13 @@ export default function FeedbackCard({ feedback }) {
                 <ScrollArea className="h-80">
                     {feedback.length > 0 ? (
                         feedback.map((item, index) => (
-                            <div key={index}  className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
-                                <p className="text-md text-gray-800 font-bold">to: {item.name} </p>
-                                <p className="text-sm text-gray-600">{item.feedback}</p>
-                                <p className="text-xs text-blue-dentist">{new Date(item.createdAt).toLocaleDateString()}</p>
-                            </div>
+                            <Link href="/dashboard/feedbacks" key={index}>
+                                <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
+                                    <p className="text-md text-gray-800 font-bold">to: {item.name} </p>
+                                    <p className="text-sm text-gray-600">{item.feedback}</p>
+                                    <p className="text-xs text-blue-dentist">{new Date(item.createdAt).toLocaleDateString()}</p>
+                                </div>
+                            </Link>
                         ))
                     ) : (
                         Array.from({ length: 5 }).map((_, index) => (
