@@ -59,7 +59,7 @@ export default function ResetPassword() {
       {/* Left Column for the Image */}
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-100 p-4">
         <Image
-          src="/static/images/godentist_logo.jpeg"
+          src="/static/images/godentist_logo_sidebar.jpeg"
           alt="Logo"
           width={1488}
           height={423}
