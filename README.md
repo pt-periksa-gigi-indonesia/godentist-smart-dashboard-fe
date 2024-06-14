@@ -14,6 +14,15 @@ This repository contains the Next.js project for the GoDentist Smart Dashboard, 
 - **OCR for Document Extraction:** Extracts important information from uploaded documents.
 - **Doctor Partner Notifications:** Alerts for new partner registrations.
 
+## Technologies
+
+This project is built using the following key technologies:
+
+- **[Next.js](https://nextjs.org/)**: A powerful React framework that enables server-side rendering and generating static websites for React-based web applications.
+- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework for rapid UI development. It allows us to build custom designs in the HTML.
+- **[Next ShadcnUI](https://ui.shadcn.com/docs/installation/next)**: A comprehensive UI framework designed specifically for Next.js applications, enhancing the development of rich, interactive user interfaces.
+- **[Next PWA](https://ducanh-next-pwa.vercel.app/docs/next-pwa/getting-started)**: A plugin for Next.js that adds Progressive Web App (PWA) capabilities, enabling offline support and app-like experiences.
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
